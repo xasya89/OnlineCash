@@ -1,0 +1,84 @@
+﻿@model List<OnlineCash.DataBaseModels.Good>
+<div class="row">
+    <div class="col-lg-6">
+        <input id="goodSearch" class="form-control form-control-sm mb-1"/>
+        <ul id="goodSearchList" class="list-group mb-1"></ul>
+        <button id="btnAppend" class="btn btn-sm btn-primary">Перенести</button>
+    </div>
+    <div class="col-lg-6">
+        <h2>Выбранные товары</h2>
+        <ul id="goodSelected" class="list-group mb-1"></ul>
+        <button btnSuccess data-typeprice="Type1" class="btn btn-sm btn-success">Печать (кассир)</button>
+        <button btnSuccess data-typeprice="Type2" class="btn btn-sm btn-success">Печать (витрина)</button>
+    </div>
+</div>
+
+<script>
+    var idShops =@Json.Serialize(ViewData["idShops"]);;
+    const goodSearch = document.getElementById("goodSearch");
+    const goodSearchList = document.getElementById("goodSearchList");
+    const goodSelected = document.getElementById("goodSelected");
+    const btnAppend = document.getElementById("btnAppend");
+    const btnSuccess = document.getElementById("btnSuccess");
+    goodSearch.addEventListener("input", () => {
+        goodSearchList.querySelectorAll("li").forEach(div => div.remove());
+        let row = 0;
+        fetch("../api/Goods?Name=" + goodSearch.value)
+            .then(r => r.json())
+            .then(goods => {
+                goods.forEach(good => {
+                    if (row++ <= 15) {
+                        let li = document.createElement("li");
+                        li.dataset.id = good.id;
+                        li.classList.add("list-group-item", "list-group-item-action");
+                        li.textContent = good.name;
+                        li.addEventListener("click", () => {
+                            li.classList.toggle("active");
+                        })
+                        goodSearchList.append(li);
+                    }
+                })
+            });
+    });
+    btnAppend.addEventListener("click", () => {
+        goodSearchList.querySelectorAll(".active").forEach(li => {
+            let flag = true;
+            goodSelected.querySelectorAll("li").forEach(liSelected => {
+                if (liSelected.dataset.id == li.dataset.id)
+                    flag = false;
+            });
+            if (flag) {
+                let liNew = document.createElement("li");
+                liNew.classList.add("list-group-item", "list-group-item-action");
+                liNew.dataset.id = li.dataset.id;
+                liNew.textContent = li.textContent;
+                goodSelected.append(liNew);
+            }
+        });
+    })
+
+    document.querySelectorAll("button[btnSuccess]").forEach(btnSuccess => btnSuccess.addEventListener("click", () => {
+        let goods = new Array();
+        console.log(goodSelected);
+        goodSelected.querySelectorAll("li").forEach(li => {
+            goods.push(li.dataset.id);
+        });
+        console.log(goods);
+        (async () => {
+            await fetch('PrintPriceStepSuccess', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ goods: goods, shops: idShops })
+            })
+                .then(resp => {
+                    if (resp.status == 200)
+                        resp.text().then(uuid => {
+                            location.href = "PrintPriceStepPrint?uuid=" + uuid.replace('"', "").replace('"', "") + "&typeprice=" + btnSuccess.dataset.typeprice;
+                        })
+                });
+        })();
+    }));
+</script>

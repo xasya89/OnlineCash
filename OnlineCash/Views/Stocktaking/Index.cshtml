@@ -1,0 +1,41 @@
+﻿@using OnlineCash.DataBaseModels
+@model IEnumerable<OnlineCash.DataBaseModels.Stocktaking>
+
+    <form asp-controller="Stocktaking" asp-action="Create" method="get">
+        <div>
+            <h4>Выберите магазин</h4>
+            <div style="display: inline-block; width:100px">
+                <select name="idShop" class="form-select form-select-sm ">
+                    @foreach(var shop in (List<Shop>)ViewBag.Shops)
+            {
+                <option value="@shop.Id">@shop.Name</option>
+            }
+                </select>
+            </div>
+            <input type="submit" class="btn btn-sm btn-primary " value="создать"/>
+        </div>
+    </form>
+
+<table class="table table-hover table-bordered table-sm ">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Номер</th>
+            <th>Магазин</th>
+            <th>Подтвр</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stocktaking in Model)
+        {
+            string className = stocktaking.isSuccess ? "bg-success" : "";
+            string classNameLink = stocktaking.isSuccess ? "link-light" : "link-dark";
+            <tr class="@className">
+                <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking.Create.ToString("dd.MM")</a></td>
+                <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking.Num</a></td>
+                <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking?.Shop.Name</a></td>
+                <td><input type="checkbox" checked="@stocktaking.isSuccess" class="form-check-input" readonly /></td>
+            </tr>
+        }
+    </tbody>
+</table>

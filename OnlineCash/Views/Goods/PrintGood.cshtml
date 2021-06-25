@@ -1,0 +1,31 @@
+﻿@model List<OnlineCash.ViewModels.GoodViewModel>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div style="display:grid; font-size: 7pt; grid-template-columns: repeat(3, 1fr); width:100%">
+        @foreach (var good in Model)
+        {
+            <div style="border: 1px dotted lightgray; padding: 2mm">
+                <h4>@good.Name</h4>
+                <h2 style="float:right; ">@good.Price р.</h2>
+                <div style="clear: both">&nbsp;</div>
+                <div style="display: block; float: left;">
+                    <barcode content="@good.BarCode" width="160" height="20" margin="0" barcodeformat="CODE_128" outputformat="PNG" />
+                </div>
+                <div style="float: right">ИП Санина Е М<br /> ИНН 312306898510<br>@DateTime.Now.ToString("dd.MM.yy")</div>
+            </div>
+        }
+    </div>
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

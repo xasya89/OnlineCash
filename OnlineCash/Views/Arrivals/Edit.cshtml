@@ -1,0 +1,376 @@
+﻿@using System.Text.Json;
+@model OnlineCash.DataBaseModels.Arrival
+<div class="row mt-2">
+    <div class="col">
+        @if (Model.isSuccess == false)
+        {
+            if ((int)ViewData["ShopId"] == -1 || (string)ViewData["Action"]=="Edit")
+            {
+                <button onclick="arrivalSave(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
+            }
+            <button onclick="arrivalSave(false)" class="btn btn-sm btn-primary" style="margin-right: 20px">Сохранить</button>
+        }
+        <a asp-action="Index" class="btn btn-sm btn-danger">Отмена</a>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <label for="ShopSelect" class="col-sm-2 col-form-label">Магазин: </label>
+    <div class="col-sm-10">
+        <select id="ShopSelect" asp-items="@(new SelectList(ViewBag.Shops,"Id","Name"))" class="form-select form-select-sm"></select>
+    </div>
+</div>
+<div class="row mb-2">
+    <label for="Num" class="col-sm-2 col-form-label ">Номер</label>
+    <div class="col-sm-4">
+        <input id="TTNNum" value="@Model.Num" class="form-control form-control-sm " />
+    </div>
+    <label for="Date" class="col-sm-2">Дата</label>
+    <div class="col-sm-4">
+        <input id="TTNDate" value="@Model.DateArrival.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " />
+    </div>
+</div>
+<div class="row mb-2">
+    <label for="SupplierSelect" class="col-sm-2 col-form-label">Поставщик: </label>
+    <div class="col-sm-2">
+        <button data-bs-toggle="modal" data-bs-target="#SupplierModal" class="btn btn-primary btn-sm">Выбрать</button>
+        <label id="SupplierSelected" data-id="@Model.SupplierId" class="form-label" style="margin-left: 20px">@Model.Supplier?.Name</label>
+    </div>
+    <label class="col-sm-8 col-form-label col-form-label-sm"></label>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Товар</span>
+            </div>
+            <input id="GoodSearch" type="text" list="GoodSearchList" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            <datalist id="GoodSearchList"></datalist>
+            <div class="input-group-append">
+                <span id="GoodSearchBtnAdd" class="input-group-text">Добавить</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-sm table-hover table-bordered">
+    <thead class="bg-light">
+        <tr>
+            <th></th>
+            <th>Товар</th>
+            <th>Ед</th>
+            <th>Цена</th>
+            <th>Кол-во</th>
+            <th>Стоимость</th>
+        </tr>
+    </thead>
+    <tbody id="ArrivalTable">
+        @if(Model.ArrivalGoods!=null)
+        @foreach (var arrivalGood in Model.ArrivalGoods)
+        {
+            double sum = (double)arrivalGood.Price * arrivalGood.Count;
+        <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
+            <td><span onclick="deleteGood( @arrivalGood.Good.Id )" class="fa fa-trash"></span></td>
+            <td>@arrivalGood.Good?.Name</td>
+            <td>@arrivalGood.Good?.Unit</td>
+            <td><input oninput="editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" /></td>
+            <td><input oninput="editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" /></td>
+            <td><input oninput="editGood(@arrivalGood.Good.Id)" Sum value="@sum" /></td>
+        </tr>
+        }
+    </tbody>
+    <tfoot class="bg-light">
+        <tr>
+            <th colspan="4"></th>
+            <th id="ArrivalTableSummaryCount">@Model.CountAll</th>
+            <th id="ArrivalTableSummarySum">@Model.PriceAll</th>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="modal fade" id="SupplierModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Поставщик</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: calc(100vh - 170px)">
+                <a class="btn btn-primary btn-sm mb-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    Новый поставщик
+                </a>
+                <div class="collapse mb-2" id="collapseExample" >
+                    <div class="card card-body">
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-sm">Наименоваени</label>
+                            <div class="col-sm-10">
+                                <input id="SupplierNewName" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-sm">ИНН</label>
+                            <div class="col-sm-10">
+                                <input id="SupplierNewINN" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label col-form-label-sm">КПП</label>
+                            <div class="col-sm-10">
+                                <input id="SupplierNewKPP" class="form-control form-control-sm" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button id="SupplierNewBtnAdd" class="btn btn-light">Создать</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col">
+                        <input id="SupplierFind" type="text" placeholder="Поиск" class="form-control form-control-sm " />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col" style="overflow: hidden">
+                        <select id="SupplierList" class="form-select" size="10" style="height:auto; display: inline-block;"  aria-label="multiple select example">
+                            @foreach(var supplier in (List<OnlineCash.DataBaseModels.Supplier>)ViewBag.Suppliers)
+            {
+                <option value="@supplier.Id" data-name="@supplier.Name">@supplier.Name</option>
+            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button id="SupplierModalBtnSave" type="button" class="btn btn-primary">Выбрать</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const ttnNum = document.getElementById("TTNNum");
+    const ttnDate = document.getElementById("TTNDate");
+
+    var goods = new Array();
+    const goodSearch = document.getElementById("GoodSearch");
+    const goodSearchBtnAdd = document.getElementById("GoodSearchBtnAdd");
+    const goodSearchList = document.getElementById("GoodSearchList");
+    const arrivalTable = document.getElementById("ArrivalTable");
+    const arrivalTableSummaryCount = document.getElementById("ArrivalTableSummaryCount");
+    const arrivalTableSummarySum = document.getElementById("ArrivalTableSummarySum");
+    goodSearchBtnAdd.addEventListener("click", () => {
+        addGoodBySearch();
+    })
+    goodSearch.addEventListener("keyup", (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13)
+            addGoodBySearch();
+    })
+    function addGoodBySearch() {
+        goods.forEach(g => {
+            if (g.name == goodSearch.value) {
+                let flag = false;
+                arrivalTable.querySelectorAll("tr").forEach(tr => {
+                    if (tr.dataset.idGood == g.id) {
+                        console.log(tr.dataset.idGood + " - " + g.id);
+                        let price = parseFloat(tr.querySelector("input[Price]").value);
+                        let count = parseFloat(tr.querySelector("input[Count]").value) + 1;
+                        tr.querySelector("input[Count]").value = count;
+                        tr.querySelector("input[Sum]").value = (price * count).toFixed(2);
+                        flag = true;
+                    }
+                });
+                if (!flag) {
+                    let tr = document.createElement("tr");
+                    tr.dataset.id = -1;
+                    tr.dataset.idGood = g.id;
+                    tr.innerHTML = `
+<td><i Remove class="fa fa-trash" aria-hidden="true"></i></td>
+<td>${g.name}</td>
+<td>${g.unit}</td>
+<td><input Price value='0' class='form-control form-control-sm'></td>
+<td><input Count value='1' class='form-control form-control-sm'></td>
+<td><input Sum value='0' class='form-control form-control-sm'></td>
+`;
+                    let btnDelete = tr.querySelector("i[Remove]");
+                    btnDelete.addEventListener("click", () => {
+                        deleteGood(g.id);
+                    })
+                    let tdPrice = tr.querySelector("input[Price]");
+                    let tdCount = tr.querySelector("input[Count]");
+                    let tdSum = tr.querySelector("input[Sum]");
+                    [tdPrice, tdCount, tdSum].forEach(td => {
+                        td.addEventListener("input", () => {
+                            editGood(g.id);
+                            /*
+                            let price = parseFloat(tdPrice.value);
+                            let count = parseFloat(tdCount.value);
+                            if (isNaN(price) || isNaN(count))
+                                tdSum.value = "0";
+                            else
+                                tdSum.value = (price * count).toFixed(2);
+                            calcSummary();
+                            */
+                        });
+                    });
+                    arrivalTable.prepend(tr);
+                }
+            }
+        })
+        calcSummary();
+        goodSearch.value = "";
+    }
+    function editGood(idGood) {
+        arrivalTable.querySelectorAll("tr").forEach(tr => {
+            if (tr.dataset.idGood = idGood) {
+                let tdPrice = tr.querySelector("input[Price]");
+                let tdCount = tr.querySelector("input[Count]");
+                let tdSum = tr.querySelector("input[Sum]");
+                let price = parseFloat(tdPrice.value);
+                let count = parseFloat(tdCount.value);
+                if (isNaN(price) || isNaN(count))
+                    tdSum.value = "0";
+                else
+                    tdSum.value = (price * count).toFixed(2);
+                calcSummary();
+            }
+        })
+    }
+    function deleteGood(idGood) {
+        if (confirm("Удалить?"))
+            arrivalTable.querySelectorAll("tr").forEach(tr => {
+                if (tr.dataset.idGood == idGood)
+                    tr.remove();
+            })
+    }
+    function calcSummary() {
+        let countAll = 0;
+        let sumAll = 0;
+        arrivalTable.querySelectorAll("tr").forEach(tr => {
+            let count = parseFloat(tr.querySelector("input[Count]").value);
+            let sum = parseFloat(tr.querySelector("input[Sum]").value);
+            countAll += isNaN(count) ? 0 : count;
+            sumAll += isNaN(sum) ? 0 : sum;
+        });
+        arrivalTableSummaryCount.textContent = countAll.toFixed(2);
+        arrivalTableSummarySum.textContent = sumAll.toFixed(2);
+    }
+    const shopselect = document.getElementById("ShopSelect");
+    const supplierSelected = document.getElementById("SupplierSelected");
+    const supplierModalBtnSave = document.getElementById("SupplierModalBtnSave");
+    document.addEventListener("DOMContentLoaded", function (event) {
+        fetch("/api/goods")
+            .then(r => r.json())
+            .then(goodlist => {
+                goods = goodlist;
+                goodlist.forEach(g => {
+                    let option = document.createElement("option");
+                    option.value=g.name;
+                    goodSearchList.appendChild(option);
+                })
+            });
+
+        fetch("/api/suppliers")
+            .then(r => r.json())
+            .then(suppliers => {
+                var suppliers = suppliers;
+            });
+
+        var supplierModal = new bootstrap.Modal(document.getElementById('SupplierModal'));
+        supplierModalBtnSave.addEventListener("click", () => {
+            let supplierid = supplierList.value;
+            let suppliername = "";
+            fetch("/api/suppliers")
+                .then(r => r.json())
+                .then(suppliers => {
+                    suppliers.forEach(s => {
+                        if (s.id == supplierid)
+                            suppliername = s.name;
+                    });
+                    supplierSelected.textContent = suppliername;
+                    supplierSelected.dataset.id = supplierid;
+                    supplierModal.hide();
+                });
+        })
+    });
+    const supplierNewName = document.getElementById("SupplierNewName");
+    const supplierNewInn = document.getElementById("SupplierNewINN");
+    const supplierNewKpp = document.getElementById("SupplierNewKPP");
+    const supplierNewBtnAdd = document.getElementById("SupplierNewBtnAdd");
+    supplierNewBtnAdd.addEventListener("click", () => {
+        let name = supplierNewName.value;
+        let inn = supplierNewInn.value;
+        let kpp = supplierNewKpp.value;
+        fetch("/api/suppliers", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: name, inn: inn, kpp:kpp })
+        })
+            .then(r => r.json())
+            .then(supplier => {
+                let option = document.createElement("option");
+                option.value = supplier.id;
+                option.textContent = supplier.name;
+                option.dataset.name = supplier.name;
+                supplierList.append(option);
+                option.selected = true;
+            })
+    })
+
+    const supplierFind = document.getElementById("SupplierFind");
+    const supplierList = document.getElementById("SupplierList");
+    supplierFind.addEventListener("input", () => {
+        let find = supplierFind.value;
+        let flagfirst = true;
+        supplierList.querySelectorAll("option").forEach(option => {
+            if (option.dataset.name.indexOf(find) == -1) {
+                option.style.display = "none";
+                if (flagfirst) {
+                    option.selected = true;
+                    flagfirst = false;
+                }
+            }
+            else
+                option.style.display = "block";
+        })
+    })
+
+
+    function arrivalSave(isSuccess) {
+        let num = ttnNum.value;
+        let date = ttnDate.value;
+        let shopId = shopselect.value;
+        let supplierId = supplierSelected.dataset.id;
+        let arrivalGoods = new Array();
+        arrivalTable.querySelectorAll("tr").forEach(tr => {
+            arrivalGoods.push({
+                id: parseInt(tr.dataset.id),
+                goodId: parseInt(tr.dataset.idGood),
+                count: parseFloat(tr.querySelector("input[Count]").value),
+                price:  parseFloat(tr.querySelector("input[Price]").value)
+            });
+        });
+        fetch("create", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: @Model.Id,
+                shopId: parseInt(shopId),
+                supplierId: parseInt(supplierId),
+                num: num,
+                dateArrival: date,
+                isSuccess: isSuccess,
+                arrivalGoods: arrivalGoods
+            })
+        })
+            .then(r => {
+                if (r.status == 200)
+                    window.location.href = "index";
+            });
+    }
+</script>

@@ -1,0 +1,119 @@
+﻿@model RMK.DataBaseModels.Stocktaking
+<div style="height:100vh; display: grid; grid-template-rows: 35px 35px auto">
+    <h3 style="display: block">Инверторизация - @Model.Num от @Model.Create.ToString("dd.MM")</h3>
+    <div class="row">
+        <div class="col">
+            <span onclick="save('SaveAndSend')" class="btn btn-sm btn-success">Отправить</span>
+            <span onclick="save('save')" class="btn btn-sm btn-primary">Сохранить</span>
+        </div>
+        <div class="col">
+            <input id="findGood" list="findGoodList" class="form-control form-control-sm" placeholder="Поиск" />
+            <datalist id="findGoodList"></datalist>
+        </div>
+        <div class="col">
+            <span id="findGoodBtn" class="btn btn-sm btn-light">Добавть</span>
+        </div>
+    </div>
+    <div style="overflow-y: scroll">
+        <table class="table table-sm table-hover table-bordered">
+            <thead>
+                <tr style="position:sticky">
+                    <th>№</th>
+                    <th>Товар</th>
+                    <th>Кол-во</th>
+                </tr>
+            </thead>
+            <tbody id="tableGood">
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var idStocktaking = @Model.Id ;
+    const findGood = document.getElementById("findGood");
+    const findGoodList = document.getElementById("findGoodList");
+    const findGoodBtn = document.getElementById("findGoodBtn");
+    const tableGoods = document.getElementById("tableGood");
+    var stockGoods = [];
+    window.onload = function () {
+        fetch("/api/StockTakingGoods/" +@Model.Id)
+            .then(resp => resp.json())
+            .then(stockgoods => {
+                stockgoods.forEach(sg => stockGoods.push({ id: sg.id, }));
+            });
+        fetch("/api/goods/")
+            .then(o => o.json())
+            .then(goods => {
+                goods.forEach(g => {
+                    let option = document.createElement("option");
+                    option.value = g.name;
+                    findGoodList.append(option);
+                });
+            });
+    }
+    var barCodeScan = "";
+    window.onkeydown = function (e) {
+        if (["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].indexOf(e.key) > -1)
+            barCodeScan = barCodeScan + e.key;
+
+        if (e.key == "Enter") {
+            fetch("api/GoodBarCodes/" + barCodeScan)
+                .then(resp => {
+                    if (resp.status == 200)
+                        resp.json().then(g => addGood(g));
+                })
+            barCodeScan = "";
+        }
+    }
+
+    findGoodBtn.addEventListener("click", () => {
+        fetch("/api/goods/one/" + findGood.value)
+            .then(resp => {
+                if (resp.status == 200)
+                    resp.json()
+                        .then(good => addGood(good));
+                findGood.value = "";
+            });
+    })
+
+    function addGood(g) {
+        let flagAdd = false;
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            if (tr.dataset.idGood == g.id) {
+                let tdCount = tr.querySelector("input");
+                tdCount.value = (parseFloat(tdCount.value) + 1).toFixed(3);
+                flagAdd = true;
+            }
+        })
+        if (!flagAdd) {
+            let rowCount = tableGoods.querySelectorAll("tr").length;
+            let tr = document.createElement("tr");
+            tr.dataset.id = -1;
+            tr.dataset.idGood = g.id;
+            tr.innerHTML = `<td>${rowCount}</td><td>${g.name}</td><td><input value='1' class='form-control form-control-sm' /></td>`;
+            let tdCount = tr.querySelector("input");
+            tdCount.addEventListener("input", () => {
+                tdCount.value = tdCount.value.replace(",", ".");
+            });
+            tableGoods.prepend(tr);
+        }
+    }
+
+    function save(typeSave) {
+        let stockTakingGoods = new Array();
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            stockTakingGoods.push({
+                id: tr.dataset.id,
+                idGood: tr.dataset.idGood,
+                good: { id: tr.dataset.idGood },
+                count: tr.querySelector("input").value
+            })
+        })
+        fetch("/Stocktaking/" + typeSave, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }, method: "POST", body: JSON.stringify({ id: idStocktaking, stocktakingGoods: stockTakingGoods })
+        });
+    }
+</script>

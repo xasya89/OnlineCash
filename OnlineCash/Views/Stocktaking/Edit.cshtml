@@ -1,0 +1,164 @@
+﻿@using OnlineCash.DataBaseModels
+@using System.Linq 
+@model OnlineCash.DataBaseModels.Stocktaking
+
+<div style="height: calc(100vh - 150px); display: grid; grid-template-rows: 40px 40px auto ">
+    <div>
+        <h5>№ @Model.Num от @Model.Create.ToString("dd.MM") @Model.Shop?.Name</h5>
+    </div>
+
+    <div style= display: grid; grid-template-columns: 100px 180px 10px auto">
+        <span id="btnSave" class="btn btn-sm btn-primary m-1">Сохранить</span>
+        <span id="btnSuccess" class="btn btn-sm btn-success m-1">Сохранить и принять</span>
+        <div></div>
+        <div>
+            <input id="findGoods" list="findGoodList" class="form-control form-control-sm " style="display: inline-block; max-width:calc(100% - 105px)" />
+            <datalist id="findGoodList">
+                @foreach (Good g in ViewBag.Goods)
+                {
+                    <option data-id-good="@g.Id" data-price="@g.GoodPrices.Where(g=>g.ShopId==Model.ShopId).FirstOrDefault()?.Price" value="@g.Name"></option>
+                }
+            </datalist>
+            <span id="findBtnAdd" class="btn btn-sm btn-primary" style="width: 100px">Добавить</span>
+        </div>
+    </div>
+    <div style="overflow-y: scroll;">
+        <table class="table table-sm table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Товар</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Магазин</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Система</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Факт</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Остаток руб</th>
+                </tr>
+            </thead>
+            <tbody id="tableGoods">
+                @foreach (var stgood in Model.StocktakingGoods)
+                {
+                    <tr data-id="@stgood.Id" data-price="@stgood.Good.Price" data-id-good="@stgood.GoodId">
+                        <td>@stgood.Good.Name</td>
+                        <td countshop>@stgood.Count</td>
+                        <td countdb>@stgood.CountDB</td>
+                        <td><input class="form-control form-control-sm" value="@stgood.CountFact"></td>
+                        <td sum>@(stgood.Price* (decimal)stgood.Count)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var idAct =@Model.Id ;
+    var idShop = @Model.Shop.Id ;
+    const findGoods = document.getElementById("findGoods");
+    const findGoodList = document.getElementById("findGoodList");
+    const findBtnAdd = document.getElementById("findBtnAdd");
+    const tableGoods = document.getElementById("tableGoods");
+    const btnSave = document.querySelector("#btnSave");
+    const btnSuccess = document.querySelector("#btnSuccess");
+    console.log(btnSave);
+    console.log(btnSuccess);
+    window.onload = function () {
+    }
+    findGoods.addEventListener("change", () => {
+
+    });
+
+    function goodAdd(id, name, price) {
+        let flagaded = false;
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            if (tr.dataset.idGood == id) {
+                tr.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+                flagaded = true;
+            }
+        })
+        if (!flagaded) {
+            let tr = document.createElement("tr");
+            tr.dataset.idGood = id;
+            tr.dataset.id = -1;
+            tr.dataset.price = price;
+            tr.innerHTML = `
+                    <td>${name}</td>
+                    <td countshop>0</td>
+                    <td countdb>0</td>
+                    <td><input class="form-control form-control-sm" value="1"></td>
+                    <td sum>${price}</td>
+`;
+            tableGoods.prepend(tr);
+        };
+    }
+
+    findBtnAdd.addEventListener("click", () => {
+        let findGoodStr = findGoods.value;
+        if (findGoods.value != "")
+            findGoodList.querySelectorAll("option").forEach(option => {
+                if (findGoodStr == option.value) {
+                    let idGood = option.dataset.idGood;
+                    let price = parseFloat(option.dataset.price == "" ? 0 : option.dataset.price);
+                    let goodName = option.value;
+                    goodAdd(idGood, goodName, price);
+                    findGoods.value = "";
+                }
+            });
+    })
+    btnSave.addEventListener("click", e => { Save(e.target); })
+    btnSuccess.addEventListener("click", e => Save(e.target))
+    function Save(btn) {
+        let isSuccess = btn.id == "btnSuccess";
+        let goods = [];
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            let id = tr.dataset.id;
+            let idGood = tr.dataset.idGood;
+            let price = tr.dataset.price;
+            let tdCountShop = parseFloat(tr.querySelector("td[countShop]").textContent);
+            let tdCountDb = parseFloat(tr.querySelector("td[countDb]").textContent);
+            let tdCount = parseFloat(tr.querySelector("input").value);
+            goods.push({
+                id: id,
+                idGood: idGood,
+                count: tdCountShop,
+                countDb: tdCountDb,
+                countFact: tdCount,
+                price: price
+            });
+        })
+        fetch("/Stocktaking/Save", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: idAct, isSuccess: isSuccess, goods: goods })
+        })
+            .then(resp => {
+                if (resp.status != 200) {
+                    alert("Ошибка сохранения");
+                    return false;
+                }
+                window.location.href = "/stocktaking";
+            });
+    }
+
+    var code = "";
+    window.onkeydown = (e) => {
+        let digitals = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+        if (digitals.indexOf(e.key) > -1)
+            code = code + e.key;
+        if (e.key == "Enter" && code != "") {
+            fetch("/api/goods/barcode/" + code)
+                .then(resp => resp.json())
+                .then(good => {
+                    let price = good.Price;
+                    good.GoodPrices.forEach(p => { if (p.ShopId == idShop) price = p.Price });
+                    goodAdd(good.Id, good.Name, price);
+                })
+            code = "";
+        };
+    }
+</script>

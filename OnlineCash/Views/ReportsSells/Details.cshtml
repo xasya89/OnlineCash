@@ -1,0 +1,79 @@
+﻿@model OnlineCash.Models.ReportSellModel
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+            <div class="p-3 bg-white rounded">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="billed"><span class="font-weight-bold text-uppercase">Магазин: </span><span class="ml-1">@Model.Shop?.Name</span></div>
+                        <div class="billed"><span class="font-weight-bold text-uppercase">Дата: </span><span class="ml-1">@Model.Start.ToString("dd.MM.yy")</span></div>
+                    </div>
+                </div>
+                <div class="row mt-3 mb-0">
+                    <div class="col-md-6">
+                        <h5 class="text-uppercase">Проданные товары</h5>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Продано</th>
+                                <th>Возврат</th>
+                                <th>Всего</th>
+                                <th>Всего руб</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reportGood in Model.ReportGoods)
+                            {
+                                <tr>
+                                    <td>@reportGood.Good?.Name</td>
+                                    <td>@reportGood.CountSell</td>
+                                    <td>@reportGood.CountReturn</td>
+                                    <td>@reportGood.CountAll</td>
+                                    <td>@reportGood.SumAll</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3">Итог</th>
+                                <th>@Model.ReportGoods.Sum(r => r.CountAll)</th>
+                                <th>@Model.ReportGoods.Sum(r => r.SumAll)</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <!--<div class="text-right mb-3"><button class="btn btn-danger btn-sm mr-5" type="button">Pay Now</button></div>-->
+
+                <div class="row mt-3 mb-0">
+                    <div class="col-md-6">
+                        <h5 class="text-uppercase">Внесения / Изъятия</h5>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Причина</th>
+                                <th>Внесение</th>
+                                <th>Изъятие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">Итог</th>
+                                <th>0</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

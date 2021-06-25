@@ -1,0 +1,822 @@
+Now listening on: http://localhost:5000
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application is shutting down...
+Unable to start Kestrel.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An unhandled exception has occurred while executing the request.
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (42ms) [Parameters=[@__with_0='?' (DbType = DateTime), @__AddDays_1='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumIncome`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `t0`.`Id`, `t0`.`DateCreate`, `t0`.`IsElectron`, `t0`.`ShiftId`, `t0`.`Sum`, `t0`.`SumAll`, `t0`.`SumDiscont`, `t0`.`Id0`, `t0`.`CheckSellId`, `t0`.`Cost`, `t0`.`Count`, `t0`.`GoodId`, `t0`.`Id00`, `t0`.`Article`, `t0`.`BarCode`, `t0`.`Name`, `t0`.`Price`, `t0`.`Unit`, `t0`.`Uuid`
+FROM `Shifts` AS `s`
+LEFT JOIN (
+    SELECT `c`.`Id`, `c`.`DateCreate`, `c`.`IsElectron`, `c`.`ShiftId`, `c`.`Sum`, `c`.`SumAll`, `c`.`SumDiscont`, `t`.`Id` AS `Id0`, `t`.`CheckSellId`, `t`.`Cost`, `t`.`Count`, `t`.`GoodId`, `t`.`Id0` AS `Id00`, `t`.`Article`, `t`.`BarCode`, `t`.`Name`, `t`.`Price`, `t`.`Unit`, `t`.`Uuid`
+    FROM `CheckSells` AS `c`
+    LEFT JOIN (
+        SELECT `c0`.`Id`, `c0`.`CheckSellId`, `c0`.`Cost`, `c0`.`Count`, `c0`.`GoodId`, `g`.`Id` AS `Id0`, `g`.`Article`, `g`.`BarCode`, `g`.`Name`, `g`.`Price`, `g`.`Unit`, `g`.`Uuid`
+        FROM `CheckGoods` AS `c0`
+        INNER JOIN `Goods` AS `g` ON `c0`.`GoodId` = `g`.`Id`
+    ) AS `t` ON `c`.`Id` = `t`.`CheckSellId`
+) AS `t0` ON `s`.`Id` = `t0`.`ShiftId`
+WHERE ((`s`.`Start` > @__with_0) & (`s`.`Start` < @__AddDays_1)) & `s`.`Stop` IS NOT NULL
+ORDER BY `s`.`Id`, `t0`.`Id`, `t0`.`Id0`, `t0`.`Id00`
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 116
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (41ms) [Parameters=[@__with_0='?' (DbType = DateTime), @__AddDays_1='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumIncome`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `t0`.`Id`, `t0`.`DateCreate`, `t0`.`IsElectron`, `t0`.`ShiftId`, `t0`.`Sum`, `t0`.`SumAll`, `t0`.`SumDiscont`, `t0`.`Id0`, `t0`.`CheckSellId`, `t0`.`Cost`, `t0`.`Count`, `t0`.`GoodId`, `t0`.`Id00`, `t0`.`Article`, `t0`.`BarCode`, `t0`.`Name`, `t0`.`Price`, `t0`.`Unit`, `t0`.`Uuid`
+FROM `Shifts` AS `s`
+LEFT JOIN (
+    SELECT `c`.`Id`, `c`.`DateCreate`, `c`.`IsElectron`, `c`.`ShiftId`, `c`.`Sum`, `c`.`SumAll`, `c`.`SumDiscont`, `t`.`Id` AS `Id0`, `t`.`CheckSellId`, `t`.`Cost`, `t`.`Count`, `t`.`GoodId`, `t`.`Id0` AS `Id00`, `t`.`Article`, `t`.`BarCode`, `t`.`Name`, `t`.`Price`, `t`.`Unit`, `t`.`Uuid`
+    FROM `CheckSells` AS `c`
+    LEFT JOIN (
+        SELECT `c0`.`Id`, `c0`.`CheckSellId`, `c0`.`Cost`, `c0`.`Count`, `c0`.`GoodId`, `g`.`Id` AS `Id0`, `g`.`Article`, `g`.`BarCode`, `g`.`Name`, `g`.`Price`, `g`.`Unit`, `g`.`Uuid`
+        FROM `CheckGoods` AS `c0`
+        INNER JOIN `Goods` AS `g` ON `c0`.`GoodId` = `g`.`Id`
+    ) AS `t` ON `c`.`Id` = `t`.`CheckSellId`
+) AS `t0` ON `s`.`Id` = `t0`.`ShiftId`
+WHERE ((`s`.`Start` > @__with_0) & (`s`.`Start` < @__AddDays_1)) & `s`.`Stop` IS NOT NULL
+ORDER BY `s`.`Id`, `t0`.`Id`, `t0`.`Id0`, `t0`.`Id00`
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 116
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at lambda_method180(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.FormatException: Couldn't interpret '2021-04-24 13:04:31.374211' as a valid DateTime
+ ---> System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySqlConnector.Core.TextRow.ParseDateTime(ReadOnlySpan`1 value) in /_/src/MySqlConnector/Core/TextRow.cs:line 197
+   --- End of inner exception stack trace ---
+   at MySqlConnector.Core.TextRow.ParseDateTime(ReadOnlySpan`1 value) in /_/src/MySqlConnector/Core/TextRow.cs:line 206
+   at MySqlConnector.Core.TextRow.GetValueCore(ReadOnlySpan`1 data, ColumnDefinitionPayload columnDefinition) in /_/src/MySqlConnector/Core/TextRow.cs:line 92
+   at MySqlConnector.Core.Row.GetValue(Int32 ordinal) in /_/src/MySqlConnector/Core/Row.cs:line 40
+   at MySqlConnector.Core.Row.GetDateTime(Int32 ordinal) in /_/src/MySqlConnector/Core/Row.cs:line 361
+   at MySql.Data.MySqlClient.MySqlDataReader.GetDateTime(Int32 ordinal) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 251
+   at lambda_method173(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.StartTracking(IEntityType entityType, Object entity, ValueBuffer valueBuffer)
+   at lambda_method177(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (38ms) [Parameters=[@__with_0='?' (DbType = DateTime), @__AddDays_1='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumIncome`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `t0`.`Id`, `t0`.`DateCreate`, `t0`.`IsElectron`, `t0`.`ShiftId`, `t0`.`Sum`, `t0`.`SumAll`, `t0`.`SumDiscont`, `t0`.`Id0`, `t0`.`CheckSellId`, `t0`.`Cost`, `t0`.`Count`, `t0`.`GoodId`, `t0`.`Id00`, `t0`.`Article`, `t0`.`BarCode`, `t0`.`Name`, `t0`.`Price`, `t0`.`Unit`, `t0`.`Uuid`
+FROM `Shifts` AS `s`
+LEFT JOIN (
+    SELECT `c`.`Id`, `c`.`DateCreate`, `c`.`IsElectron`, `c`.`ShiftId`, `c`.`Sum`, `c`.`SumAll`, `c`.`SumDiscont`, `t`.`Id` AS `Id0`, `t`.`CheckSellId`, `t`.`Cost`, `t`.`Count`, `t`.`GoodId`, `t`.`Id0` AS `Id00`, `t`.`Article`, `t`.`BarCode`, `t`.`Name`, `t`.`Price`, `t`.`Unit`, `t`.`Uuid`
+    FROM `CheckSells` AS `c`
+    LEFT JOIN (
+        SELECT `c0`.`Id`, `c0`.`CheckSellId`, `c0`.`Cost`, `c0`.`Count`, `c0`.`GoodId`, `g`.`Id` AS `Id0`, `g`.`Article`, `g`.`BarCode`, `g`.`Name`, `g`.`Price`, `g`.`Unit`, `g`.`Uuid`
+        FROM `CheckGoods` AS `c0`
+        INNER JOIN `Goods` AS `g` ON `c0`.`GoodId` = `g`.`Id`
+    ) AS `t` ON `c`.`Id` = `t`.`CheckSellId`
+) AS `t0` ON `s`.`Id` = `t0`.`ShiftId`
+WHERE ((`s`.`Start` > @__with_0) & (`s`.`Start` < @__AddDays_1)) & `s`.`Stop` IS NOT NULL
+ORDER BY `s`.`Id`, `t0`.`Id`, `t0`.`Id0`, `t0`.`Id00`
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 116
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (15ms) [Parameters=[], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumIncome`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `t0`.`Id`, `t0`.`DateCreate`, `t0`.`IsElectron`, `t0`.`ShiftId`, `t0`.`Sum`, `t0`.`SumAll`, `t0`.`SumDiscont`, `t0`.`Id0`, `t0`.`CheckSellId`, `t0`.`Cost`, `t0`.`Count`, `t0`.`GoodId`, `t0`.`Id00`, `t0`.`Article`, `t0`.`BarCode`, `t0`.`Name`, `t0`.`Price`, `t0`.`Unit`, `t0`.`Uuid`
+FROM `Shifts` AS `s`
+LEFT JOIN (
+    SELECT `c`.`Id`, `c`.`DateCreate`, `c`.`IsElectron`, `c`.`ShiftId`, `c`.`Sum`, `c`.`SumAll`, `c`.`SumDiscont`, `t`.`Id` AS `Id0`, `t`.`CheckSellId`, `t`.`Cost`, `t`.`Count`, `t`.`GoodId`, `t`.`Id0` AS `Id00`, `t`.`Article`, `t`.`BarCode`, `t`.`Name`, `t`.`Price`, `t`.`Unit`, `t`.`Uuid`
+    FROM `CheckSells` AS `c`
+    LEFT JOIN (
+        SELECT `c0`.`Id`, `c0`.`CheckSellId`, `c0`.`Cost`, `c0`.`Count`, `c0`.`GoodId`, `g`.`Id` AS `Id0`, `g`.`Article`, `g`.`BarCode`, `g`.`Name`, `g`.`Price`, `g`.`Unit`, `g`.`Uuid`
+        FROM `CheckGoods` AS `c0`
+        INNER JOIN `Goods` AS `g` ON `c0`.`GoodId` = `g`.`Id`
+    ) AS `t` ON `c`.`Id` = `t`.`CheckSellId`
+) AS `t0` ON `s`.`Id` = `t0`.`ShiftId`
+ORDER BY `s`.`Id`, `t0`.`Id`, `t0`.`Id0`, `t0`.`Id00`
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 116
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at lambda_method172(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.FormatException: Couldn't interpret '2021-04-24 13:04:31.374211' as a valid DateTime
+ ---> System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySqlConnector.Core.TextRow.ParseDateTime(ReadOnlySpan`1 value) in /_/src/MySqlConnector/Core/TextRow.cs:line 197
+   --- End of inner exception stack trace ---
+   at MySqlConnector.Core.TextRow.ParseDateTime(ReadOnlySpan`1 value) in /_/src/MySqlConnector/Core/TextRow.cs:line 206
+   at MySqlConnector.Core.TextRow.GetValueCore(ReadOnlySpan`1 data, ColumnDefinitionPayload columnDefinition) in /_/src/MySqlConnector/Core/TextRow.cs:line 92
+   at MySqlConnector.Core.Row.GetValue(Int32 ordinal) in /_/src/MySqlConnector/Core/Row.cs:line 40
+   at MySqlConnector.Core.Row.GetDateTime(Int32 ordinal) in /_/src/MySqlConnector/Core/Row.cs:line 361
+   at MySql.Data.MySqlClient.MySqlDataReader.GetDateTime(Int32 ordinal) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 251
+   at lambda_method172(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.StartTracking(IEntityType entityType, Object entity, ValueBuffer valueBuffer)
+   at lambda_method162(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (16ms) [Parameters=[], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumIncome`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `c`.`Id`, `c`.`DateCreate`, `c`.`IsElectron`, `c`.`ShiftId`, `c`.`Sum`, `c`.`SumAll`, `c`.`SumDiscont`
+FROM `Shifts` AS `s`
+LEFT JOIN `CheckSells` AS `c` ON `s`.`Id` = `c`.`ShiftId`
+ORDER BY `s`.`Id`, `c`.`Id`
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 116
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.StartTracking(IEntityType entityType, Object entity, ValueBuffer valueBuffer)
+   at lambda_method162(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (22ms) [Parameters=[], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumIncome`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `c`.`Id`, `c`.`DateCreate`, `c`.`IsElectron`, `c`.`ShiftId`, `c`.`Sum`, `c`.`SumAll`, `c`.`SumDiscont`
+FROM `Shifts` AS `s`
+LEFT JOIN `CheckSells` AS `c` ON `s`.`Id` = `c`.`ShiftId`
+ORDER BY `s`.`Id`, `c`.`Id`
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 116
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.StartTracking(IEntityType entityType, Object entity, ValueBuffer valueBuffer)
+   at lambda_method162(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.ObjectDisposedException: Cannot access a disposed object. A common cause of this error is disposing a context that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling Dispose() on the context, or wrapping the context in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'onlinecashContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.get_StateManager()
+   at lambda_method162(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An unhandled exception has occurred while executing the request.
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+System.InvalidOperationException: Sequence contains no elements.
+   at lambda_method116(Closure , QueryContext , DbDataReader , ResultContext , Int32[] , ResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.Enumerator.MoveNext()
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (15ms) [Parameters=[@__idSotcktaking_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`Count`, `s`.`GoodUuid`, `s`.`StocktakingId`, `s`.`idGood`
+FROM `StocktakingGoods` AS `s`
+WHERE `s`.`StocktakingId` = @__idSotcktaking_0
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 805
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (6ms) [Parameters=[@__idSotcktaking_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`Count`, `s`.`GoodUuid`, `s`.`StocktakingId`, `s`.`idGood`
+FROM `StocktakingGoods` AS `s`
+WHERE `s`.`StocktakingId` = @__idSotcktaking_0
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 805
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (9ms) [Parameters=[@__idSotcktaking_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`Count`, `s`.`GoodUuid`, `s`.`StocktakingId`, `s`.`idGood`
+FROM `StocktakingGoods` AS `s`
+WHERE `s`.`StocktakingId` = @__idSotcktaking_0
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 805
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+An unhandled exception has occurred while executing the request.
+Failed executing DbCommand (2ms) [Parameters=[@__model_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+SELECT `s`.`Id`, `s`.`Count`, `s`.`GoodUuid`, `s`.`StocktakingId`, `s`.`idGood`
+FROM `StocktakingGoods` AS `s`
+WHERE `s`.`StocktakingId` = @__model_Id_0
+An exception occurred while iterating over the results of a query for context type 'RMK.onlinecashContext'.
+MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Unknown column 's.idGood' in 'field list'
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 805
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (50ms) [Parameters=[@p0='?' (DbType = Double), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+INSERT INTO `StocktakingGoods` (`Count`, `GoodUuid`, `StocktakingId`, `idGood`)
+VALUES (@p0, @p1, @p2, @p3);
+SELECT `Id`
+FROM `StocktakingGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+An exception occurred in the database while saving changes for context type 'RMK.onlinecashContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 805
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+An unhandled exception has occurred while executing the request.
+Failed executing DbCommand (3ms) [Parameters=[@p0='?' (DbType = Double), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+INSERT INTO `StocktakingGoods` (`Count`, `GoodUuid`, `StocktakingId`, `idGood`)
+VALUES (@p0, @p1, @p2, @p3);
+SELECT `Id`
+FROM `StocktakingGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+An exception occurred in the database while saving changes for context type 'RMK.onlinecashContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 807
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Failed executing DbCommand (7ms) [Parameters=[@p0='?' (DbType = Double), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+INSERT INTO `StocktakingGoods` (`Count`, `GoodUuid`, `StocktakingId`, `idGood`)
+VALUES (@p0, @p1, @p2, @p3);
+SELECT `Id`
+FROM `StocktakingGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+An exception occurred in the database while saving changes for context type 'RMK.onlinecashContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 805
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+An unhandled exception has occurred while executing the request.
+Failed executing DbCommand (3ms) [Parameters=[@p0='?' (DbType = Double), @p1='?' (DbType = Guid), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='60']
+INSERT INTO `StocktakingGoods` (`Count`, `GoodUuid`, `StocktakingId`, `idGood`)
+VALUES (@p0, @p1, @p2, @p3);
+SELECT `Id`
+FROM `StocktakingGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+An exception occurred in the database while saving changes for context type 'RMK.onlinecashContext'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+ ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`rmk`.`stocktakinggoods`, CONSTRAINT `FK_StocktakingGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 807
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 51
+   at MySql.Data.MySqlClient.MySqlDataReader.ActivateResultSet() in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 125
+   at MySql.Data.MySqlClient.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlDataReader.cs:line 390
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 62
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySql.Data.MySqlClient/MySqlCommand.cs:line 257
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+An unhandled exception has occurred while executing the request.
+An unhandled exception has occurred while executing the request.
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\Xasya\source\repos\OnlineCash\RMK

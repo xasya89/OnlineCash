@@ -1,0 +1,11 @@
+﻿@model RMK.Models.LoginModel;
+
+<form asp-controller="Account" asp-action="Login">
+    <div class="form-group">
+        <label asp-for="PinCode">Пин код</label>
+        <input asp-for="PinCode" class="form-control form-control-sm" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Войти" class="btn btn-sm btn-primary" />
+    </div>
+</form>

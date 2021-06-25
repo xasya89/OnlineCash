@@ -1,0 +1,31 @@
+﻿@model List<OnlineCash.DataBaseModels.Arrival>
+
+<div>
+    <a asp-controller="Arrivals" asp-action="Create" class="btn btn-sm btn-success">Создать</a>
+</div>
+<table class="table table-sm table-hover table-striped table-bordered mb-2">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Дата</th>
+            <th>Поставщик</th>
+            <th>Магазин</th>
+            <th>Сумма</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var arrvial in Model)
+        {
+            string className = arrvial.isSuccess ? "bg-success" : "";
+            string classTrName = arrvial.isSuccess ? "link-light" : "link-dark";
+            
+        <tr class="@className">
+            <td class="@classTrName"><a class="@classTrName" asp-action="Edit" asp-route-ArrivalId="@arrvial.Id">@arrvial.Num</a></td>
+            <td class="@classTrName"><a class="@classTrName" asp-action="Edit" asp-route-ArrivalId="@arrvial.Id">@arrvial.DateArrival.ToString("dd.MM")</a></td>
+            <td class="@classTrName">@arrvial.Supplier?.Name</td>
+            <td class="@classTrName">@arrvial.Shop?.Name</td>
+            <th class="@classTrName">@arrvial.PriceAll</th>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,72 @@
+﻿@using OnlineCash.DataBaseModels;
+@model OnlineCash.ViewModels.GoodViewModel
+
+<form id="form" asp-controller="Goods" asp-action="Save" method="post">
+    <input asp-for="@Model.Id" type="hidden" />
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    <div>
+        <div class="form-group">
+            <label asp-for="Name">Наименование</label>
+            <input type="text" asp-for="Name" class="form-control form-control-sm" />
+            <span asp-validation-for="Name" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Article">Артикул</label>
+            <input type="text" asp-for="Article" class="form-control form-control-sm" />
+            <span asp-validation-for="Article" />
+        </div>
+        <div class="form-group">
+            <label asp-for="BarCode">Штрих код</label>
+            <input type="text" asp-for="BarCode" class="form-control form-control-sm" />
+            <input type="button" id="btnGenerateBarCode" class="btn btn-sm btn-outline-info" value="Новый" />
+            <span asp-validation-for="BarCode" />
+        </div>
+        <div class="form-group">
+            <select asp-for="Unit" asp-items="Html.GetEnumSelectList<DataBase.Units>()" class="form-select form-select-sm"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Price">Цена</label>
+            <input type="text" asp-for="Price" class="form-control form-control-sm" />
+            <span asp-validation-for="Price" />
+        </div>
+    </div>
+    <table class="table table-sm">
+        @for(var i=0; i<Model.PriceShops.Count; i++)
+            {
+        <tr>
+            @Html.EditorFor(Model => Model.PriceShops[i].idShop, new { htmlAttributes = new { @type = "hidden" }, })
+            @Html.EditorFor(Model => Model.PriceShops[i].idPrice, new { htmlAttributes = new { @type = "hidden" }, })
+            <td>
+                @Model.PriceShops[i].ShopName
+            </td>
+            <td>
+                @Html.EditorFor(Model => Model.PriceShops[i].Price, new { htmlAttributes = new { @class = "form-control form-control-sm" }, })
+            </td>
+        </tr>
+            }
+    </table>
+    <div class="form-group">
+        <span id="btnSubmit" type="submit" value="Сохранить" class="btn btn-sm btn-success" >Созранить</span>
+        <span id="btnDelete" class="btn btn-sm btn-danger">Удалить</span>
+    </div>
+</form>
+<script>
+    const barCode = document.getElementById("BarCode");
+    const btnGenerateBarCode = document.getElementById("btnGenerateBarCode");
+    btnGenerateBarCode.addEventListener("click", () => {
+        fetch("/api/NewBarCode/")
+            .then(r => r.text())
+            .then(code => barCode.value = code);
+    })
+
+    const formGood = document.getElementById("form");
+    const btnSubmit = document.getElementById("btnSubmit");
+    const btnDelete = document.getElementById("btnDelete");
+    btnSubmit.addEventListener("click", () => {
+        formGood.submit();
+    })
+    btnDelete.addEventListener("click", () => {
+        if (confirm("Удалить?"))
+            window.location.href = "/goods/delete?id=@Model.Id";
+    });
+</script>

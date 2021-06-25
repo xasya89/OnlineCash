@@ -1,0 +1,301 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="rmk">
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr)">
+        <div class="window">
+            Сумма без скидок <span id="sumAllLabel"></span> р
+        </div>
+        <div class="window">
+            Скидка <span id="sumAllDiscontLabel"></span> р
+        </div>
+        <div class="window" style="background-color: #e2f0e1">
+            К оплате <span id="sumAllItogLabel"></span> р
+        </div>
+    </div>
+    <div style="display: grid; grid-template-columns: 2fr 1fr">
+        <div class="window">
+            <h5 id="goodNameLabel" style="margin: 0">Товар 1</h5>
+            <h5 style="text-align: right; margin: 0"><span id="goodPriceLabel"></span> x <span id="goodCountLabel"></span> = <span id="goodSumLabel"></span> р.</h5>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr)">
+            <span class="btn btn-outline-dark" style="margin: 5px">Возврат</span>
+            <span id="sellBtn" data-isElectron="0" style="margin: 5px" class="btn btn-success font-weight-bold" active>Наличные <br> (enter + 1)</span>
+            <span id="sellBtnElectron" data-isElectron="1" style="margin: 5px" class="btn btn-primary font-weight-bold" active>Безналичные <br> (enter + 2)</span>
+        </div>
+    </div>
+    <div style="overflow-y: scroll;">
+        <table class="table table-hover table-striped table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Товар</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Количество</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Цена</th>
+                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Сумма</th>
+                </tr>
+            </thead>
+            <tbody id="tableGoods"></tbody>
+        </table>
+    </div>
+    <input id="findGoods" class="form-control form-control-sm" placeholder="Поиск" />
+    <table class="table table-sm table-hover table-bordered" style="overflow-y:scroll; background:#ffffff; display: block;">
+        <tbody id="findTableGoods">
+        </tbody>
+    </table>
+    <div style="display: grid; grid-template-columns: repeat(6, 1fr)">
+        <span id="shiftBtn" style="margin: 5px" class="btn btn-sm btn-outline-dark">Смена</span>
+        <span onclick="tableGoods.querySelectorAll('tr').forEach(tr => tr.remove())" style="margin: 5px" class="btn btn-sm btn-outline-dark">Аннулирование</span>
+        <a asp-controller="Stocktaking" asp-action="Index" style="margin: 5px" class="btn btn-sm btn-outline-dark">Инверторизация</a>
+        <span onclick="let f = GoodSynch.bind(this); f();" style="margin: 5px" class="btn btn-sm btn-outline-dark">Обмен</span>
+
+    </div>
+</div>
+
+<script>
+    const shiftBtn = document.getElementById("shiftBtn");
+    const depositingMoneyBtn = document.getElementById("depositingMoneyBtn");
+    //const withdrawalMoneyBtn = document.getElementById("withdrawalMoneyBtn");
+
+    const sumAllLabel = document.getElementById("sumAllLabel");
+    const sumAllItogLabel = document.getElementById("sumAllItogLabel");
+    const sumAllDiscontLabel = document.getElementById("sumAllDiscontLabel");
+    const goodNameLabel = document.getElementById("goodNameLabel");
+    const goodPriceLabel = document.getElementById("goodPriceLabel");
+    const goodCountLabel = document.getElementById("goodCountLabel");
+    const goodSumLabel = document.getElementById("goodSumLabel");
+    const findGoods = document.getElementById("findGoods");
+    const findTableGoods = document.getElementById("findTableGoods");
+    const tableGoods = document.getElementById("tableGoods");
+
+    const sellBtn = document.getElementById("sellBtn");
+    const sellBtnElectron = document.getElementById("sellBtnElectron");
+
+    window.onload = () => {
+        fetch(`/api/Goods`)
+            .then(o => o.json())
+            .then(goods => {
+                goods.forEach(g => addInFindGood(g))
+            });
+    }
+
+    findGoods.onkeyup = (e) => {
+        //if (!e) e = window.event;
+        findTableGoods.querySelectorAll("tr").forEach(tr => tr.remove());
+        fetch(`/api/Goods/${findGoods.value}`)
+            .then(o => o.json())
+            .then(goods => {
+                goods.forEach(g => addInFindGood(g))
+            });
+        return true;
+    }
+
+    function addInFindGood(g) {
+        let tr = document.createElement("tr");
+        tr.dataset.id = g.id;
+        tr.innerHTML = `<tr><td styl='width:350px'>${g.name}</td><td style="width: 100px">${g.price} р.</td></tr>`;
+        findTableGoods.appendChild(tr);
+        tr.ondblclick = () => {
+            fetch("/api/Goods/" + g.id)
+                .then(r => {
+                    if (r.status == 200)
+                        r.json()
+                            .then(good => {
+                                addGood(good);
+                            })
+                })
+        }
+    }
+
+    function addGood(good) {
+        let flag = true;
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            if (tr.dataset.id == good.id) {
+                tableGoods.querySelectorAll("tr").forEach(r => r.classList.remove("bg-primary"));
+                tr.classList.add("bg-primary");
+                let count = parseFloat(tr.querySelector("td[count]").textContent);
+                tr.querySelector("td[count]").textContent = ++count;
+                let price = parseFloat(tr.querySelector("td[price]").textContent);
+                let tdSum = tr.querySelector("td[sum]");
+                let sum = (count * price).toFixed(2);
+                tdSum.textContent = sum;
+                flag = false;
+                trSelectionChange(tr);
+            }
+        });
+        if (flag) {
+            tableGoods.querySelectorAll("tr").forEach(tr => tr.classList.remove("bg-primary"))
+            let trNewGood = document.createElement("tr");
+            trNewGood.dataset.id = good.id;
+            trNewGood.classList.add("bg-primary");
+            let tdGoodName = document.createElement("td");
+            tdGoodName.setAttribute("name", "");
+            tdGoodName.textContent = good.name;
+            trNewGood.appendChild(tdGoodName);
+            let tdGoodCount = document.createElement("td");
+            tdGoodCount.setAttribute("count", "");
+            tdGoodCount.textContent = 1;
+            trNewGood.appendChild(tdGoodCount);
+            let tdGoodPrice = document.createElement("td");
+            tdGoodPrice.setAttribute("price", "");
+            tdGoodPrice.textContent = good.price;
+            trNewGood.appendChild(tdGoodPrice);
+            let tdGoodSum = document.createElement("td");
+            tdGoodSum.setAttribute("sum", "");
+            tdGoodSum.textContent = good.price;
+            trNewGood.appendChild(tdGoodSum);
+            trNewGood.addEventListener("click", () => {
+                tableGoods.querySelectorAll("tr").forEach(r => r.classList.remove("bg-primary"));
+                trNewGood.classList.add("bg-primary");
+                trSelectionChange(trNewGood);
+            })
+
+            tableGoods.append(trNewGood);
+
+            trSelectionChange(trNewGood);
+        }
+    }
+
+    function calcAll() {
+        let sum = 0;
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            sum += parseFloat(tr.querySelector("td[sum]").textContent);
+        });
+        sumAllLabel.textContent = sum;
+        sumAllDiscontLabel.textContent = 0;
+        sumAllItogLabel.textContent = sum;
+    }
+
+    shiftBtn.addEventListener("click", () => {
+        fetch("/api/Shift");
+    });
+    var statCashOperation = 0;
+    var trCountEditing = null;
+    var barCodeScan = "";
+    window.onkeydown = e => {
+        if (e.target.id !== "findGoods") {
+            if (statCashOperation == 0) {
+                if (e.key == "ArrowUp" || e.key == "ArrowDown")
+                    try {
+                        trCountEditing = null;
+                        let tr = tableGoods.querySelector("tr[class='bg-primary']");
+                        if (e.key=="ArrowUp")
+                            tr = tr.previousElementSibling;
+                        if (e.key == "ArrowDown")
+                            tr = tr.nextElementSibling;
+                        if (tr != null) {
+                            tableGoods.querySelectorAll("tr").forEach(r => r.classList.remove("bg-primary"));
+                            tr.classList.add("bg-primary");
+                            tr.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center',
+                                inline: 'center'
+                            });
+                            trSelectionChange(tr);
+                        }
+                    }
+                    catch (err) { };
+                if (e.key == "Delete")
+                    try {
+                        let trSelected = tableGoods.querySelector("tr[class='bg-primary");
+                        let tr = trSelected.previousElementSibling;
+                        trSelected.remove();
+                        if (tr != null) {
+                            tableGoods.querySelectorAll("tr").forEach(r => r.classList.remove("bg-primary"));
+                            tr.classList.add("bg-primary");
+                            trSelectionChange(tr);
+                        }
+                        else
+                            calcAll();
+                    }
+                    catch (err) { };
+                if (e.key == "=") {
+                    let tr = tableGoods.querySelector("tr[class='bg-primary']");
+                    tr.querySelector("td[count]").textContent = "0";
+                    trCountEditing = tr;
+                    barCodeScan = "";
+                }
+                if (trCountEditing != null && ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", ","].indexOf(e.key) > -1) {
+                    let tr = tableGoods.querySelector("tr[class='bg-primary']");
+                    let td = tr.querySelector("td[count]");
+                    if (td.textContent == "0")
+                        td.textContent = e.key;
+                    else
+                        td.textContent = td.textContent + e.key;
+                    let count = parseFloat(td.textContent);
+                    let price = parseFloat(tr.querySelector("td[price]").textContent);
+                    tr.querySelector("td[sum]").textContent = (count * price).toFixed(2);
+                    trSelectionChange(tr,false);
+                }
+                if (trCountEditing != null && e.key == "Enter")
+                    trCountEditing = null;
+
+                if (trCountEditing == null && ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].indexOf(e.key) > -1) {
+                    barCodeScan = barCodeScan + e.key;
+                }
+                if (trCountEditing == null && e.key == "Enter") {
+                    fetch("api/GoodBarCodes/" + barCodeScan)
+                        .then(resp => {
+                            if (resp.status == 200)
+                                resp.json().then(g => addGood(g));
+                        })
+                    barCodeScan = "";
+                }
+            }
+        }
+    }
+
+    function trSelectionChange(tr, flagRowCahnge = true) {
+        if (flagRowCahnge)
+            trCountEditing = null;
+        goodNameLabel.textContent = tr.querySelector("td[name]").textContent;
+        goodPriceLabel.textContent = tr.querySelector("td[price]").textContent;
+        goodCountLabel.textContent = tr.querySelector("td[count]").textContent;
+        goodSumLabel.textContent = tr.querySelector("td[sum]").textContent;
+        calcAll();
+    }
+
+    [sellBtn, sellBtnElectron].forEach(btn => btn.addEventListener("click", () => {
+        var goods = new Array();
+        let sum = 0;
+        let sumDiscont = 0;
+        let sumAll = 0;
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            let idGood = tr.dataset.id;
+            let count = parseFloat(tr.querySelector("td[count]").textContent);
+            let price = parseFloat(tr.querySelector("td[price]").textContent);
+            sum += count * price;
+            goods.push({ id: idGood, count: count, price: price });
+        });
+        sumAll = sum * sumDiscont;
+        let isElectron = btn.dataset.isElectron == "1" ? true : false;
+        fetch("api/CheckSell", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }, method: "POST", body: JSON.stringify({ isElectron: isElectron, sum: sum, sumDiscont: sumDiscont, sumAll: sumAll, goods: goods })
+        })
+            .then(resp => {
+                if (resp.status == 200) tableGoods.querySelectorAll("tr").forEach(tr => tr.remove());
+            });
+    }));
+    //Синхронизаия товаров
+    function GoodSynch() {
+        this.classList.remove("btn-outline-dark");
+        this.classList.add("btn-primary");
+        fetch("/api/GoodsSynch")
+            .then(resp => {
+                this.classList.remove("btn-primary");
+                this.classList.add("btn-outline-dark");
+                if (resp.status != 200) {
+                    alert("Ошибка синхронизации");
+                    
+                    return false;
+                }
+                this.classList.add("btn-success");
+                setTimeout(() => { this.classList.remove("btn-success");  }, 1000);
+            });
+        this.classList.add("btn-success");
+        setTimeout(() => { this.classList.remove("btn-success") }, 1000);
+    }
+</script>

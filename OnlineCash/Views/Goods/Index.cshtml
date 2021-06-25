@@ -1,0 +1,46 @@
+﻿@model List<OnlineCash.DataBaseModels.Good>
+@using OnlineCash.DataBaseModels
+@using System
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary">Создать</a>
+            <a asp-controller="Goods" asp-action="PrintPriceStepShop" class="btn btn-sm btn-primary">Печать выбранные</a>
+            <a asp-controller="Goods" asp-action="PrintAll" target="_blank" class="btn btn-sm btn-primary">Печать все ценники</a>
+            <form class="d-flex" asp-controller="Goods" asp-action="Search" method="get">
+                <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Найти" aria-label="Search">
+                <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
+            </form>
+        </div>
+    </nav>
+
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Ед. изм</th>
+                        <th>Цена</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var g in Model)
+                    {
+                    <tr>
+                        <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Name</a></td>
+                        <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit</a></td>
+                        <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Price</a></td>
+                        <td><span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id&find=@ViewBag.Find'" class="text-danger">X</span></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+<script>
+    var code = "";
+    window.onload = function () {
+        const findInp = document.querySelector("input[name=find]");
+        findInp.oninput = function () {
+            fetch("/goods/SetSearch?search=" + findInp.value);
+        }
+    }
+</script>

@@ -1,0 +1,96 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+.rmk {
+    height: calc(100vh);
+    width: calc(100vw);
+    display: grid;
+    grid-template-rows: 40px 60px 190px 35px auto 40px;
+    background-color: #fefaef;
+}
+.rmk .window {
+    border: solid 1px #86837c;
+    background-color: #ffffff;
+    margin: 1px 5px 1px 5px;
+    padding: 5px;
+}
+.rmk .window span{
+    font-weight: 900;
+}
+.rmk .text-info{
+    font-size: 15px;
+    font-weight: bold;
+}
+.rmk button{
+    margin: 5px;
+}
+/*
+.rmk button {
+    border: solid 1px #86837c;
+    background: #ebe5d9;
+    margin: 10px;
+}
+.rmk button[active] {
+    background: #e2f0e1;
+}
+    */

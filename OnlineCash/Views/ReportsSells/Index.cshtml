@@ -1,0 +1,43 @@
+﻿@model List<OnlineCash.DataBaseModels.Shift>
+<table class="table table-sm table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Магазин</th>
+            <th>Продажи</th>
+            <th>Возвраты</th>
+            <th>Внесения</th>
+            <th>Изъятия</th>
+            <th>Остаток</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var shift in Model)
+            {
+                <tr data-id="@shift.Id" onclick="openShift(@shift.Id)">
+                    <td>@shift.Start.ToString("dd.MM.yy")</td>
+                    <td>@shift.Shop?.Name</td>
+                    <td>@shift.SumSell</td>
+                    <td>@shift.SummReturn</td>
+                    <td>@shift.SumIncome</td>
+                    <td>@shift.SumOutcome</td>
+                    <td>@shift.SumAll</td>
+                </tr>
+            }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="2"></th>
+            <th>@Model.Sum(s => s.SumSell)</th>
+            <th>@Model.Sum(s => s.SummReturn)</th>
+            <th>@Model.Sum(s => s.SumIncome)</th>
+            <th>@Model.Sum(s => s.SumOutcome)</th>
+            <th>@Model.Sum(s => s.SumAll)</th>
+        </tr>
+    </tfoot>
+</table>
+<script>
+    function openShift(id) {
+        window.location.href = "/ReportsSells/Details/"+id;
+    }
+</script>
