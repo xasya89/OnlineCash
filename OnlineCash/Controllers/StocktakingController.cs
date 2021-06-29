@@ -24,7 +24,7 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Shops = await db.Shops.ToListAsync();
-            return View(await db.Stocktakings.Include(s => s.Shop).OrderBy(s => s.Create).OrderByDescending(s=>s.Create).ToListAsync());
+            return View("Index",await db.Stocktakings.Include(s => s.Shop).OrderBy(s => s.Create).OrderByDescending(s=>s.Create).ToListAsync());
         }
 
         public async Task<IActionResult> Create(int idShop)
@@ -39,8 +39,26 @@ namespace OnlineCash.Controllers
                 num = stocktakingold.Max(s => s.Num)+1;
             var stocktaking = new Stocktaking { Create = DateTime.Now, Num = (int)num, Shop = shop };
             db.Stocktakings.Add(stocktaking);
-            await db.SaveChangesAsync();
             stocktaking.StocktakingGoods = new List<StocktakingGood>();
+            /*
+            var goodbalances= await db.GoodBalances.Include(gb=>gb.Good).ThenInclude(gb=>gb.GoodPrices.Where(p=>p.ShopId==shop.Id)).Where(gb => gb.ShopId == shop.Id & gb.Count!=0).ToListAsync();
+            foreach (var goodbalance in goodbalances)
+            {
+                StocktakingGood stocktakingGood = new StocktakingGood
+                {
+                    Good = goodbalance.Good,
+                    Count = 0,
+                    CountDB = goodbalance.Count,
+                    CountFact = 0,
+                    Price = goodbalance.Good.GoodPrices.FirstOrDefault().Price,
+                    Stocktaking = stocktaking
+                };
+                db.StocktakingGoods.Add(stocktakingGood);
+                stocktaking.StocktakingGoods.Add(stocktakingGood);
+            };
+            */
+            await db.SaveChangesAsync();
+
             return View("Edit", stocktaking);
         }
 
@@ -54,8 +72,9 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> Save([FromBody] Models.StockTakingSaveModel model)
         {
             Stocktaking stocktaking = await db.Stocktakings.Include(s => s.StocktakingGoods).Where(s => s.Id == model.id).FirstOrDefaultAsync();
+            bool isSuccessOld = stocktaking.isSuccess;
             stocktaking.isSuccess = model.isSuccess;
-            //add goods in inventiry
+            //Добавим новые товары
             foreach(var sg in model.Goods.Where(g=>g.id==-1).ToList())
             {
                 var good = await db.Goods.Include(g=>g.GoodPrices).Where(g => g.Id == sg.idGood).FirstOrDefaultAsync();
@@ -68,34 +87,66 @@ namespace OnlineCash.Controllers
                     CountFact = sg.CountFact,
                     Price = good.GoodPrices.Where(p => p.ShopId == stocktaking.ShopId).FirstOrDefault().Price
                 };
-                stocktaking.StocktakingGoods.Add(stocktakingGood);
+                db.StocktakingGoods.Add(stocktakingGood);
+                //stocktaking.StocktakingGoods.Add(stocktakingGood);
             }
+            //Изменим количество
             foreach(var sg in model.Goods.Where(g=>g.id!=-1).ToList())
             {
                 StocktakingGood stocktakingGood = await db.StocktakingGoods.Where(g => g.Id == sg.id).FirstOrDefaultAsync();
                 stocktakingGood.CountFact = sg.CountFact;
             }
+            await db.SaveChangesAsync();
             //Set count good in goodbalance
-            var goodbalances = await db.GoodBalances.Include(b=>b.Good).Include(b=>b.Shop).ToListAsync();
-            foreach(var good in model.Goods)
+            if (model.isSuccess & !isSuccessOld)
             {
-                var goodbalance = goodbalances.Where(b => b.GoodId == good.idGood & b.ShopId == stocktaking.ShopId).FirstOrDefault();
-                if (goodbalance == null)
+                var goodbalances = await db.GoodBalances.Include(b => b.Good).ThenInclude(b=>b.GoodPrices.Where(p=>p.ShopId==stocktaking.ShopId)).Include(b => b.Shop).ToListAsync();
+
+                foreach (var good in model.Goods)
                 {
-                    var gb = new GoodBalance
-                    {
-                        ShopId = stocktaking.ShopId,
-                        GoodId = good.idGood,
-                        Count = good.CountFact
-                    };
-                    db.GoodBalances.Add(gb);
+                    var goodbalance = goodbalances.Where(b => b.GoodId == good.idGood & b.ShopId == stocktaking.ShopId).FirstOrDefault();
+                    if (goodbalance != null)
+                        goodbalance.Count = good.CountFact;
                 }
-                else
-                    goodbalance.Count = good.CountFact;
+
+                var stocktakingGoods = await db.StocktakingGoods.Include(s => s.Good).Where(s => s.StocktakingId == stocktaking.Id).ToListAsync();
+                foreach (var goodbalance in goodbalances)
+                    if (stocktakingGoods.Count(s => s.GoodId == goodbalance.GoodId) == 0 & goodbalance.Count!=0)
+                    {
+                        db.StocktakingGoods.Add(new StocktakingGood
+                        {
+                            Stocktaking = stocktaking,
+                            Good = goodbalance.Good,
+                            Count = 0,
+                            CountDB = goodbalance.Count,
+                            CountFact = 0,
+                            Price = goodbalance.Good.GoodPrices.FirstOrDefault().Price
+                        });
+                        goodbalance.Count = 0;
+                    };
+                //Теперь учтем продажи после даты выполнения инверторизации
+                var sells = await db.Shifts.Include(s => s.CheckSells).ThenInclude(c => c.CheckGoods).ThenInclude(g => g.Good).Where(s => s.ShopId == stocktaking.ShopId & s.Start >= stocktaking.Create).ToListAsync();
+                foreach(var sell in sells)
+                    foreach(var check in sell.CheckSells)
+                        foreach(var good in check.CheckGoods)
+                        {
+                            var goodbalance = goodbalances.Where(gb => gb.GoodId == good.GoodId).FirstOrDefault();
+                            if (goodbalance != null)
+                                goodbalance.Count -= good.Count;
+                        }    
             }
 
             await db.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var stocktaking = await db.Stocktakings.Where(s => s.Id == id).FirstOrDefaultAsync();
+            db.Stocktakings.Remove(stocktaking);
+            await db.SaveChangesAsync();
+            return await Index();
         }
     }
 }

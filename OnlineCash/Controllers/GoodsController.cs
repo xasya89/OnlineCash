@@ -113,6 +113,13 @@ namespace OnlineCash.Controllers
                         var shop = await db.Shops.FirstOrDefaultAsync(s => s.Id == p.idShop);
                         var price = new GoodPrice { Good = good, Shop = shop, Price = p.Price };
                         await db.GoodPrices.AddAsync(price);
+                        var goodBalance = new GoodBalance
+                        {
+                            Shop = shop,
+                            Good = good,
+                            Count = 0
+                        };
+                        db.GoodBalances.Add(goodBalance);
                     }
                     db.SaveChanges();
                     return RedirectToAction("Index");
