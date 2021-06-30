@@ -23,18 +23,31 @@
             <th>Номер</th>
             <th>Магазин</th>
             <th>Подтвр</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var stocktaking in Model)
         {
-            string className = stocktaking.isSuccess ? "bg-success" : "";
-            string classNameLink = stocktaking.isSuccess ? "link-light" : "link-dark";
+            string className = "";
+            className = stocktaking.Status == DocumentStatus.Confirm ? "bg-success" : className;
+            className = stocktaking.Status == DocumentStatus.Remove ? "bg-secondary" : className;
+            string classNameLink = stocktaking.Status==DocumentStatus.Confirm || stocktaking.Status==DocumentStatus.Remove? "link-light" : "link-dark";
             <tr class="@className">
                 <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking.Create.ToString("dd.MM")</a></td>
                 <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking.Num</a></td>
                 <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking?.Shop.Name</a></td>
                 <td><input type="checkbox" checked="@stocktaking.isSuccess" class="form-check-input" readonly /></td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Действия
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a asp-controller="stocktaking" asp-action="Cancel" asp-route-id="@stocktaking.Id" class="dropdown-item active" >Отменить</a></li>
+                        </ul>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>

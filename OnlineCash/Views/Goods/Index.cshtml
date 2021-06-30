@@ -7,6 +7,15 @@
             <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary">Создать</a>
             <a asp-controller="Goods" asp-action="PrintPriceStepShop" class="btn btn-sm btn-primary">Печать выбранные</a>
             <a asp-controller="Goods" asp-action="PrintAll" target="_blank" class="btn btn-sm btn-primary">Печать все ценники</a>
+            <span>
+                <select id="shopList" class="form-select form-select-sm" style="float:left">
+                    @foreach(var shop in (List<Shop>) ViewBag.Shops)
+            {
+                        <option value="@shop.Id">@shop.Name</option>
+            }
+                </select>
+                <span onclick="printAllPrice()" class="btn btn-sm btn-primary"><span class="fa fa-print"></span> Весь прайс</span>
+            </span>
             <form class="d-flex" asp-controller="Goods" asp-action="Search" method="get">
                 <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Найти" aria-label="Search">
                 <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
@@ -36,11 +45,17 @@
                 </tbody>
             </table>
 <script>
+    const shopList = document.getElementById("shopList");
     var code = "";
     window.onload = function () {
         const findInp = document.querySelector("input[name=find]");
         findInp.oninput = function () {
             fetch("/goods/SetSearch?search=" + findInp.value);
         }
+    }
+
+    function printAllPrice() {
+        let idShop = shopList.value;
+        window.open(`/goods/PrintPriceAll?idShop=${idShop}`, "_blank");
     }
 </script>

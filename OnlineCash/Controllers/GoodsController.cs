@@ -30,6 +30,7 @@ namespace OnlineCash.Controllers
         {
             string find= HttpContext.Session.GetString("SearchGoods");
             ViewBag.Find = find;
+            ViewBag.Shops = await db.Shops.ToListAsync();
             return View(await db.Goods.Where(g=>EF.Functions.Like(g.Name, $"%{find}%")).OrderBy(g => g.Name).ToListAsync());
         }
 
@@ -59,6 +60,23 @@ namespace OnlineCash.Controllers
                     Price = g.Price
                 });
             return View("PrintGood", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PrintPriceAll(int idShop)
+        {
+            var goods = await db.Goods.Include(g => g.GoodPrices.Where(p => p.ShopId==idShop)).OrderBy(g=>g.Name).ToListAsync();
+            List<Models.GoodWithGoodBalanceModel> goodWithBalances = new List<Models.GoodWithGoodBalanceModel>();
+            var goodBalances = await db.GoodBalances.Where(gb => gb.ShopId==idShop).ToListAsync();
+            foreach (var good in goods)
+            {
+                goodWithBalances.Add(new Models.GoodWithGoodBalanceModel
+                {
+                    Good = good,
+                    CountOnBalance = goodBalances.Where(gb => gb.GoodId == good.Id).FirstOrDefault()?.Count
+                });
+            }
+            return View("PrintPriceStepPrint_TypePriceNoCount", goodWithBalances);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -192,16 +210,22 @@ namespace OnlineCash.Controllers
             return View(await db.Goods.Include(g => g.GoodPrices).ToListAsync());
         }
 
-        static Dictionary<Guid, List<Good>> GoodSelectedListForPrint = new Dictionary<Guid, List<Good>>();
+        static Dictionary<Guid, List<Models.GoodWithGoodBalanceModel>> GoodSelectedListForPrint = new Dictionary<Guid, List<Models.GoodWithGoodBalanceModel>>();
         [HttpPost]
         public async Task<IActionResult> PrintPriceStepSuccess([FromBody] Models.GoodPricePrintModel model)
         {
             var goods = await db.Goods.Include(g => g.GoodPrices.Where(p => model.Shops.Contains(p.ShopId))).Where(g=>model.Goods.Contains(g.Id)).ToListAsync();
-            var query= db.Goods.Include(g => g.GoodPrices.Where(p => model.Shops.Contains(p.ShopId))).Where(g => model.Goods.Contains(g.Id));
-            var str= query.ToQueryString();
-            System.Diagnostics.Debug.WriteLine(str);
+            List<Models.GoodWithGoodBalanceModel> goodWithBalances = new List<Models.GoodWithGoodBalanceModel>();
+            var goodBalances = await db.GoodBalances.Where(gb => model.Shops.Contains(gb.ShopId)).ToListAsync();
+            foreach (var good in goods)
+            {
+                goodWithBalances.Add(new Models.GoodWithGoodBalanceModel { 
+                    Good=good,
+                    CountOnBalance= goodBalances.Where(gb => gb.GoodId == good.Id).FirstOrDefault()?.Count
+                });
+            }
             Guid uuid = Guid.NewGuid();
-            GoodSelectedListForPrint.Add(uuid, goods);
+            GoodSelectedListForPrint.Add(uuid, goodWithBalances);
             return Ok(uuid);
         }
 

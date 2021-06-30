@@ -22,7 +22,14 @@
             <span asp-validation-for="BarCode" />
         </div>
         <div class="form-group">
+            <!--
             <select asp-for="Unit" asp-items="Html.GetEnumSelectList<DataBase.Units>()" class="form-select form-select-sm"></select>
+                -->
+            <select asp-for="Unit" class="form-select form-select-sm">
+                <option value="796">шт</option>
+                <option value="166">кг</option>
+                <option value="112">л</option>
+            </select>
         </div>
         <div class="form-group">
             <label asp-for="Price">Цена</label>
@@ -51,6 +58,10 @@
     </div>
 </form>
 <script>
+    const inpUnit = document.getElementById("select[name=Unit]");
+    window.onload = function () {
+        inpUnit.value = 796;
+    }
     const barCode = document.getElementById("BarCode");
     const btnGenerateBarCode = document.getElementById("btnGenerateBarCode");
     btnGenerateBarCode.addEventListener("click", () => {

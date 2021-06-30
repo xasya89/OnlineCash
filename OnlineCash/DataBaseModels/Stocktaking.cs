@@ -16,6 +16,7 @@ namespace OnlineCash.DataBaseModels
         public int ShopId { get; set; }
         public Shop Shop { get; set; }
         public bool isSuccess { get; set; }
+        public DocumentStatus Status { get; set; } = DocumentStatus.New;
         public List<StocktakingGood> StocktakingGoods { get; set; }
     }
 }

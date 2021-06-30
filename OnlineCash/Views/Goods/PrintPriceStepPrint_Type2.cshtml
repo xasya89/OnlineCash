@@ -1,4 +1,4 @@
-﻿@model List<OnlineCash.DataBaseModels.Good>
+﻿@model List<OnlineCash.Models.GoodWithGoodBalanceModel>
 @{
     Layout = null;
 }
@@ -31,12 +31,12 @@
 </head>
 <body>
     <div style="display:grid; grid-template-columns: repeat(3, 60mm);">
-        @foreach (var good in Model)
-            foreach (var price in good.GoodPrices)
+        @foreach (var goodWithBalance in Model)
+            foreach (var price in goodWithBalance.Good.GoodPrices)
             {
         <div style="border: 1px dotted lightgray; padding: 2mm;">
             <h5 style="width:56mm; min-height: 15mm; overflow-x: hidden; text-overflow: ellipsis">
-                @good.Name
+                @goodWithBalance.Good.Name
             </h5>
             <div style="clear: both">&nbsp;</div>
             <div style="display: grid; grid-template-columns: repeat(2, 1fr)">

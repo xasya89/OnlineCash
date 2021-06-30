@@ -74,6 +74,7 @@ namespace OnlineCash.Controllers
             Stocktaking stocktaking = await db.Stocktakings.Include(s => s.StocktakingGoods).Where(s => s.Id == model.id).FirstOrDefaultAsync();
             bool isSuccessOld = stocktaking.isSuccess;
             stocktaking.isSuccess = model.isSuccess;
+            stocktaking.Status = model.isSuccess ? DocumentStatus.Confirm : stocktaking.Status;
             //Добавим новые товары
             foreach(var sg in model.Goods.Where(g=>g.id==-1).ToList())
             {
@@ -144,7 +145,8 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> Cancel(int id)
         {
             var stocktaking = await db.Stocktakings.Where(s => s.Id == id).FirstOrDefaultAsync();
-            db.Stocktakings.Remove(stocktaking);
+            if (stocktaking.Status != DocumentStatus.Confirm)
+                stocktaking.Status = DocumentStatus.Remove;
             await db.SaveChangesAsync();
             return await Index();
         }

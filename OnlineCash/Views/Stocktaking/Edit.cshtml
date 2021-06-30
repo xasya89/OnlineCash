@@ -13,10 +13,6 @@
             <span id="btnSave" class="btn btn-sm btn-primary m-1">Сохранить</span>
         };
         <span id="btnSuccess" class="btn btn-sm btn-success m-1">Сохранить и принять</span>
-        @if (Model.isSuccess == false)
-        {
-            <span id="btnCancel" class="btn btn-sm btn-danger m-1">Удалить</span>
-        };
         <div></div>
         <div>
             <input id="findGoods" list="findGoodList" placeholder="Поиск товара" class="form-control form-control-sm " style="display: inline-block; max-width:calc(100% - 105px)" />
@@ -78,7 +74,6 @@
     const tableSummary = document.getElementById("tableSummary");
     const btnSave = document.querySelector("#btnSave");
     const btnSuccess = document.querySelector("#btnSuccess");
-    const btnCancel = document.querySelector("#btnCancel");
 
     function goodAdd(good) {
         let flagaded = false;
@@ -156,7 +151,6 @@
                 price: price
             });
         })
-        console.log(goods);
         fetch("/Stocktaking/Save", {
             method: "POST",
             headers: {
@@ -173,9 +167,6 @@
                 window.location.href = "/stocktaking";
             });
     }
-    btnCancel.addEventListener("click", () => {
-        window.location.href = "/Stocktaking/Cancel?id=" + idAct;
-    })
 
     var code = "";
     window.onkeydown = (e) => {
