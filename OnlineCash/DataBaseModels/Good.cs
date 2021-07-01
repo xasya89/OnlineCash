@@ -10,6 +10,9 @@ namespace OnlineCash.DataBaseModels
     public class Good
     {
         public int Id { get; set; }
+        public int GoodGroupId { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
+        public GoodGroup GoodGroup { get; set; }
         public Guid Uuid { get; set; }
         public string Name { get; set; }
         public string Article { get; set; }

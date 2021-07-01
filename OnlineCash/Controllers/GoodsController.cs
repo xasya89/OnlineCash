@@ -38,6 +38,7 @@ namespace OnlineCash.Controllers
         {
             find = HttpContext.Session.GetString("SearchGoods");
             ViewBag.Find = find;
+            ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
             return View("Index", await db.Goods.Where(g => EF.Functions.Like(g.Name, $"%{find}%")).OrderBy(g => g.Name).ToListAsync());
         }
 
@@ -81,10 +82,11 @@ namespace OnlineCash.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var good = await db.Goods.FirstOrDefaultAsync(g => g.Id == id);
+            var good = await db.Goods.Where(g=>g.Id==id).FirstOrDefaultAsync(g => g.Id == id);
             var model = new GoodViewModel();
             model.Id = good.Id;
             model.Name = good.Name;
+            model.GoodGroupId = good.GoodGroupId;
             model.Article = good.Article;
             model.BarCode = good.BarCode;
             model.Unit = good.Unit;
@@ -106,14 +108,18 @@ namespace OnlineCash.Controllers
                         ShopName = shop.Name,
                         Price = 0
                     });
+            ViewBag.Goods = await db.Goods.ToListAsync();
+            ViewBag.Groups = await db.GoodGroups.OrderBy(gr=>gr.Name).ToListAsync();
             return View("Good", model);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var g = new GoodViewModel();
             foreach (var s in db.Shops.ToList())
                 g.PriceShops.Add(new ShopPriceViewModel { idShop = s.Id, ShopName = s.Name });
+            ViewBag.Goods = await db.Goods.ToListAsync();
+            ViewBag.Groups = await db.GoodGroups.OrderBy(gr => gr.Name).ToListAsync();
             return View("Good", g);
         }
 
@@ -122,9 +128,10 @@ namespace OnlineCash.Controllers
         {
             if (ModelState.IsValid)
             {
+                var goodGroup = await db.GoodGroups.Where(gr => gr.Id == g.GoodGroupId).FirstOrDefaultAsync();
                 if (g.Id == 0)
                 {
-                    var good = new Good { Name = g.Name, Article = g.Article, BarCode = g.BarCode, Unit = g.Unit, Price = g.Price };
+                    var good = new Good { Uuid=Guid.NewGuid(), Name = g.Name, Article = g.Article, BarCode = g.BarCode, Unit = g.Unit, Price = g.Price, GoodGroup=goodGroup };
                     db.Goods.Add(good);
                     foreach (var p in g.PriceShops)
                     {
@@ -152,6 +159,7 @@ namespace OnlineCash.Controllers
                         good.BarCode = g.BarCode;
                         good.Unit = g.Unit;
                         good.Price = g.Price;
+                        good.GoodGroup = goodGroup;
                         foreach (var p in g.PriceShops)
                         {
                             if (p.idPrice == 0)

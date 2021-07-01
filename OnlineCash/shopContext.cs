@@ -23,6 +23,7 @@ namespace OnlineCash
         public DbSet<ArrivalGood> ArrivalGoods { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<GoodGroup> GoodGroups { get; set; }
 
         public shopContext()
         {
@@ -90,6 +91,10 @@ namespace OnlineCash
                 .HasOne(s => s.Good)
                 .WithMany(g => g.StocktakingGoods)
                 .HasForeignKey(s => s.GoodId);
+            modelBuilder.Entity<Good>()
+                .HasOne(g => g.GoodGroup)
+                .WithMany(gr => gr.Goods)
+                .HasForeignKey(g => g.GoodGroupId);
 
             //Поступления
             modelBuilder.Entity<ArrivalGood>()

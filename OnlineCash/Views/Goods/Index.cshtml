@@ -4,18 +4,28 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary">Создать</a>
-            <a asp-controller="Goods" asp-action="PrintPriceStepShop" class="btn btn-sm btn-primary">Печать выбранные</a>
-            <a asp-controller="Goods" asp-action="PrintAll" target="_blank" class="btn btn-sm btn-primary">Печать все ценники</a>
-            <span>
-                <select id="shopList" class="form-select form-select-sm" style="float:left">
-                    @foreach(var shop in (List<Shop>) ViewBag.Shops)
-            {
-                        <option value="@shop.Id">@shop.Name</option>
-            }
-                </select>
-                <span onclick="printAllPrice()" class="btn btn-sm btn-primary"><span class="fa fa-print"></span> Весь прайс</span>
-            </span>
+            <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>Создать</a>
+            <span onclick="goodGroupModal.show()" class="btn btn-primary btn-sm"><i class="fas fa-layer-group"></i> Группы</span>
+            <div class="btn-group">
+                <span class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="fa fa-print"></span> Печать
+                </span>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintPriceStepShop">Выбор позиций</a></li>
+                    <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintAll" target="_blank">Все позиции</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                            <select id="shopList" class="form-select form-select-sm" style="float:left">
+                                @foreach (var shop in (List<Shop>)ViewBag.Shops)
+                                {
+                                    <option value="@shop.Id">@shop.Name</option>
+                                }
+                            </select>
+                    </li>
+                    <li><a class="dropdown-item" onclick="printAllPrice()" href="#">Весь прайс</a></li>
+                </ul>
+            </div>
+            
             <form class="d-flex" asp-controller="Goods" asp-action="Search" method="get">
                 <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Найти" aria-label="Search">
                 <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
@@ -44,14 +54,90 @@
                     }
                 </tbody>
             </table>
+
+<!--Диалог добавления группы-->
+            <div class="modal fade" id="modalGroups" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 style="display: block; clear: both;">Группы</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group input-group-sm mb-3">
+                                <input id="goodGroupName" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Новая группа">
+                                <span onclick="addGroup()" class="input-group-text" id="inputGroup-sizing-sm">Добавить</span>
+                            </div>
+                            <ul id="goodGroupList" class="list-group">
+                                <li class="list-group-item">An item</li>
+                                <li class="list-group-item">A second item</li>
+                                <li class="list-group-item">A third item</li>
+                                <li class="list-group-item">A fourth item</li>
+                                <li class="list-group-item">And a fifth one</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-sm btn-primary">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <script>
     const shopList = document.getElementById("shopList");
+    const goodGroupModal = new bootstrap.Modal(document.getElementById("modalGroups"));
+    const goodGroupName = document.getElementById("goodGroupName");
+    const goodGroupList = document.getElementById("goodGroupList");
     var code = "";
     window.onload = function () {
         const findInp = document.querySelector("input[name=find]");
         findInp.oninput = function () {
             fetch("/goods/SetSearch?search=" + findInp.value);
         }
+        loadGroups();
+    }
+
+    function addGroupIntoList(group) {
+        let li = document.createElement("li");
+        li.classList.add("list-group-item");
+        li.dataset.id = group.id;
+        console.log(group);
+        li.innerHTML = `<span class="fa fa-trash"></span> ${group.name}`;
+        li.querySelector("span").addEventListener("click", () => {
+            if (confirm(`Удалить ${group.name}?`))
+                fetch(`/api/goodgroups/${group.id}`, { method: "DELETE" })
+                    .then(resp => {
+                        if (resp.status == 200)
+                            li.remove();
+                        else
+                            alert("Ошибка удаления");
+                    })
+        });
+        goodGroupList.append(li);
+    }
+
+    function loadGroups() {
+        goodGroupList.querySelectorAll("li").forEach(li => li.remove());
+        fetch("/api/goodgroups")
+            .then(resp => resp.json())
+            .then(groups => groups.forEach(group => addGroupIntoList(group) ))
+    }
+
+    function addGroup() {
+        let body = new FormData();
+        body.append("Name", goodGroupName.value);
+        if (goodGroupName.value != "")
+            fetch("/api/goodgroups/", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: goodGroupName.value })
+            })
+                .then(resp => {
+                    if (resp.status == 200)
+                        resp.json().then(group => addGroupIntoList(group));
+                });
     }
 
     function printAllPrice() {

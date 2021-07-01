@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20210701063038_AddGoodGroup")]
+    partial class AddGoodGroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,7 +177,10 @@ namespace OnlineCash.Migrations
                     b.Property<string>("BarCode")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("GoodGroupId")
+                    b.Property<int?>("GoodGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -498,9 +503,7 @@ namespace OnlineCash.Migrations
                 {
                     b.HasOne("OnlineCash.DataBaseModels.GoodGroup", "GoodGroup")
                         .WithMany("Goods")
-                        .HasForeignKey("GoodGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GoodGroupId");
 
                     b.Navigation("GoodGroup");
                 });

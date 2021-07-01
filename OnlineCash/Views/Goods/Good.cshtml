@@ -7,8 +7,19 @@
     <div>
         <div class="form-group">
             <label asp-for="Name">Наименование</label>
-            <input type="text" asp-for="Name" class="form-control form-control-sm" />
+            <input type="text" asp-for="Name" list="GoodList" class="form-control form-control-sm" />
+            <datalist id="GoodList" >
+                @foreach(var good in (List<Good>) ViewBag.Goods)
+            {
+                <option>@good.Name</option>
+            }
+            </datalist>
             <span asp-validation-for="Name" />
+        </div>
+        <div class="form-group">
+            <label asp-for="GoodGroupId">Группа</label>
+            <select asp-for="GoodGroupId" asp-items="@(new SelectList(ViewBag.Groups,"Id","Name"))" class="form-select form-select-sm "></select>
+            <span asp-validation-for="GoodGroupId" />
         </div>
         <div class="form-group">
             <label asp-for="Article">Артикул</label>
@@ -23,8 +34,8 @@
         </div>
         <div class="form-group">
             <!--
-            <select asp-for="Unit" asp-items="Html.GetEnumSelectList<DataBase.Units>()" class="form-select form-select-sm"></select>
-                -->
+        <select asp-for="Unit" asp-items="Html.GetEnumSelectList<DataBase.Units>()" class="form-select form-select-sm"></select>
+            -->
             <select asp-for="Unit" class="form-select form-select-sm">
                 <option value="796">шт</option>
                 <option value="166">кг</option>
