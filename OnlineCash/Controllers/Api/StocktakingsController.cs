@@ -26,7 +26,8 @@ namespace OnlineCash.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Set([FromBody] Models.StocktakingModel model)
+        public async Task<IActionResult> Set([FromBody] Models.StocktakingModel model) => Ok();
+        /*
         {
             var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
             var stocktaking = new Stocktaking
@@ -52,5 +53,6 @@ namespace OnlineCash.Controllers.Api
             await db.SaveChangesAsync();
             return Ok("success");
         }
+        */
     }
 }

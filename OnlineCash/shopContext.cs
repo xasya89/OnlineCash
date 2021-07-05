@@ -17,6 +17,7 @@ namespace OnlineCash
         public DbSet<CheckGood> CheckGoods { get; set; }
         public DbSet<CheckSell> CheckSells { get; set; }
         public DbSet<Stocktaking> Stocktakings { get; set; }
+        public DbSet<StockTakingGroup> StockTakingGroups { get; set; }
         public DbSet<StocktakingGood> StocktakingGoods { get; set; }
         public DbSet<GoodBalance> GoodBalances { get; set; }
         public DbSet<Arrival> Arrivals { get; set; }
@@ -82,11 +83,15 @@ namespace OnlineCash
                 .HasOne(s => s.Shift)
                 .WithMany(s => s.CheckSells)
                 .HasForeignKey(s => s.ShiftId);
-
-            modelBuilder.Entity<StocktakingGood>()
+            //Инверторизация
+            modelBuilder.Entity<StockTakingGroup>()
                 .HasOne(s => s.Stocktaking)
-                .WithMany(s => s.StocktakingGoods)
+                .WithMany(s => s.StockTakingGroups)
                 .HasForeignKey(s => s.StocktakingId);
+            modelBuilder.Entity<StocktakingGood>()
+                .HasOne(s => s.StockTakingGroup)
+                .WithMany(s => s.StocktakingGoods)
+                .HasForeignKey(s => s.StockTakingGroupId);
             modelBuilder.Entity<StocktakingGood>()
                 .HasOne(s => s.Good)
                 .WithMany(g => g.StocktakingGoods)

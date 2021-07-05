@@ -14,7 +14,7 @@ namespace OnlineCash.DataBaseModels
         public double CountDB { get; set; } = 0;
         public double CountFact { get; set; } = 0;
         public decimal Price { get; set; } = 0;
-        public int StocktakingId { get; set; }
-        public Stocktaking Stocktaking { get; set; }
+        public int StockTakingGroupId { get; set; }
+        public StockTakingGroup StockTakingGroup { get; set; }
     }
 }

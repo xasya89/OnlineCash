@@ -2,103 +2,156 @@
 @using System.Linq 
 @model OnlineCash.DataBaseModels.Stocktaking
 
-<div style="height: calc(100vh - 150px); display: grid; grid-template-rows: 40px 40px auto ">
+<div >
     <div>
         <h5>№ @Model.Num от @Model.Create.ToString("dd.MM") @Model.Shop?.Name</h5>
     </div>
-
-    <div style=display: grid; grid-template-columns: 100px 180px 10px auto">
-        @if (Model.isSuccess == false)
-        {
+    <div class="row gy-1 gx-1 align-items-center">
+        <div class="col-auto">
             <span id="btnSave" class="btn btn-sm btn-primary m-1">Сохранить</span>
-        };
-        <span id="btnSuccess" class="btn btn-sm btn-success m-1">Сохранить и принять</span>
-        <div></div>
-        <div>
-            <input id="findGoods" list="findGoodList" placeholder="Поиск товара" class="form-control form-control-sm " style="display: inline-block; max-width:calc(100% - 105px)" />
-            <datalist id="findGoodList">
-                @foreach (Good g in ViewBag.Goods)
-                {
-                    <option data-id-good="@g.Id" data-unit="@g.Unit" data-price="@g.GoodPrices.Where(g=>g.ShopId==Model.ShopId).FirstOrDefault()?.Price.ToString().Replace(",",".")" value="@g.Name"></option>
-                }
-            </datalist>
-            <span id="findBtnAdd" class="btn btn-sm btn-primary" style="width: 100px">Добавить</span>
+        </div>
+        <div class="col-auto">
+            <span id="btnSuccess" class="btn btn-sm btn-success m-1">Сохранить и принять</span>
+        </div>
+        <div class="col-auto">
+            <span onclick="groupAdd({id:-1, name:'Новая'})" class="btn btn-sm btn-secondary m-1"><i class="fa fa-plus"></i> Группу</span>
+        </div>
+        <div class="col-auto">
+            <span class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
+        </div>
+        <div class="col-auto">
+            <label class="visually-hidden" for="autoSizingInputGroup">Username</label>
+            <div class="input-group input-group-sm ">
+                <input id="findGoods" type="text" list="findGoodList" class="form-control" id="autoSizingInputGroup" placeholder="Поиск товара" />
+                <datalist id="findGoodList">
+                    @foreach (Good g in ViewBag.Goods)
+                    {
+                        <option data-id-good="@g.Id" data-unit="@g.Unit" data-price="@g.GoodPrices.Where(g=>g.ShopId==Model.ShopId).FirstOrDefault()?.Price.ToString().Replace(",",".")" value="@g.Name"></option>
+                    }
+                </datalist>
+                <div id="findBtnAdd" class="input-group-text"><i class="fa fa-plus"></i></div>
+            </div>
         </div>
     </div>
-    <div class="mt-5" style="overflow-y: scroll;">
-        <table class="table table-sm table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Товар</th>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Ед</th>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Цена</th>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Система</th>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Факт</th>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Разница</th>
-                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Остаток руб</th>
-                </tr>
-            </thead>
-            <tbody id="tableGoods">
-                @foreach (var stgood in Model.StocktakingGoods)
-                {
-                    
-                    <tr data-id="@stgood.Id" data-price="@stgood.Good.Price" data-id-good="@stgood.GoodId">
-                        <td>@stgood.Good.Name</td>
-                        <td>@stgood.Good.Unit</td>
-                        <td>@stgood.Price.ToString().Replace(",",".")</td>
-                        <td countdb>@stgood.CountDB.ToString().Replace(",",".")</td>
-                        <td><input oninput="changeCountFact(this)" class="form-control form-control-sm" value="@stgood.CountFact.ToString().Replace(",",".")"></td>
-                        <td countDiff>@(Math.Round((stgood.CountFact - stgood.CountDB),3).ToString().Replace(",","."))</td>
-                        <td sumDiff>@((stgood.Price* (decimal)(stgood.CountFact - stgood.CountDB)).ToString().Replace(",","."))</td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot id="tableSummary">
-                <tr>
-                    <th colspan="5">Итого</th>
-                    <th countSummary>@Math.Round(Model.StocktakingGoods.Sum(s=>s.CountFact - s.CountDB),2)</th>
-                    <th sumSummary>@Math.Round(Model.StocktakingGoods.Sum(s=>s.Price * ((decimal)s.CountFact - (decimal)s.CountDB)),2)</th>
-                </tr>
-            </tfoot>
-        </table>
+    <div class="row">
+        <div class="col">
+            <h5>Итоги инверторизации: расхождение кол-во 
+            <strong id="summaryCount">@Model.StockTakingGroups.Sum(gr=>gr.StocktakingGoods.Sum(g=>g.CountFact - g.CountDB))</strong> 
+            на сумму 
+            <strong id="summarySum">@Model.StockTakingGroups.Sum(gr => gr.StocktakingGoods.Sum(g => (decimal)(g.CountFact - g.CountDB) * g.Price))</strong>
+            </h5>
+        </div>
     </div>
+    <div class="mt-3">
+        <div class="accordion">
+            @{
+                int groupnum = 0;
+            }
+            @foreach (var group in Model.StockTakingGroups)
+            {
+            <div class="accordion-item" data-id="@group.Id">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Выбран
+                    </label>
+                </div>
+                <h2 class="accordion-header" id="group-@(groupnum)">
+                    <button header class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#group-body-@groupnum" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                        @group.Name
+                    </button>
+                </h2>
+                <div id="group-body-@groupnum" class="accordion-collapse collapse show" aria-labelledby="group-@(groupnum++)">
+                    <div class="accordion-body">
+                        <input body oninput="changeGroupName(this)" value="@group.Name" class="form-control form-control-sm mb-1" />
+                        <table class="table table-sm table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Товар</th>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Ед</th>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Цена</th>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Система</th>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Факт</th>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Разница</th>
+                                    <th style="position: sticky; top: 0; z-index: 2; background: white;">Остаток руб</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableGoods">
+                                @foreach (var stgood in group?.StocktakingGoods)
+                                {
+
+                                    <tr data-id="@stgood.Id" data-price="@stgood.Good.Price" data-id-good="@stgood.GoodId">
+                                        <td>@stgood.Good.Name</td>
+                                        <td>@stgood.Good.Unit</td>
+                                        <td>@stgood.Price.ToString().Replace(",", ".")</td>
+                                        <td countdb>@stgood.CountDB.ToString().Replace(",", ".")</td>
+                                        <td><input oninput="changeCountFact(this)" class="form-control form-control-sm" value="@stgood.CountFact.ToString().Replace(",",".")"></td>
+                                        <td countDiff>@(Math.Round((stgood.CountFact - stgood.CountDB),3).ToString().Replace(",","."))</td>
+                                        <td sumDiff>@((stgood.Price* (decimal)(stgood.CountFact - stgood.CountDB)).ToString().Replace(",","."))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot id="tableSummary">
+                                <tr>
+                                    <th colspan="5">Итого</th>
+                                    <th countSummary>@group?.StocktakingGoods.Sum(g=>g.CountFact - g.CountDB)</th>
+                                    <th sumSummary>@group?.StocktakingGoods.Sum(g=>(decimal)(g.CountFact - g.CountDB) * g.Price)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        </div>
 </div>
 
 <script>
     var idAct =@Model.Id ;
     var idShop = @Model.Shop.Id ;
+    const span_summaryCount = document.getElementById("summaryCount");
+    const span_summarySum = document.getElementById("summarySum");
     const findGoods = document.getElementById("findGoods");
     const findGoodList = document.getElementById("findGoodList");
     const findBtnAdd = document.getElementById("findBtnAdd");
+    const accordion = document.querySelector(".accordion");
+
     const tableGoods = document.getElementById("tableGoods");
     const tableSummary = document.getElementById("tableSummary");
     const btnSave = document.querySelector("#btnSave");
     const btnSuccess = document.querySelector("#btnSuccess");
 
     function goodAdd(good) {
-        let flagaded = false;
-        tableGoods.querySelectorAll("tr").forEach(tr => {
-            if (tr.dataset.idGood == good.id) {
-                tr.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                });
-                let inpCountFact = tr.querySelector("input");
-                if (good.unit == "PCE" || good.unit == "796") {
-                    inpCountFact.value = parseFloat(inpCountFact.value) + 1;
-                    changeCountFact(inpCountFact);
-                }
-                flagaded = true;
-            }
-        })
-        if (!flagaded) {
-            let tr = document.createElement("tr");
-            tr.dataset.idGood = good.id;
-            tr.dataset.id = -1;
-            tr.dataset.price = good.price;
-            let countFact = good.unit == "PCE" || good.unit=="796" ? 1 : 0;
-            tr.innerHTML = `
+        //Найдем выбранную таблицу
+        accordion.querySelectorAll(".accordion-item").forEach(accordion => {
+            if (accordion.querySelector("input[type=radio]").checked) {
+                let tableGoods = accordion.querySelector("tbody");
+                let tableSummary = accordion.querySelector("tfoot");
+
+                let flagaded = false;
+                tableGoods.querySelectorAll("tr").forEach(tr => {
+                    if (tr.dataset.idGood == good.id) {
+                        tr.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                            inline: 'center'
+                        });
+                        let inpCountFact = tr.querySelector("input");
+                        if (good.unit == "PCE" || good.unit == "796") {
+                            inpCountFact.value = parseFloat(inpCountFact.value) + 1;
+                            changeCountFact(inpCountFact);
+                        }
+                        flagaded = true;
+                    }
+                })
+                if (!flagaded) {
+                    let tr = document.createElement("tr");
+                    tr.dataset.idGood = good.id;
+                    tr.dataset.id = -1;
+                    tr.dataset.price = good.price;
+                    let countFact = good.unit == "PCE" || good.unit == "796" ? 1 : 0;
+                    tr.innerHTML = `
                     <td>${good.name}</td>
                     <td>${good.unit}</td>
                     <td>${good.price}</td>
@@ -107,8 +160,10 @@
                     <td countDiff>${countFact}</td>
                     <td sumDiff>${(parseFloat(good.price) * countFact)}</td>
 `;
-            tableGoods.prepend(tr);
-        };
+                    tableGoods.prepend(tr);
+                };
+            }
+        })
     }
 
     findBtnAdd.addEventListener("click", () => {
@@ -135,21 +190,30 @@
     btnSuccess.addEventListener("click", e => Save(e.target))
     function Save(btn) {
         let isSuccess = btn.id == "btnSuccess";
-        let goods = [];
-        tableGoods.querySelectorAll("tr").forEach(tr => {
-            let id = tr.dataset.id;
-            let idGood = tr.dataset.idGood;
-            let price = tr.dataset.price;
-            let tdCountDb = parseFloat(tr.querySelector("td[countDb]").textContent);
-            let tdCount = parseFloat(tr.querySelector("input").value.replace(",","."));
-            goods.push({
-                id: id,
-                idGood: idGood,
-                count: 0,
-                countDb: tdCountDb,
-                countFact: tdCount,
-                price: price
-            });
+        let groups = [];
+        accordion.querySelectorAll(".accordion-item").forEach(accordionitem => {
+            let idGroup = accordionitem.dataset.id;
+            let groupName = accordionitem.querySelector("input[body]").value;
+            let tableGoods = accordion.querySelector("tbody");
+            let group = {
+                id: idGroup, name: groupName, goods: new Array()
+            };
+            groups.push(group);
+            tableGoods.querySelectorAll("tr").forEach(tr => {
+                let id = tr.dataset.id;
+                let idGood = tr.dataset.idGood;
+                let price = tr.dataset.price;
+                let tdCountDb = parseFloat(tr.querySelector("td[countDb]").textContent);
+                let tdCount = parseFloat(tr.querySelector("input").value.replace(",", "."));
+                group.goods.push({
+                    id: id,
+                    idGood: idGood,
+                    count: 0,
+                    countDb: tdCountDb,
+                    countFact: tdCount,
+                    price: price
+                });
+            })
         })
         fetch("/Stocktaking/Save", {
             method: "POST",
@@ -157,7 +221,7 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: idAct, isSuccess: isSuccess, goods: goods })
+            body: JSON.stringify({ id: idAct, isSuccess: isSuccess, groups: groups })
         })
             .then(resp => {
                 if (resp.status != 200) {
@@ -201,13 +265,80 @@
         calcSummary();
     }
     function calcSummary() {
-        let countSummary = 0;
-        let sumSummary = 0;
-        tableGoods.querySelectorAll("tr").forEach(tr => {
-            countSummary += parseFloat(tr.querySelector("td[countdiff]").textContent);
-            sumSummary += parseFloat(tr.querySelector("td[sumdiff]").textContent);
+        let summaryCount = 0;
+        let summarySum = 0;
+        accordion.querySelectorAll(".accordion-item").forEach(accordion => {
+            if (accordion.querySelector("input[type=radio]").checked) {
+                let tableGoods = accordion.querySelector("tbody");
+                let tableSummary = accordion.querySelector("tfoot");
+                let countSummary = 0;
+                let sumSummary = 0;
+                tableGoods.querySelectorAll("tr").forEach(tr => {
+                    countSummary += parseFloat(tr.querySelector("td[countdiff]").textContent);
+                    sumSummary += parseFloat(tr.querySelector("td[sumdiff]").textContent);
+                });
+                tableSummary.querySelector("th[countSummary]").textContent = countSummary.toFixed(3);
+                tableSummary.querySelector("th[sumSummary]").textContent = sumSummary.toFixed(2);
+            }
+            summaryCount += parseFloat(tableSummary.querySelector("th[countSummary]").textContent);
+            summarySum += parseFloat(tableSummary.querySelector("th[sumSummary]").textContent);
         });
-        tableSummary.querySelector("th[countSummary]").textContent = countSummary.toFixed(3);
-        tableSummary.querySelector("th[sumSummary]").textContent = sumSummary.toFixed(2);
+        span_summaryCount.textContent = summaryCount;
+        span_summarySum.textContent = summarySum;
+    }
+
+    function changeGroupName(inp) {
+        let groupheader = inp.parentNode.parentNode.parentNode.querySelector("button[header]");
+        groupheader.textContent = inp.value;
+    }
+    function groupAdd(group) {
+        let groupnum = 0;
+        accordion.querySelectorAll(".accordion-item").forEach(div => groupnum++);
+
+        let accordiobItem = document.createElement("div");
+        accordiobItem.classList.add("accordion-item");
+        accordiobItem.classList.add("mb-2");
+        accordiobItem.dataset.id = group.id;
+        accordiobItem.innerHTML = `
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                      <label class="form-check-label" for="flexRadioDefault1">
+                        Выбран
+                      </label>
+                    </div>
+                    <h2 class="accordion-header" id="group-${groupnum}">
+                        <button header class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#group-body-${groupnum}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                            ${group.name}
+                        </button>
+                    </h2>
+                    <div id="group-body-${groupnum}" class="accordion-collapse collapse show" aria-labelledby="group-${groupnum}">
+                        <div class="accordion-body">
+                            <input body oninput="changeGroupName(this)" value="${groupnum}" class="form-control form-control-sm mb-1" />
+                            <table class="table table-sm table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Товар</th>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Ед</th>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Цена</th>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Система</th>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Факт</th>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Разница</th>
+                                        <th style="position: sticky; top: 0; z-index: 2; background: white;">Остаток руб</th>
+                                    </tr>
+                                </thead>
+                                <tbody tableGoods>
+                                </tbody>
+                                <tfoot tableSummary>
+                                    <tr>
+                                        <th colspan="5">Итого</th>
+                                        <th countSummary></th>
+                                        <th sumSummary></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+`;
+        accordion.prepend(accordiobItem);
     }
 </script>
