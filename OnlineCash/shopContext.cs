@@ -49,6 +49,10 @@ namespace OnlineCash
             modelBuilder.HasCharSet("utf8")
                 .UseCollation("utf8_general_ci");
 
+            modelBuilder.Entity<Good>()
+                .HasOne(g => g.Supplier)
+                .WithMany(s => s.Goods)
+                .HasForeignKey(g => g.SupplierId);
             modelBuilder.Entity<GoodPrice>()
                 .HasOne(p => p.Shop)
                 .WithMany(t => t.GoodPrices)

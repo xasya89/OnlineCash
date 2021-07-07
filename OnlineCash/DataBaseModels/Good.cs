@@ -13,6 +13,8 @@ namespace OnlineCash.DataBaseModels
         public int GoodGroupId { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public GoodGroup GoodGroup { get; set; }
+        public int? SupplierId { get; set; }
+        public Supplier Supplier { get; set; }
         public Guid Uuid { get; set; }
         public string Name { get; set; }
         public string Article { get; set; }

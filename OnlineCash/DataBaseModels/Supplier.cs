@@ -11,5 +11,6 @@ namespace OnlineCash.DataBaseModels
         public string Name { get; set; }
         public string Inn { get; set; }
         public List<Arrival> Arrivals { get; set; }
+        public List<Good> Goods { get; set; }
     }
 }
