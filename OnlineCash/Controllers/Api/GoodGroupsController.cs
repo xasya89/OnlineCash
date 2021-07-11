@@ -27,7 +27,7 @@ namespace OnlineCash.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<GoodGroup>> Get() => await db.GoodGroups.OrderBy(g=>g.Name).ToListAsync();
+        public async Task<IEnumerable<GoodGroup>> Get() => await db.GoodGroups.Include(g=>g.Goods).ThenInclude(g=>g.Supplier).OrderBy(g=>g.Name).ToListAsync();
 
         // GET api/<GoodGroupsController>/5
         [HttpGet("{id}")]

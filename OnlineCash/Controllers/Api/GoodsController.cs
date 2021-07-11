@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DataBase;
+using OnlineCash.DataBaseModels;
 
 namespace OnlineCash.Controllers.Api
 {
@@ -22,14 +22,14 @@ namespace OnlineCash.Controllers.Api
         }
         [HttpGet]
         public async Task<IActionResult> Get(string Name)
-            => Ok( await db.Goods.Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync());
+            => Ok( await db.Goods.Include(g=>g.GoodPrices).Include(g=>g.GoodGroup).Include(g=>g.Supplier).Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync());
 
         [HttpGet("barcode/{barcode}")]
         public async Task<IActionResult> GetBarcode(string barcode)
         {
 
             return Ok( JsonSerializer.Serialize(
-                await db.Goods.Include(g => g.GoodPrices).Where(g => g.BarCode == barcode).FirstOrDefaultAsync()
+                await db.Goods.Include(g => g.GoodPrices).Include(g=>g.Supplier).Where(g => g.BarCode == barcode).FirstOrDefaultAsync()
                 ));
 
         }

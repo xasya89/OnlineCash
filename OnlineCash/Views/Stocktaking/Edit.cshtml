@@ -17,7 +17,7 @@
             <span onclick="groupAdd({id:-1, name:'Новая'})" class="btn btn-sm btn-secondary m-1"><i class="fa fa-plus"></i> Группу</span>
         </div>
         <div class="col-auto">
-            <span class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
+            <span id="btnGoodSelected" class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
         </div>
         <div class="col-auto">
             <label class="visually-hidden" for="autoSizingInputGroup">Username</label>
@@ -107,7 +107,9 @@
         </div>
 </div>
 
+
 <script>
+
     var idAct =@Model.Id ;
     var idShop = @Model.Shop.Id ;
     const span_summaryCount = document.getElementById("summaryCount");
@@ -121,6 +123,7 @@
     const tableSummary = document.getElementById("tableSummary");
     const btnSave = document.querySelector("#btnSave");
     const btnSuccess = document.querySelector("#btnSuccess");
+    const btnGoodSelected = document.getElementById("btnGoodSelected");
 
     function goodAdd(good) {
         //Найдем выбранную таблицу
@@ -167,7 +170,6 @@
     }
 
     findBtnAdd.addEventListener("click", () => {
-        console.log("click");
         let findGoodStr = findGoods.value;
         if (findGoods.value != "")
             findGoodList.querySelectorAll("option").forEach(option => {
@@ -341,4 +343,43 @@
 `;
         accordion.prepend(accordiobItem);
     }
+
+    //Подбор товара
+    function loadGroupGoods() {
+        return new Promise((resolve, reject) => {
+            fetch("/api/goodgroups")
+                .then(resp => resp.json())
+                .then(groups => {
+                    let groups_result = [];
+                    groups.forEach(group => {
+                        let newgroup = { id: group.id, name: group.name, goods: [], groups: [] };
+                        group.goods.forEach(good => {
+                            if (good.supplierId !== null) {
+                                let flagAdd = true;
+                                newgroup.groups.forEach(group => {
+                                    if (group.id == good.supplierId) {
+                                        group.goods.push({ id: good.id, name: good.name, unit: good.unit });
+                                        flagAdd = false;
+                                    }
+                                })
+                                if (flagAdd)
+                                    newgroup.groups.push({
+                                        id: good.supplier.id,
+                                        name: good.supplier.name,
+                                        goods: [{ id: good.id, name: good.name, unit: good.unit }]
+                                    });
+                            }
+                            newgroup.goods.push({ id: good.id, name: good.name, unit: good.unit });
+                        });
+                        groups_result.push(newgroup);
+                    });
+                    resolve(groups_result);
+                });
+        });
+    }
+    loadGroupGoods().then(groups => {
+        let selectionGood = new SelectionGood(groups);
+        btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
+        selectionGood.CloseDialogSetEvent((goods) => goods.forEach(good => goodAdd(good)));
+    });
 </script>
