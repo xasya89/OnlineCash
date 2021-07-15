@@ -21,10 +21,12 @@ namespace OnlineCash
         public DbSet<StocktakingGood> StocktakingGoods { get; set; }
         public DbSet<GoodBalance> GoodBalances { get; set; }
         public DbSet<Arrival> Arrivals { get; set; }
+        public DbSet<ArrivalPayment> ArrivalPayments { get; set; }
         public DbSet<ArrivalGood> ArrivalGoods { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GoodGroup> GoodGroups { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
 
         public shopContext()
         {
@@ -122,6 +124,14 @@ namespace OnlineCash
                 .HasOne(a => a.Shop)
                 .WithMany(s => s.Arrivals)
                 .HasForeignKey(a => a.ShopId);
+            modelBuilder.Entity<ArrivalPayment>()
+                .HasOne(p => p.Arrival)
+                .WithMany(a => a.ArrivalPayments)
+                .HasForeignKey(p => p.ArrivalId);
+            modelBuilder.Entity<ArrivalPayment>()
+                .HasOne(p => p.BankAccount)
+                .WithMany(b => b.ArrivalPayments)
+                .HasForeignKey(p => p.BankAccountId);
 
             OnModelCreatingPartial(modelBuilder);
         }

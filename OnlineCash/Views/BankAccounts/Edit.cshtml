@@ -1,0 +1,42 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model OnlineCash.DataBaseModels.BankAccount
+<form asp-action="Save" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    <div class="mb-2">
+        <div>
+            <label asp-for="Alias">Псевдоним</label><br />
+            <input type="text" asp-for="Alias" />
+            <span asp-validation-for="Alias" />
+        </div>
+        <div>
+            <label asp-for="Num">Расчетный счет</label><br />
+            <input type="text" asp-for="Num" />
+            <span asp-validation-for="Num" />
+        </div>
+        <div>
+            <label asp-for="BankName">Банк</label><br />
+            <input type="text" asp-for="BankName" />
+            <span asp-validation-for="BankName" />
+        </div>
+        <div>
+            <label asp-for="KorShet">Кор счет</label><br />
+            <input type="text" asp-for="KorShet" />
+            <span asp-validation-for="KorShet" />
+        </div>
+        <div>
+            <label asp-for="Bik">Бик</label><br />
+            <input type="text" asp-for="Bik" />
+            <span asp-validation-for="Bik" />
+        </div>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-sm btn-success" value="Сохранить" style="margin-left: 20px" />
+        <a asp-action="Index" class="btn btn-sm btn-danger">Отмена</a>
+    </div>
+
+</form>

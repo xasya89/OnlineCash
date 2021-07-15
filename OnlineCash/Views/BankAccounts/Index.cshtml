@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<OnlineCash.DataBaseModels.BankAccount>
+<div class="row mb-2">
+    <div class="col-auto">
+        <a asp-action="Create" class="btn btn-sm btn-success">Добавить</a>
+    </div>
+</div>
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Псевдоним</th>
+            <th>Р.с.</th>
+            <th>Банк</th>
+            <th>Кор. счет</th>
+            <th>Бик</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var account in Model)
+            {
+        <tr>
+            <td><a asp-action="Delete" asp-route-id="@account.Id"><i class="fa fa-trash"></i></a></td>
+            <td><a asp-action="Edit" asp-route-id="@account.Id" class="link-dark">@account.Alias</a></td>
+            <td><a asp-action="Edit" asp-route-id="@account.Id" class="link-dark">@account.Num</a></td>
+            <td><a asp-action="Edit" asp-route-id="@account.Id" class="link-dark">@account.BankName</a></td>
+            <td><a asp-action="Edit" asp-route-id="@account.Id" class="link-dark">@account.KorShet</a></td>
+            <td><a asp-action="Edit" asp-route-id="@account.Id" class="link-dark">@account.Bik</a></td>
+        </tr>
+            }
+    </tbody>
+</table>
