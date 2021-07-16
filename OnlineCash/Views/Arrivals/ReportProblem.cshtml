@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<OnlineCash.Models.ArrivalReport>
+<h3></h3>
+<table class=" table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Поставщик</th>
+            <th>Сумма оплат</th>
+            <th>Сумма по ТТН</th>
+            <th>Остаток</th>
+        </tr>
+    </thead>
+    <thead>
+        @foreach(var supplier in Model)
+            {
+        <tr>
+            <td>@supplier.Supplier.Name</td>
+            <td>@supplier.SumPayments</td>
+            <td>@supplier.SumArrivals</td>
+            <td>@(supplier.SumPayments - supplier.SumArrivals)</td>
+        </tr>
+            }
+    </thead>
+</table>

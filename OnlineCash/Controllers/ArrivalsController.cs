@@ -32,6 +32,7 @@ namespace OnlineCash.Controllers
             ViewData["Action"] = "Create";
             ViewBag.Shops = await db.Shops.ToListAsync();
             ViewBag.Suppliers = await db.Suppliers.OrderBy(s=>s.Name).ToListAsync();
+            ViewBag.BankAccounts = await db.BankAccounts.OrderBy(b => b.Alias).ToListAsync();
             return View("Edit", new Arrival { Id=-1});
         }
 
@@ -39,13 +40,14 @@ namespace OnlineCash.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int ArrivalId=-1)
         {
-            var model = await db.Arrivals.Include(a=>a.Supplier).Include(a=>a.ArrivalGoods).ThenInclude(a=>a.Good).Where(a => a.Id == ArrivalId).FirstOrDefaultAsync();
+            var model = await db.Arrivals.Include(a=>a.Supplier).Include(a=>a.ArrivalGoods).ThenInclude(a=>a.Good).Include(a => a.ArrivalPayments).Where(a => a.Id == ArrivalId).FirstOrDefaultAsync();
             if (model == null)
                 return Redirect("index");
             ViewData["ShopId"] = model.ShopId;
             ViewData["Action"] = "Edit";
             ViewBag.Shops = await db.Shops.ToListAsync();
             ViewBag.Suppliers = await db.Suppliers.OrderBy(s => s.Name).ToListAsync();
+            ViewBag.BankAccounts = await db.BankAccounts.OrderBy(b => b.Alias).ToListAsync();
             return View("Edit", model);
         }
         [Authorize]
@@ -132,9 +134,50 @@ namespace OnlineCash.Controllers
                     }
                     else
                         goodBalance.Count += modelGood.Count;
-                }    
+                }
+            //Платежи
+            var bankaccouns = await db.BankAccounts.ToListAsync();
+            foreach(var modelpayment in model.ArrivalPayments)
+                if(modelpayment.Id==0)
+                {
+                    var payment = new ArrivalPayment
+                    {
+                        Arrival = arrival,
+                        BankAccount = bankaccouns.Where(b => b.Id == modelpayment.BankAccountId).FirstOrDefault(),
+                        DatePayment=modelpayment.DatePayment,
+                        Sum=modelpayment.Sum
+                    };
+                    db.ArrivalPayments.Add(payment);
+                }
+            else
+                {
+                    var payment = await db.ArrivalPayments.Where(p => p.Id == modelpayment.Id).FirstOrDefaultAsync();
+                    payment.BankAccountId = modelpayment.BankAccountId;
+                    payment.DatePayment = modelpayment.DatePayment;
+                    payment.Sum = modelpayment.Sum;
+                }
+            //Подсчет итогов
+            arrival.SumArrivals = model.ArrivalGoods.Sum(a => (decimal) a.Count * a.Price);
+            arrival.SumPayments = model.ArrivalPayments.Sum(p => p.Sum);
             await db.SaveChangesAsync();
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReportProblem()
+        {
+            List<Models.ArrivalReport> result = new List<Models.ArrivalReport>();
+            var suppliers = await db.Suppliers.ToListAsync();
+            //var supplierGroups = db.Arrivals.Include(a=>a.Supplier).GroupBy(a => a.SupplierId);
+            var supplierGroups =await db.Arrivals.GroupBy(a => a.SupplierId).Select(a => new { SupplierId = a.Key, SumArrival = a.Sum(a => a.SumArrivals), SumPayments = a.Sum(a => a.SumPayments) }).ToListAsync();
+            foreach (var supplier in supplierGroups)
+                result.Add(new Models.ArrivalReport
+                {
+                    Supplier = suppliers.Where(s => s.Id == supplier.SupplierId).FirstOrDefault(),
+                    SumPayments = supplier.SumPayments,
+                    SumArrivals = supplier.SumArrival
+                });
+            return View(result.OrderBy(r=>r.Supplier.Name).ToList());
         }
     }
 }

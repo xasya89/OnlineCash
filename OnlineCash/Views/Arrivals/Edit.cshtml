@@ -4,7 +4,7 @@
     <div class="col">
         @if (Model.isSuccess == false)
         {
-            if ((int)ViewData["ShopId"] == -1 || (string)ViewData["Action"]=="Edit")
+            if ((int)ViewData["ShopId"] == -1 || (string)ViewData["Action"] == "Edit")
             {
                 <button onclick="arrivalSave(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
             }
@@ -17,7 +17,7 @@
 <div class="row mt-2">
     <label for="ShopSelect" class="col-sm-2 col-form-label">Магазин: </label>
     <div class="col-sm-10">
-        <select id="ShopSelect" asp-items="@(new SelectList(ViewBag.Shops,"Id","Name"))" class="form-select form-select-sm"></select>
+        <select id="ShopSelect" asp-items="@(new SelectList(ViewBag.Shops, "Id", "Name"))" class="form-select form-select-sm"></select>
     </div>
 </div>
 <div class="row mb-2">
@@ -37,6 +37,75 @@
         <label id="SupplierSelected" data-id="@Model.SupplierId" class="form-label" style="margin-left: 20px">@Model.Supplier?.Name</label>
     </div>
     <label class="col-sm-8 col-form-label col-form-label-sm"></label>
+</div>
+<div class="row mb-2">
+    <label class="col-sm-2 col-form-label ">Оплата: </label>
+    <div class="col-auto">
+        @{
+            string summary = "";
+            if (Model.SumPayments - Model.SumArrivals == 0)
+                summary = "оплачен " + Model.SumPayments;
+            else
+                if (Model.SumPayments - Model.SumArrivals > 0)
+                summary = "переплата " + (Model.SumPayments - Model.SumArrivals);
+            else
+                summary = "долг " + (Model.SumArrivals - Model.SumPayments);
+
+        }
+        <input id="paymentSummary" value="@summary" class="form-control form-control-sm " readonly style="background: white" />
+    </div>
+    <div class="col-auto">
+        <span id="paymentMore" class="btn btn-sm btn-secondary"><i class="fa fa-arrow-down"></i></span>
+    </div>
+</div>
+<div id="addPayment" style="display: none">
+    <div class="row mb-2">
+        <label class="col-sm-2 col-form-label"></label>
+        <div class="col-auto">
+            <select id="addPaymentBankAccount" asp-items="@(new SelectList(ViewBag.BankAccounts, "Id","Alias"))" class="form-select form-select-sm "></select>
+        </div>
+        <div class="col-auto">
+            <span class="form-label"> Сумма: </span>
+        </div>
+        <div class="col-auto">
+            <input id="addPaymentSum" class="form-control form-control-sm " />
+        </div>
+        <div class="col-auto">
+            <span class="form-label"> дата платежа: </span>
+        </div>
+        <div class="col-auto">
+            <input id="addPaymentDate" type="date" class="form-control form-control-sm " />
+        </div>
+        <div class="col-auto">
+            <span id="addPaymentBtn" class="btn btn-sm btn-secondary"><i class="fa fa-plus"></i></span>
+        </div>
+    </div>
+    <div class="row md-2">
+        <label class="col-sm-2">Предыдущие оплаты</label>
+        <div class="col-10">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Дата</th>
+                        <th>Счет</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody id="payments">
+                    @foreach(var payment in Model.ArrivalPayments)
+            {
+                <tr data-id="@payment.Id">
+                    <td><i onclick="this.parentElement.remove()" class="fa fa-trash"></i></td>
+                    <td><input date value="@payment.DatePayment.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " /></td>
+                    <td><select asp-for="@payment.BankAccountId" asp-items="@(new SelectList(ViewBag.BankAccounts, "Id","Alias"))" class="form-select form-select-sm "></select></td>
+                    <td><input sum value="@payment.Sum" class="form-control form-control-sm " /></td>
+                </tr>
+            }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-sm-6">
@@ -65,19 +134,19 @@
         </tr>
     </thead>
     <tbody id="ArrivalTable">
-        @if(Model.ArrivalGoods!=null)
-        @foreach (var arrivalGood in Model.ArrivalGoods)
-        {
-            double sum = (double)arrivalGood.Price * arrivalGood.Count;
-        <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
-            <td><span onclick="deleteGood( @arrivalGood.Good.Id )" class="fa fa-trash"></span></td>
-            <td>@arrivalGood.Good?.Name</td>
-            <td>@arrivalGood.Good?.Unit</td>
-            <td><input oninput="editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" /></td>
-            <td><input oninput="editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" /></td>
-            <td><input oninput="editGood(@arrivalGood.Good.Id)" Sum value="@sum" /></td>
-        </tr>
-        }
+        @if (Model.ArrivalGoods != null)
+            @foreach (var arrivalGood in Model.ArrivalGoods)
+            {
+                double sum = (double)arrivalGood.Price * arrivalGood.Count;
+                <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
+                    <td><span onclick="deleteGood( @arrivalGood.Good.Id )" class="fa fa-trash"></span></td>
+                    <td>@arrivalGood.Good?.Name</td>
+                    <td>@arrivalGood.Good?.Unit</td>
+                    <td><input oninput="editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" class="form-control form-control-sm "/></td>
+                    <td><input oninput="editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
+                    <td><input oninput="editGood(@arrivalGood.Good.Id)" Sum value="@sum" class="form-control form-control-sm " /></td>
+                </tr>
+            }
     </tbody>
     <tfoot class="bg-light">
         <tr>
@@ -87,6 +156,8 @@
         </tr>
     </tfoot>
 </table>
+
+
 
 <div class="modal fade" id="SupplierModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -99,7 +170,7 @@
                 <a class="btn btn-primary btn-sm mb-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                     Новый поставщик
                 </a>
-                <div class="collapse mb-2" id="collapseExample" >
+                <div class="collapse mb-2" id="collapseExample">
                     <div class="card card-body">
                         <div class="row">
                             <label class="col-sm-2 col-form-label col-form-label-sm">Наименоваени</label>
@@ -131,11 +202,11 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col" style="overflow: hidden">
-                        <select id="SupplierList" class="form-select" size="10" style="height:auto; display: inline-block;"  aria-label="multiple select example">
-                            @foreach(var supplier in (List<OnlineCash.DataBaseModels.Supplier>)ViewBag.Suppliers)
-            {
-                <option value="@supplier.Id" data-name="@supplier.Name">@supplier.Name</option>
-            }
+                        <select id="SupplierList" class="form-select" size="10" style="height:auto; display: inline-block;" aria-label="multiple select example">
+                            @foreach (var supplier in (List<OnlineCash.DataBaseModels.Supplier>)ViewBag.Suppliers)
+                            {
+                                <option value="@supplier.Id" data-name="@supplier.Name">@supplier.Name</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -147,6 +218,7 @@
         </div>
     </div>
 </div>
+
 <script>
     const ttnNum = document.getElementById("TTNNum");
     const ttnDate = document.getElementById("TTNDate");
@@ -217,6 +289,7 @@
             }
         })
         calcSummary();
+        calcPaymentSumary();
         goodSearch.value = "";
     }
     function editGood(idGood) {
@@ -232,6 +305,7 @@
                 else
                     tdSum.value = (price * count).toFixed(2);
                 calcSummary();
+                calcPaymentSumary();
             }
         })
     }
@@ -337,6 +411,57 @@
         })
     })
 
+    //---- Платежи --------
+    const paymentSummary = document.getElementById("paymentSummary");
+    const paymentMore = document.getElementById("paymentMore");
+    const payments = document.getElementById("payments");
+    const addPayment = document.getElementById("addPayment");
+    const addPaymentBankAccount = document.getElementById("addPaymentBankAccount");
+    const addPaymentSum = document.getElementById("addPaymentSum");
+    const addPaymentDate = document.getElementById("addPaymentDate");
+    const addPaymentBtn = document.getElementById("addPaymentBtn");
+    var bankAccounts = JSON.parse('@Html.Raw(JsonSerializer.Serialize(ViewBag.BankAccounts))');
+    paymentMore.addEventListener("click", () => {
+        addPayment.style.display = addPayment.style.display == "none" ? "block" : "none";
+    })
+    addPaymentBtn.addEventListener("click", () => {
+        if (!isNaN(parseFloat(addPaymentSum.value)) & addPaymentDate.value != "") {
+            let tr = document.createElement("tr");
+            tr.dataset.id = 0;
+            let addAccount = bankAccounts.filter(account => account.id == addPaymentBankAccount.value)[0];
+            let accountSelectstr = "";
+            bankAccounts.forEach(account => {
+                if (account.id == addPaymentBankAccount.value)
+                    accountSelectstr = accountSelectstr + `<option value="${account.id}" selected>${account.alias}</option>`;
+                else
+                    accountSelectstr = accountSelectstr + `<option value="${account.id}">${account.alias}</option>`;
+            });
+            accountSelectstr = "<select class='form-select form-select-sm'>" + accountSelectstr + "</select>";
+            console.log(addPaymentDate);
+            tr.innerHTML = `<td><i class="fa fa-trash"></i></td>
+<td><input date value='${addPaymentDate.value}' type='date' class='form-control form-control-sm' /></td>
+<td>${accountSelectstr}</td>
+<td><input sum value="${addPaymentSum.value}" class="form-control form-control-sm"/></td>`;
+            tr.querySelector("i").addEventListener("click", () => {
+                tr.remove();
+            });
+            payments.prepend(tr);
+            calcPaymentSumary();
+        }
+    })
+    function calcPaymentSumary() {
+        calcSummary();
+        let sum = 0;
+        payments.querySelectorAll("tr").forEach(tr => sum += parseFloat(tr.querySelector("input[sum]").value));
+        let arrivalSum = parseFloat(arrivalTableSummarySum.textContent);
+        if (sum - arrivalSum == 0)
+            paymentSummary.value = "оплачено " + (sum);
+        else
+            if (sum - arrivalSum < 0)
+                paymentSummary.value = "долг " + (arrivalSum - sum);
+            else
+                paymentSummary.value = "переплата " + (sum - arrivalSum);
+    }
 
     function arrivalSave(isSuccess) {
         let num = ttnNum.value;
@@ -352,6 +477,16 @@
                 price:  parseFloat(tr.querySelector("input[Price]").value)
             });
         });
+        let arrivalPayments = [];
+        payments.querySelectorAll("tr").forEach(tr => {
+            arrivalPayments.push({
+                id: parseInt(tr.dataset.id),
+                datePayment: tr.querySelector("input[date]").value,
+                bankAccountId: parseInt(tr.querySelector("select").value),
+                sum: parseFloat(tr.querySelector("input[sum]").value)
+            })
+        });
+        console.log(arrivalPayments);
         fetch("create", {
             method: "POST",
             headers: {
@@ -365,7 +500,8 @@
                 num: num,
                 dateArrival: date,
                 isSuccess: isSuccess,
-                arrivalGoods: arrivalGoods
+                arrivalGoods: arrivalGoods,
+                arrivalPayments: arrivalPayments
             })
         })
             .then(r => {

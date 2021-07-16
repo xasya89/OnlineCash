@@ -19,6 +19,7 @@ namespace OnlineCash.DataBaseModels
         public double CountAll { get; set; }
         public decimal PriceAll { get; set; }
         public double SumAll { get => CountAll * (double)PriceAll; }
+        public decimal SumArrivals { get; set; }
         public List<ArrivalPayment> ArrivalPayments { get; set; }
         public decimal SumPayments { get; set; }
         public bool isSuccess { get; set; } = false;
