@@ -40,7 +40,10 @@ namespace OnlineCash
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
-            services.AddControllersWithViews();
+            services.AddScoped<Filters.ControlCountGoodsFilter>();
+            services.AddControllersWithViews(options=> {
+                options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
