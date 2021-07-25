@@ -19,36 +19,48 @@
 <table class="table table-hover table-bordered table-sm ">
     <thead>
         <tr>
+            <th>Статус</th>
             <th>Дата</th>
             <th>Номер</th>
             <th>Магазин</th>
-            <th>Подтвр</th>
+            <th>Рассхождение руб.</th>
+            <th>Факт руб.</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var stocktaking in Model)
         {
+            string status = "";
+            if (stocktaking.Status == DocumentStatus.Confirm)
+                status = "Подтверждена";
+            if (stocktaking.Status == DocumentStatus.Remove)
+                status = "Отменена";
             string className = "";
             className = stocktaking.Status == DocumentStatus.Confirm ? "bg-success" : className;
             className = stocktaking.Status == DocumentStatus.Remove ? "bg-secondary" : className;
             string classNameLink = stocktaking.Status==DocumentStatus.Confirm || stocktaking.Status==DocumentStatus.Remove? "link-light" : "link-dark";
-            <tr class="@className">
-                <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking.Create.ToString("dd.MM")</a></td>
-                <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking.Num</a></td>
-                <td><a class="@classNameLink" asp-controller="stocktaking" asp-action="edit" asp-route-id="@stocktaking.Id">@stocktaking?.Shop.Name</a></td>
-                <td><input type="checkbox" checked="@stocktaking.isSuccess" class="form-check-input" readonly /></td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Действия
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a asp-controller="stocktaking" asp-action="Cancel" asp-route-id="@stocktaking.Id" class="dropdown-item active" >Отменить</a></li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
+        <tr class="">
+            <td onclick="openStocktaking(@stocktaking.Id)">@status</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Create.ToString("dd.MM")</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Num</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.Shop.Name</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@(stocktaking.SumFact - stocktaking.SumDb)</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.SumFact</td>
+            <td>
+                <span onclick="cancelStocktaking(@stocktaking.Id)" class="btn btn-sm btn-light" style="margin-right: 10px"><i class="fa fa-trash"></i> Отменить</span>
+                <a asp-controller="stocktaking" asp-action="Print" asp-route-id="@stocktaking.Id" class="btn btn-sm btn-light "><i class="fa fa-print"></i>Печать</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
+<script>
+    function openStocktaking(id) {
+        window.location.href = "/stocktaking/Edit/" + id;
+    }
+    function cancelStocktaking(id) {
+        if (confirm("Отменить инверторизацию?"))
+            window.location.href = "/stocktaking/Cancel/" + id;
+    }
+</script>

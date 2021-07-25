@@ -1,4 +1,4 @@
-﻿@model List<OnlineCash.DataBaseModels.GoodGroup>
+﻿@model List<OnlineCash.Models.GoodWithGoodBalanceModel>
 @{
     Layout = null;
 }
@@ -37,10 +37,7 @@
     </style>
 </head>
 <body>
-    @foreach(var group in Model)
-    {
-        <h5 style="text-align:center">@group.Name</h5>
-        <table class="table table-sm table-bordered table-striped">
+    <table class="table table-sm table-bordered table-borderless">
         <thead>
             <tr>
                 <th>Наименование</th>
@@ -49,19 +46,18 @@
             </tr>
         </thead>
         <tbody>
-                @foreach(var good in group.Goods)
-                    foreach(var price in good.GoodPrices)
-                    {
-                        <tr>
-                            <td>@good.Name</td>
-                            <td>@price.Price</td>
-                            <td></td>
-                        </tr>
-                    }
+            @if(Model!=null)
+            foreach (var goodWithBalance in Model)
+                foreach (var price in goodWithBalance.Good.GoodPrices)
+                {
+                    <tr>
+                        <td>@goodWithBalance.Good.Name</td>
+                        <td>@goodWithBalance.Good.Price</td>
+                        <td></td>
+                    </tr>
+                }
         </tbody>
     </table>
-    <!--<div style="page-break-after:always"></div>-->
-    }
     <script>
         window.print();
     </script>

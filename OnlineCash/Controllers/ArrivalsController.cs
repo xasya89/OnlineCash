@@ -33,7 +33,7 @@ namespace OnlineCash.Controllers
             ViewBag.Shops = await db.Shops.ToListAsync();
             ViewBag.Suppliers = await db.Suppliers.OrderBy(s=>s.Name).ToListAsync();
             ViewBag.BankAccounts = await db.BankAccounts.OrderBy(b => b.Alias).ToListAsync();
-            return View("Edit", new Arrival { Id=-1});
+            return View("Edit", new Arrival { Id=-1, DateArrival=DateTime.Now});
         }
 
         [Authorize]
@@ -54,8 +54,6 @@ namespace OnlineCash.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Arrival model)
         {
-
-            //var model = System.Text.Json.JsonSerializer.Deserialize<Arrival>(models.ToString());
             var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
             var supplier = await db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefaultAsync();
             if (model.Num == "" || model.DateArrival == DateTime.MinValue || shop == null || supplier == null)
@@ -106,6 +104,7 @@ namespace OnlineCash.Controllers
                         Arrival = arrival,
                         Good = good,
                         Price = modelGood.Price,
+                        PriceSell=modelGood.PriceSell,
                         Count = modelGood.Count
                     };
                     db.ArrivalGoods.Add(arrivalGood);
@@ -116,6 +115,7 @@ namespace OnlineCash.Controllers
                     if (arrivalGood == null)
                         return BadRequest();
                     arrivalGood.Price = modelGood.Price;
+                    arrivalGood.PriceSell = modelGood.PriceSell;
                     arrivalGood.Count = modelGood.Count;
                 };
             if (model.isSuccess)
@@ -134,6 +134,9 @@ namespace OnlineCash.Controllers
                     }
                     else
                         goodBalance.Count += modelGood.Count;
+                    //Изменим цену на товар
+                    var goodPrice = await db.GoodPrices.Where(p => p.ShopId == arrival.ShopId & p.GoodId == modelGood.GoodId).FirstOrDefaultAsync();
+                    goodPrice.Price = modelGood.PriceSell;
                 }
             //Платежи
             var bankaccouns = await db.BankAccounts.ToListAsync();
@@ -178,6 +181,26 @@ namespace OnlineCash.Controllers
                     SumArrivals = supplier.SumArrival
                 });
             return View(result.OrderBy(r=>r.Supplier.Name).ToList());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PaymentsList()
+        {
+            ViewBag.Banks = await db.BankAccounts.ToListAsync();
+            return View(await db.Arrivals.Where(a => a.SumArrivals - a.SumPayments > 0).Include(a => a.Shop).OrderBy(a=>a.DateArrival).OrderBy(a=>a.Shop.Name).ToListAsync());
+        }
+            
+        [HttpPost]
+        public async Task<IActionResult> PaymentsList([FromBody]Models.PaymentListSaveModel model)
+        {
+            if (model.Sum == 0 || model.ArrivalId == 0 || model.BankId == 0)
+                return BadRequest();
+            var payment = new ArrivalPayment { ArrivalId = model.ArrivalId, BankAccountId = model.BankId, DatePayment = DateTime.Now, Sum = model.Sum };
+            db.ArrivalPayments.Add(payment);
+            var arrival = await db.Arrivals.Where(a => a.Id == model.ArrivalId).FirstOrDefaultAsync();
+            arrival.SumPayments = arrival.SumPayments + model.Sum;
+            await db.SaveChangesAsync();
+            return Ok(model);
         }
     }
 }

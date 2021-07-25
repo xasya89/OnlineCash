@@ -1,0 +1,128 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<OnlineCash.DataBaseModels.Arrival>
+
+<table class="table table-sm table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Номер</th>
+            <th>Дата</th>
+            <th>Магазин</th>
+            <th>Сумма</th>
+            <th>Оплачено</th>
+            <th>Банк</th>
+            <th>К оплате</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="arrivals">
+        @foreach(var arrival in Model)
+        {
+            <tr data-id="@arrival.Id">
+                <td ttnNum>@arrival.Num</td>
+                <td ttnDate>@arrival.DateArrival.ToString("dd.MM")</td>
+                <td shop>@arrival.Shop.Name</td>
+                <td sumArrivals>@arrival.SumArrivals</td>
+                <td sumPayments>@arrival.SumPayments</td>
+                <td></td>
+                <td sumDiff>@(arrival.SumArrivals - arrival.SumPayments)</td>
+                <td><button onclick="paymentAction(@arrival.Id)" class="btn btn-sm btn-secondary"><i class="fa fa-ruble-sign"></i> Оплатить</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="modalPaymentDialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Внести оплату</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modalPaymentArrivalId" />
+                <div class="mb-3">
+                    <label for="modalPaymentNumTTN" class="form-label">Накладная</label>
+                    <input type="text" class="form-control form-control-sm" id="modalPaymentNumTTN">
+                </div>
+                <div class="mb-3">
+                    <label for="modalPaymentDateTTN" class="form-label">Дата</label>
+                    <input type="text" class="form-control form-control-sm" id="modalPaymentDateTTN">
+                </div>
+                <div class="mb-3">
+                    <label for="modalPaymentBank" class="form-label">Банк</label>
+                    <select class="form-select form-select-sm" asp-items="@(new SelectList(ViewBag.Banks,"Id","Alias"))" id="modalPaymentBank"></select>
+                </div>
+                <div class="mb-3">
+                    <label for="modalPaymentSummPayment" class="form-label">К оплате</label>
+                    <input type="text" class="form-control form-control-sm" id="modalPaymentSummPayment">
+                </div>
+                <div class="mb-3">
+                    <label for="modalPaymentPayment" class="form-label">Оплачено</label>
+                    <div class="input-group input-group-sm mb-3">
+                        <input id="modalPaymentPayment" type="text" class="form-control"  aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <span class="input-group-text" id="modalPaymentPaymentEqually">=</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button onclick="addPayment()" type="button" class="btn btn-primary">Внести</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const arrivals = document.getElementById("arrivals");
+    const modalPaymentDialog = document.getElementById("modalPaymentDialog");
+    const paymentDialog = new bootstrap.Modal(modalPaymentDialog);
+    const modalPaymentArrivalId = document.getElementById("modalPaymentArrivalId");
+    const modalPaymentNumTTN = document.getElementById("modalPaymentNumTTN");
+    const modalPaymentDateTTN = document.getElementById("modalPaymentDateTTN");
+    const modalPaymentBank = document.getElementById("modalPaymentBank");
+    const modalPaymentSummPayment = document.getElementById("modalPaymentSummPayment");
+    const modalPaymentPayment = document.getElementById("modalPaymentPayment");
+    const modalPaymentPaymentEqually = document.getElementById("modalPaymentPaymentEqually");
+
+    function paymentAction(idArrival) {
+        let tr = arrivals.querySelector(`tr[data-id="${idArrival}"]`);
+        modalPaymentArrivalId.value = tr.dataset.id;
+        modalPaymentNumTTN.value = tr.querySelector("td[ttnNum]").textContent;
+        modalPaymentDateTTN.value = tr.querySelector("td[ttnDate]").textContent;
+        modalPaymentSummPayment.value = tr.querySelector("td[sumDiff]").textContent;
+        modalPaymentPayment.value = 0;
+        paymentDialog.show();
+    }
+    function addPayment() {
+        if (modalPaymentSummPayment.value!="")
+            fetch("PaymentsList", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    arrivalId: parseInt(modalPaymentArrivalId.value),
+                    bankId: parseInt(modalPaymentBank.value),
+                    sum: parseFloat(modalPaymentSummPayment.value)
+                })
+            })
+                .then(resp => {
+                    if (resp.status == 200) {
+                        paymentDialog.hide();
+                        let tr = arrivals.querySelector(`tr[data-id="${modalPaymentArrivalId.value}"]`);
+                        let sumDiff = parseFloat(tr.querySelector("td[sumDiff]").textContent);
+                        let sumPayment = parseFloat(modalPaymentSummPayment.value);
+                        if (sumDiff - sumPayment <= 0)
+                            tr.remove();
+                        else
+                            tr.querySelector("td[sumDiff]").textContent = sumDiff - sumPayment;
+                    }
+                })
+
+    }
+</script>

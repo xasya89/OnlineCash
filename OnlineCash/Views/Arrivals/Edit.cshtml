@@ -17,7 +17,7 @@
 <div class="row mt-2">
     <label for="ShopSelect" class="col-sm-2 col-form-label">Магазин: </label>
     <div class="col-sm-10">
-        <select id="ShopSelect" asp-items="@(new SelectList(ViewBag.Shops, "Id", "Name"))" class="form-select form-select-sm"></select>
+        <select id="ShopSelect" asp-for="@Model.ShopId" asp-items="@(new SelectList(ViewBag.Shops, "Id", "Name"))" class="form-select form-select-sm"></select>
     </div>
 </div>
 <div class="row mb-2">
@@ -57,6 +57,23 @@
     <div class="col-auto">
         <span id="paymentMore" class="btn btn-sm btn-secondary"><i class="fa fa-arrow-down"></i></span>
     </div>
+    <!--
+    <div class="col-auto">
+        <span class="btn btn-sm btn-secondary"><i class="fa fa-info"></i></span>
+        <button id="button" aria-describedby="tooltip">I'm a button</button>
+        <div id="tooltip" role="tooltip">I'm a tooltip</div>
+        <script>
+            const button = document.querySelector('#button');
+            const tooltip = document.querySelector('#tooltip');
+
+            // Pass the button, the tooltip, and some options, and Popper will do the
+            // magic positioning for you:
+            Popper.createPopper(button, tooltip, {
+                placement: 'right',
+            });
+        </script>
+    </div>
+    -->
 </div>
 <div id="addPayment" style="display: none">
     <div class="row mb-2">
@@ -109,6 +126,9 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-auto">
+        <span id="btnGoodSelected" class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
+    </div>
     <div class="col-sm-6">
         <div class="input-group input-group-sm mb-3">
             <div class="input-group-prepend">
@@ -130,6 +150,8 @@
             <th>Товар</th>
             <th>Ед</th>
             <th>Цена</th>
+            <th>Цена продажи</th>
+            <th>Наценка %</th>
             <th>Кол-во</th>
             <th>Стоимость</th>
         </tr>
@@ -138,12 +160,17 @@
         @if (Model.ArrivalGoods != null)
             @foreach (var arrivalGood in Model.ArrivalGoods)
             {
+                decimal sellpercent = 0;
+                if (arrivalGood.Price != 0)
+                    sellpercent = (arrivalGood.PriceSell / arrivalGood.Price - 1) * 100;
                 double sum = (double)arrivalGood.Price * arrivalGood.Count;
                 <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
                     <td><span onclick="deleteGood( @arrivalGood.Good.Id )" class="fa fa-trash"></span></td>
                     <td>@arrivalGood.Good?.Name</td>
                     <td>@arrivalGood.Good?.Unit</td>
                     <td><input oninput="editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" class="form-control form-control-sm "/></td>
+                    <td><input oninput="editGood(@arrivalGood.Good.Id)" PriceSell value="@arrivalGood.PriceSell" class="form-control form-control-sm "/></td>
+                    <td><input oninput="editGood(@arrivalGood.Good.Id)" SellPercent value="@sellpercent" class="form-control form-control-sm "/></td>
                     <td><input oninput="editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
                     <td><input oninput="editGood(@arrivalGood.Good.Id)" Sum value="@sum" class="form-control form-control-sm " /></td>
                 </tr>
@@ -151,7 +178,7 @@
     </tbody>
     <tfoot class="bg-light">
         <tr>
-            <th colspan="4"></th>
+            <th colspan="6"></th>
             <th id="ArrivalTableSummaryCount">@Model.CountAll</th>
             <th id="ArrivalTableSummarySum">@Model.PriceAll</th>
         </tr>
@@ -225,12 +252,22 @@
     const ttnDate = document.getElementById("TTNDate");
 
     var goods = new Array();
+    const btnGoodSelected = document.getElementById("btnGoodSelected");
     const goodSearch = document.getElementById("GoodSearch");
     const goodSearchBtnAdd = document.getElementById("GoodSearchBtnAdd");
     const goodSearchList = document.getElementById("GoodSearchList");
     const arrivalTable = document.getElementById("ArrivalTable");
     const arrivalTableSummaryCount = document.getElementById("ArrivalTableSummaryCount");
     const arrivalTableSummarySum = document.getElementById("ArrivalTableSummarySum");
+    //Подбор товара
+    let selectionGood = new SelectionGood();
+    btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
+    selectionGood.CloseDialogSetEvent((idGoods) => {
+        idGoods.forEach(idGood => {
+            goodAdd(goods.filter(good => good.id == idGood)[0]);
+        })
+    });
+    //Выбор товара из списка
     goodSearchBtnAdd.addEventListener("click", () => {
         addGoodBySearch();
     })
@@ -240,67 +277,75 @@
     })
     function addGoodBySearch() {
         goods.forEach(g => {
-            if (g.name == goodSearch.value) {
-                let flag = false;
-                arrivalTable.querySelectorAll("tr").forEach(tr => {
-                    if (tr.dataset.idGood == g.id) {
-                        console.log(tr.dataset.idGood + " - " + g.id);
-                        let price = parseFloat(tr.querySelector("input[Price]").value);
-                        let count = parseFloat(tr.querySelector("input[Count]").value) + 1;
-                        tr.querySelector("input[Count]").value = count;
-                        tr.querySelector("input[Sum]").value = (price * count).toFixed(2);
-                        flag = true;
-                    }
-                });
-                if (!flag) {
-                    let tr = document.createElement("tr");
-                    tr.dataset.id = -1;
-                    tr.dataset.idGood = g.id;
-                    tr.innerHTML = `
+            if (g.name == goodSearch.value)
+                goodAdd(g);
+        })
+        goodSearch.value = "";
+    }
+    function goodAdd(good) {
+        let g = good;
+        let flag = false;
+        arrivalTable.querySelectorAll("tr").forEach(tr => {
+            if (tr.dataset.idGood == g.id) {
+                let price = parseFloat(tr.querySelector("input[Price]").value);
+                let count = parseFloat(tr.querySelector("input[Count]").value) + 1;
+                tr.querySelector("input[Count]").value = count;
+                tr.querySelector("input[Sum]").value = (price * count).toFixed(2);
+                flag = true;
+            }
+        });
+        if (!flag) {
+            let tr = document.createElement("tr");
+            tr.dataset.id = -1;
+            tr.dataset.idGood = g.id;
+            let priceSell = 0;
+            g.goodPrices.forEach(price => {
+                if (price.shopId == shopselect.value)
+                    priceSell = price.price;
+            });
+            tr.innerHTML = `
 <td><i Remove class="fa fa-trash" aria-hidden="true"></i></td>
 <td>${g.name}</td>
-<td>${g.unit}</td>
-<td><input Price value='0' class='form-control form-control-sm'></td>
-<td><input Count value='1' class='form-control form-control-sm'></td>
+<td>${g.unit}</td >
+<td><input Price value='' class='form-control form-control-sm'></td>
+<td><input PriceSell value='${priceSell}' class='form-control form-control-sm'></td>
+<td><input SellPercent value='0' class='form-control form-control-sm'></td>
+<td><input Count value='' class='form-control form-control-sm'></td>
 <td><input Sum value='0' class='form-control form-control-sm'></td>
 `;
-                    let btnDelete = tr.querySelector("i[Remove]");
-                    btnDelete.addEventListener("click", () => {
-                        deleteGood(g.id);
-                    })
-                    let tdPrice = tr.querySelector("input[Price]");
-                    let tdCount = tr.querySelector("input[Count]");
-                    let tdSum = tr.querySelector("input[Sum]");
-                    [tdPrice, tdCount, tdSum].forEach(td => {
-                        td.addEventListener("input", () => {
-                            editGood(g.id);
-                            /*
-                            let price = parseFloat(tdPrice.value);
-                            let count = parseFloat(tdCount.value);
-                            if (isNaN(price) || isNaN(count))
-                                tdSum.value = "0";
-                            else
-                                tdSum.value = (price * count).toFixed(2);
-                            calcSummary();
-                            */
-                        });
-                    });
-                    arrivalTable.prepend(tr);
-                }
-            }
-        })
+            let btnDelete = tr.querySelector("i[Remove]");
+            btnDelete.addEventListener("click", () => {
+                deleteGood(g.id);
+            })
+            let tdPrice = tr.querySelector("input[Price]");
+            let tdPriceSell = tr.querySelector("input[PriceSell]");
+            let tdSellPercent = tr.querySelector("input[SellPercent]");
+            let tdCount = tr.querySelector("input[Count]");
+            let tdSum = tr.querySelector("input[Sum]");
+            [tdPrice, tdCount, tdPriceSell, tdSum].forEach(td => {
+                td.addEventListener("input", () => {
+                    editGood(g.id);
+                });
+            });
+            arrivalTable.prepend(tr);
+        }
+
         calcSummary();
         calcPaymentSumary();
-        goodSearch.value = "";
     }
     function editGood(idGood) {
         arrivalTable.querySelectorAll("tr").forEach(tr => {
-            if (tr.dataset.idGood = idGood) {
+            if (tr.dataset.idGood == idGood) {
                 let tdPrice = tr.querySelector("input[Price]");
+                let tdPriceSell=tr.querySelector("input[PriceSell]");
+                let tdSellPercent=tr.querySelector("input[SellPercent]");
                 let tdCount = tr.querySelector("input[Count]");
                 let tdSum = tr.querySelector("input[Sum]");
-                let price = parseFloat(tdPrice.value);
-                let count = parseFloat(tdCount.value);
+
+                let price = toFloat(tdPrice.value);
+                let priceSell = toFloat(tdPriceSell.value);
+                tdSellPercent.value = ((priceSell / price - 1) * 100).toFixed(2);
+                let count = toFloat(tdCount.value);
                 if (isNaN(price) || isNaN(count))
                     tdSum.value = "0";
                 else
@@ -330,6 +375,23 @@
         arrivalTableSummarySum.textContent = sumAll.toFixed(2);
     }
     const shopselect = document.getElementById("ShopSelect");
+    shopselect.addEventListener("change", () => {
+        //Пересчитаем цену продажи и наценку
+        if (confirm("Магазин изменился, выполнить пересчет цену продажи?")) {
+            arrivalTable.querySelectorAll("tr").forEach(tr => {
+                let idGood = tr.dataset.idGood;
+                let price = 0;
+                goods.forEach(good => {
+                    good.goodPrices.forEach(goodPrice => {
+                        if (goodPrice.shopId == shopselect.value)
+                            price = goodPrice.price
+                    });
+                });
+                tr.querySelector("input[PriceSell]").value = price;
+                editGood(idGood);
+            })
+        }
+    })
     const supplierSelected = document.getElementById("SupplierSelected");
     const supplierModalBtnSave = document.getElementById("SupplierModalBtnSave");
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -473,9 +535,10 @@
         arrivalTable.querySelectorAll("tr").forEach(tr => {
             arrivalGoods.push({
                 id: parseInt(tr.dataset.id),
-                goodId: parseInt(tr.dataset.idGood),
-                count: parseFloat(tr.querySelector("input[Count]").value),
-                price:  parseFloat(tr.querySelector("input[Price]").value)
+                goodId: toInteger(tr.dataset.idGood),
+                count: toFloat(tr.querySelector("input[Count]").value),
+                price: toFloat(tr.querySelector("input[Price]").value),
+                priceSell: toFloat(tr.querySelector("input[PriceSell]").value)
             });
         });
         let arrivalPayments = [];
@@ -484,10 +547,9 @@
                 id: parseInt(tr.dataset.id),
                 datePayment: tr.querySelector("input[date]").value,
                 bankAccountId: parseInt(tr.querySelector("select").value),
-                sum: parseFloat(tr.querySelector("input[sum]").value)
+                sum: toFloat(tr.querySelector("input[sum]").value)
             })
         });
-        console.log(arrivalPayments);
         fetch("create", {
             method: "POST",
             headers: {

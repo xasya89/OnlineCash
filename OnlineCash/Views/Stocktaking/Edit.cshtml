@@ -196,18 +196,18 @@
         accordion.querySelectorAll(".accordion-item").forEach(accordionitem => {
             let idGroup = accordionitem.dataset.id;
             let groupName = accordionitem.querySelector("input[body]").value;
-            let tableGoods = accordion.querySelector("tbody");
+            let tableGoods = accordionitem.querySelector("tbody");
             let group = {
                 id: idGroup, name: groupName, goods: new Array()
             };
-            groups.push(group);
+            let goods = new Array()
             tableGoods.querySelectorAll("tr").forEach(tr => {
                 let id = tr.dataset.id;
                 let idGood = tr.dataset.idGood;
                 let price = tr.dataset.price;
                 let tdCountDb = parseFloat(tr.querySelector("td[countDb]").textContent);
                 let tdCount = parseFloat(tr.querySelector("input").value.replace(",", "."));
-                group.goods.push({
+                goods.push({
                     id: id,
                     idGood: idGood,
                     count: 0,
@@ -216,6 +216,7 @@
                     price: price
                 });
             })
+            groups.push({ id: idGroup, name: groupName, goods: goods });
         })
         fetch("/Stocktaking/Save", {
             method: "POST",
@@ -303,7 +304,7 @@
         accordiobItem.dataset.id = group.id;
         accordiobItem.innerHTML = `
                     <div class="form-check">
-                      <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                      <input class="form-check-input" type="radio" checked name="flexRadioDefault" id="flexRadioDefault1">
                       <label class="form-check-label" for="flexRadioDefault1">
                         Выбран
                       </label>
@@ -345,41 +346,18 @@
     }
 
     //Подбор товара
-    function loadGroupGoods() {
-        return new Promise((resolve, reject) => {
-            fetch("/api/goodgroups")
-                .then(resp => resp.json())
-                .then(groups => {
-                    let groups_result = [];
-                    groups.forEach(group => {
-                        let newgroup = { id: group.id, name: group.name, goods: [], groups: [] };
-                        group.goods.forEach(good => {
-                            if (good.supplierId !== null) {
-                                let flagAdd = true;
-                                newgroup.groups.forEach(group => {
-                                    if (group.id == good.supplierId) {
-                                        group.goods.push({ id: good.id, name: good.name, unit: good.unit });
-                                        flagAdd = false;
-                                    }
-                                })
-                                if (flagAdd)
-                                    newgroup.groups.push({
-                                        id: good.supplier.id,
-                                        name: good.supplier.name,
-                                        goods: [{ id: good.id, name: good.name, unit: good.unit }]
-                                    });
-                            }
-                            newgroup.goods.push({ id: good.id, name: good.name, unit: good.unit });
-                        });
-                        groups_result.push(newgroup);
-                    });
-                    resolve(groups_result);
-                });
-        });
-    }
-    loadGroupGoods().then(groups => {
-        let selectionGood = new SelectionGood(groups);
-        btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
-        selectionGood.CloseDialogSetEvent((goods) => goods.forEach(good => goodAdd(good)));
+    let selectionGood = new SelectionGood();
+    btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
+    selectionGood.CloseDialogSetEvent((goods) => {
+        fetch("/api/goods/list/1", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(goods)
+        })
+            .then(resp => resp.json())
+            .then(goods => goods.forEach(good => goodAdd(good)));
     });
 </script>

@@ -24,6 +24,31 @@ namespace OnlineCash.Controllers.Api
         public async Task<IActionResult> Get(string Name)
             => Ok( await db.Goods.Include(g=>g.GoodPrices).Include(g=>g.GoodGroup).Include(g=>g.Supplier).Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync());
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Default(int id)
+            => Ok(await db.Goods.Include(g => g.GoodGroup).Include(g=>g.Supplier).Where(g => g.Id == id).FirstOrDefaultAsync());
+
+        [HttpGet("{id}/{idShop}")]
+        public async Task<IActionResult> DefaultShop(int id, int idShop)
+        {
+            var good = await db.Goods.Include(g=>g.GoodPrices).Include(g => g.GoodGroup).Include(g => g.Supplier).Where(g => g.Id == id).FirstOrDefaultAsync();
+            if (good != null)
+                good.Price = good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault().Price;
+            return Ok(good);
+        }
+        [HttpPost("list/{idShop}")]
+        public async Task<IActionResult> DefaultList([FromBody] List<int> idGoods, int idShop)
+        {
+            var goods = await db.Goods.Include(g=>g.GoodPrices).Where(g=>idGoods.Contains(g.Id)).ToListAsync();
+            foreach (var good in goods)
+            {
+                var goodprice = good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault();
+                if (goodprice != null)
+                    good.Price = goodprice.Price;
+            }
+            return Ok(goods);
+        }
+        /*
         [HttpGet("barcode/{barcode}")]
         public async Task<IActionResult> GetBarcode(string barcode)
         {
@@ -33,5 +58,6 @@ namespace OnlineCash.Controllers.Api
                 ));
 
         }
+        */
     }
 }

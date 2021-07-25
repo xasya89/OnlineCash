@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20210720151047_AlterTable_Stocktaking")]
+    partial class AlterTable_Stocktaking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,9 +79,6 @@ namespace OnlineCash.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("PriceSell")
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
@@ -424,7 +423,7 @@ namespace OnlineCash.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<double>("CountDb")
+                    b.Property<double>("Count")
                         .HasColumnType("double");
 
                     b.Property<double>("CountFact")
@@ -442,7 +441,7 @@ namespace OnlineCash.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("SumDb")
+                    b.Property<decimal>("Sum")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("SumFact")

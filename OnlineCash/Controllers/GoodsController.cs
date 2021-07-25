@@ -66,7 +66,11 @@ namespace OnlineCash.Controllers
 
         [HttpGet]
         public async Task<IActionResult> PrintPriceAll(int idShop)
+            => View("PrintPriceStepPrint_TypePriceNoCount", await db.GoodGroups.Include(g => g.Goods).ThenInclude(g => g.GoodPrices.Where(p => p.ShopId == idShop)).OrderBy(gr=>gr.Name).ToListAsync());
+        /*
         {
+            var groups = await db.GoodGroups.Include(g => g.Goods).ThenInclude(g => g.GoodPrices.Where(p => p.ShopId == idShop)).ToListAsync();
+            
             var goods = await db.Goods.Include(g => g.GoodPrices.Where(p => p.ShopId==idShop)).OrderBy(g=>g.Name).ToListAsync();
             List<Models.GoodWithGoodBalanceModel> goodWithBalances = new List<Models.GoodWithGoodBalanceModel>();
             var goodBalances = await db.GoodBalances.Where(gb => gb.ShopId==idShop).ToListAsync();
@@ -79,8 +83,9 @@ namespace OnlineCash.Controllers
                 });
             }
             return View("PrintPriceStepPrint_TypePriceNoCount", goodWithBalances);
-        }
 
+        }
+        */
         public async Task<IActionResult> Details(int id)
         {
             var good = await db.Goods.Where(g=>g.Id==id).FirstOrDefaultAsync(g => g.Id == id);

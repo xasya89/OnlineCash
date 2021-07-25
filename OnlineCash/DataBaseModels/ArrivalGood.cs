@@ -12,6 +12,7 @@ namespace OnlineCash.DataBaseModels
         public Good Good { get; set; }
         public double Count { get; set; }
         public decimal Price { get; set; }
+        public decimal PriceSell { get; set; }
         public int ArrivalId { get; set; }
         public Arrival Arrival { get; set; }
     }

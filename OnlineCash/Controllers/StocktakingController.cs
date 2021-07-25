@@ -101,8 +101,81 @@ namespace OnlineCash.Controllers
                 }
             }
             await db.SaveChangesAsync();
-            //Set count good in goodbalance
+            //Изменим количесво в GoodBalance
             if (model.isSuccess & !isSuccessOld)
+            {
+                stocktaking = await db.Stocktakings.Where(s => s.Id == model.id).Include(s => s.StockTakingGroups).ThenInclude(gr => gr.StocktakingGoods).FirstOrDefaultAsync();
+
+                //Проверим количество в системе для товаров добавленных в инверторизацию
+                var goodBalances = await db.GoodBalances.Include(b=>b.Good).ThenInclude(g=>g.GoodPrices.Where(p=>p.ShopId==stocktaking.ShopId)).Where(gb => gb.ShopId == stocktaking.ShopId).ToListAsync();
+                foreach(var group in stocktaking.StockTakingGroups)
+                    foreach(var good in group.StocktakingGoods)
+                    {
+                        var goodbalance = goodBalances.Where(b => b.GoodId == good.GoodId).FirstOrDefault();
+                        if (goodbalance != null)
+                        {
+                            good.CountDB = goodbalance.Count;
+                            goodbalance.Count = good.CountFact;
+                        }
+                        else //Если товара нет в goodblalnce, тогда его добавим
+                            db.GoodBalances.Add(new GoodBalance
+                            {
+                                ShopId = stocktaking.ShopId,
+                                GoodId = good.GoodId,
+                                Count = good.CountFact
+                            });
+                    };
+                //проверим наличие не учетнных товаров и создадим группу
+                bool flagNoInvertoryGoods = false;
+                foreach(var b in goodBalances.Where(b=>b.Count!=0).ToList())
+                {
+                    bool flag = false;
+                    foreach (var group in stocktaking.StockTakingGroups)
+                        foreach (var good in group.StocktakingGoods)
+                            if (b.GoodId == good.GoodId)
+                                flag = true;
+                    flagNoInvertoryGoods = flag==false ? true : flagNoInvertoryGoods;
+                };
+                if (flagNoInvertoryGoods)
+                {
+
+                    var groupNoInvertory = new StockTakingGroup { Stocktaking = stocktaking, Name = "Не учтено" };
+                    db.StockTakingGroups.Add(groupNoInvertory);
+                    foreach (var b in goodBalances.Where(b=>b.Count!=0))
+                    {
+                        bool flag = false;
+                        foreach (var group in stocktaking.StockTakingGroups)
+                            foreach (var good in group.StocktakingGoods)
+                                if (b.GoodId == good.GoodId)
+                                    flag = true;
+                        if (!flag)
+                        {
+                            db.StocktakingGoods.Add(new StocktakingGood
+                            {
+                                StockTakingGroup = groupNoInvertory,
+                                GoodId = b.GoodId,
+                                Price=b.Good.GoodPrices.FirstOrDefault().Price,
+                                Count = 0,
+                                CountDB = b.Count,
+                                CountFact = 0,
+                            });
+                            b.Count = 0;
+                        };
+                    };
+                    //Теперь учтем продажи после даты выполнения инверторизации
+                    var sells = await db.Shifts.Include(s => s.CheckSells).ThenInclude(c => c.CheckGoods).ThenInclude(g => g.Good).Where(s => s.ShopId == stocktaking.ShopId & s.Start >= stocktaking.Create).ToListAsync();
+                    foreach (var sell in sells)
+                        foreach (var check in sell.CheckSells)
+                            foreach (var good in check.CheckGoods)
+                            {
+                                var goodbalance = goodBalances.Where(gb => gb.GoodId == good.GoodId).FirstOrDefault();
+                                if (goodbalance != null)
+                                    goodbalance.Count -= good.Count;
+                            }
+                }
+                await db.SaveChangesAsync();
+            }
+                /*
             {
                 var goodbalances = await db.GoodBalances.Include(b => b.Good).ThenInclude(b=>b.GoodPrices.Where(p=>p.ShopId==stocktaking.ShopId)).Include(b => b.Shop).ToListAsync();
                 foreach(var group in model.Groups)
@@ -118,14 +191,15 @@ namespace OnlineCash.Controllers
                 foreach (var group in stocktaking.StockTakingGroups)
                     foreach (var good in group.StocktakingGoods)
                         stocktakingGoods.Add(good);
-                var groupfirst = await db.StockTakingGroups.Where(gr => gr.StocktakingId == model.id).FirstOrDefaultAsync();
+                var groupNoFact = new StockTakingGroup { Stocktaking = stocktaking, Name = "Не учтено" };
+                db.StockTakingGroups.Add(groupNoFact);
                 foreach (var goodbalance in goodbalances)
                     if (stocktakingGoods.Count(s => s.GoodId == goodbalance.GoodId) == 0 & goodbalance.Count!=0)
                     {
 
                         db.StocktakingGoods.Add(new StocktakingGood
                         {
-                            StockTakingGroup=groupfirst,
+                            StockTakingGroup=groupNoFact,
                             Good = goodbalance.Good,
                             Count = 0,
                             CountDB = goodbalance.Count,
@@ -145,7 +219,13 @@ namespace OnlineCash.Controllers
                                 goodbalance.Count -= good.Count;
                         }    
             }
-
+                */
+            //Подведем итоги инверторизации и запишем итоговые значение
+            stocktaking = await db.Stocktakings.Where(s => s.Id == model.id).Include(s => s.StockTakingGroups).ThenInclude(gr => gr.StocktakingGoods).FirstOrDefaultAsync();
+            stocktaking.CountDb = stocktaking.StockTakingGroups.Sum(s => s.StocktakingGoods.Sum(g => g.CountDB));
+            stocktaking.CountFact = stocktaking.StockTakingGroups.Sum(s => s.StocktakingGoods.Sum(g => g.CountFact));
+            stocktaking.SumDb = stocktaking.StockTakingGroups.Sum(s => s.StocktakingGoods.Sum(g =>(decimal) g.CountDB * g.Price));
+            stocktaking.SumFact = stocktaking.StockTakingGroups.Sum(s => s.StocktakingGoods.Sum(g => (decimal)g.CountFact * g.Price));
             await db.SaveChangesAsync();
             return Ok();
         }
@@ -159,5 +239,9 @@ namespace OnlineCash.Controllers
             await db.SaveChangesAsync();
             return await Index();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Print(int id)
+            => View(await db.Stocktakings.Include(s => s.Shop).Include(s => s.StockTakingGroups).ThenInclude(g => g.StocktakingGoods).ThenInclude(g => g.Good).Where(s => s.Id == id).FirstOrDefaultAsync());
     }
 }

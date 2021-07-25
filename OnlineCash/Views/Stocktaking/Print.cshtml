@@ -1,0 +1,92 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model OnlineCash.DataBaseModels.Stocktaking
+<h5>Иверторизация - @Model.Num  от @Model.Create.ToString("dd.MM.yy")</h5>
+<h5>Товара в магазине на сумму (фактическое): @Model.SumFact руб.</h5>
+<h5>Результат по группам</h5>
+<table class="table table-sm table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Группа</th>
+            <th>Кол-во</th>
+            <th>Кол-во факт</th>
+            <th class="font-weight-bold">Отклонение</th>
+            <th>Руб</th>
+            <th>Руб факт</th>
+            <th class="font-weight-bold">Отклонение</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var group in Model.StockTakingGroups)
+        {
+            double count = group.StocktakingGoods.Sum(g => g.CountDB);
+            double countFact = group.StocktakingGoods.Sum(g => g.CountFact);
+            decimal sum = group.StocktakingGoods.Sum(g =>(decimal) g.CountDB * g.Price);
+            decimal sumFact = group.StocktakingGoods.Sum(g => (decimal)g.CountFact * g.Price);
+        <tr>
+            <td>@group.Name</td>
+            <td>@count</td>
+            <td>@countFact</td>
+            <td class="font-weight-bold">@(countFact - count)</td>
+            <td>@sum</td>
+            <td>@sumFact</td>
+            <td class="font-weight-bold">@(sumFact - sum)</td>
+        </tr>
+            }
+    </tbody>
+</table>
+<div style="page-break-after:always">&nbsp;</div>
+@foreach(var group in Model.StockTakingGroups)
+            {
+<h5 class="text-center">@group.Name</h5>
+<table class="table table-sm table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Ед</th>
+            <th>Цена</th>
+            <th>Кол-во</th>
+            <th>Кол-во факт</th>
+            <th class="font-weight-bold">Разница</th>
+            <th>Руб</th>
+            <th>Руб факт</th>
+            <th class="font-weight-bold">Разница руб</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var good in group.StocktakingGoods)
+                {
+
+        <tr>
+            <td>@good.Good.Name</td>
+            <td>@good.Good.Unit</td>
+            <td>@good.Price</td>
+            <td>@good.CountDB</td>
+            <td>@good.CountFact</td>
+            <td class="font-weight-bold">@(good.CountFact - good.CountDB)</td>
+            <td>@((decimal)good.CountDB * good.Price)</td>
+            <td>@((decimal)good.CountFact * good.Price)</td>
+            <td class="font-weight-bold">@((decimal)(good.CountFact - good.CountDB) * good.Price)</td>
+        </tr>
+                }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="3">Итого</th>
+            <th>@group.StocktakingGoods.Sum(g => g.CountDB)</th>
+            <th>@group.StocktakingGoods.Sum(g => g.CountFact)</th>
+            <th>@group.StocktakingGoods.Sum(g => g.CountFact - g.CountDB)</th>
+            <th>@group.StocktakingGoods.Sum(g => (decimal)g.CountDB * g.Price)</th>
+            <th>@group.StocktakingGoods.Sum(g => (decimal)g.CountFact * g.Price)</th>
+            <th>@group.StocktakingGoods.Sum(g => (decimal) (g.CountFact - g.CountDB) * g.Price)</th>
+        </tr>
+    </tfoot>
+</table>
+            }
+
+<script>
+        window.print();
+</script>
