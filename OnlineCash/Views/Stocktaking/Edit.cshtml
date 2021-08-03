@@ -241,7 +241,7 @@
         if (digitals.indexOf(e.key) > -1)
             code = code + e.key;
         if (e.key == "Enter" && code != "") {
-            fetch("/api/goods/barcode/" + code)
+            fetch("/api/barcodes/" + code)
                 .then(resp => resp.json())
                 .then(good => {
                     let price = good.Price;

@@ -21,11 +21,9 @@ namespace OnlineCash.Controllers.Api
         [HttpGet("{barcode}")]
         public async Task<IActionResult> GetBarcode(string barcode)
         {
-
             return Ok(JsonSerializer.Serialize(
                 await _db.Goods.Include(g => g.GoodPrices).Include(g => g.Supplier).Where(g => g.BarCode == barcode).FirstOrDefaultAsync()
                 ));
-
         }
     }
 }

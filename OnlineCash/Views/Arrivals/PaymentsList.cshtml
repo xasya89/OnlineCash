@@ -108,7 +108,7 @@
                 body: JSON.stringify({
                     arrivalId: parseInt(modalPaymentArrivalId.value),
                     bankId: parseInt(modalPaymentBank.value),
-                    sum: parseFloat(modalPaymentSummPayment.value)
+                    sum: parseFloat(modalPaymentPayment.value)
                 })
             })
                 .then(resp => {
@@ -116,7 +116,7 @@
                         paymentDialog.hide();
                         let tr = arrivals.querySelector(`tr[data-id="${modalPaymentArrivalId.value}"]`);
                         let sumDiff = parseFloat(tr.querySelector("td[sumDiff]").textContent);
-                        let sumPayment = parseFloat(modalPaymentSummPayment.value);
+                        let sumPayment = parseFloat(modalPaymentPayment.value);
                         if (sumDiff - sumPayment <= 0)
                             tr.remove();
                         else

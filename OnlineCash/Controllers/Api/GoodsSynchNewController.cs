@@ -50,6 +50,8 @@ namespace OnlineCash.Controllers.Api
         {
             good.Uuid = Guid.NewGuid();
             good.Id = 0;
+            var goodGroup = db.GoodGroups.FirstOrDefault();
+            good.GoodGroupId = db.GoodGroups.FirstOrDefault().Id;
             db.Goods.Add(good);
             decimal price = good.Price;
             var shops = await db.Shops.ToListAsync();
