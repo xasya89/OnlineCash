@@ -10,6 +10,9 @@ namespace OnlineCash.DataBaseModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string OrgName { get; set; }
+        public string Inn { get; set; }
+        public string Adress { get; set; }
         public List<GoodPrice> GoodPrices { get; set; }
         public List<Shift> Shifts { get; set; }
         public List<GoodBalance> GoodBalances { get; set; }

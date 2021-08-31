@@ -22,6 +22,8 @@ namespace OnlineCash.TagHelpers
             SVG
         }
 
+        int HeightAttr=0;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             var content = context.AllAttributes["content"]?.Value.ToString();
@@ -34,10 +36,13 @@ namespace OnlineCash.TagHelpers
                Convert.ToInt32(String.IsNullOrEmpty(context.AllAttributes["width"]?.Value.ToString())
                   ? "1"
                   : context.AllAttributes["width"].Value.ToString());
-            var height =
+            HeightAttr =
                Convert.ToInt32(String.IsNullOrEmpty(context.AllAttributes["height"]?.Value.ToString())
                   ? "1"
                   : context.AllAttributes["height"].Value.ToString());
+            var height = HeightAttr;
+            if (height < 20)
+                height = 20;
             var margin =
                Convert.ToInt32(String.IsNullOrEmpty(context.AllAttributes["margin"]?.Value.ToString())
                   ? "0"
@@ -108,7 +113,7 @@ namespace OnlineCash.TagHelpers
                 output.TagName = "img";
                 output.Attributes.Clear();
                 output.Attributes.Add("width", pixelData.Width);
-                output.Attributes.Add("height", pixelData.Height);
+                output.Attributes.Add("height", HeightAttr);
                 output.Attributes.Add("alt", alt);
                 output.Attributes.Add("src",
                    String.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray())));
@@ -129,7 +134,7 @@ namespace OnlineCash.TagHelpers
             output.TagName = "img";
             output.Attributes.Clear();
             output.Attributes.Add("width", svgImage.Width);
-            output.Attributes.Add("height", svgImage.Height);
+            output.Attributes.Add("height", HeightAttr);
             output.Attributes.Add("alt", alt);
             output.Attributes.Add("src", new Microsoft.AspNetCore.Html.HtmlString(
                String.Format("data:image/svg+xml;{0}", svgImage.Content)));
