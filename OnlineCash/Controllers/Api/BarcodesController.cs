@@ -18,11 +18,15 @@ namespace OnlineCash.Controllers.Api
         {
             _db = db;
         }
-        [HttpGet("{barcode}")]
-        public async Task<IActionResult> GetBarcode(string barcode)
+        [HttpGet("{barcodestr}")]
+        public async Task<IActionResult> GetBarcode(string barcodestr)
         {
+            var barcode = await _db.BarCodes.Where(b => b.Code == barcodestr).FirstOrDefaultAsync();
+            if (barcodestr == null)
+                return Ok(null);
+
             return Ok(JsonSerializer.Serialize(
-                await _db.Goods.Include(g => g.GoodPrices).Include(g => g.Supplier).Where(g => g.BarCode == barcode).FirstOrDefaultAsync()
+                await _db.Goods.Include(g => g.GoodPrices).Include(g=>g.BarCodes).Include(g => g.Supplier).Where(g => g.Id == barcode.GoodId).FirstOrDefaultAsync()
                 ));
         }
     }

@@ -29,6 +29,37 @@ namespace OnlineCash.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<GoodGroup>> Get() => await db.GoodGroups.Include(g=>g.Goods).ThenInclude(g=>g.Supplier).OrderBy(g=>g.Name).ToListAsync();
 
+        [HttpGet("tree")]
+        public async Task<IActionResult> GetTree()
+        {
+            var groups = await db.GoodGroups.Include(gr=>gr.Goods).ThenInclude(g=>g.Supplier).OrderBy(gr => gr.Name).ToListAsync();
+            List<Models.GroupTreeModel> model = new List<Models.GroupTreeModel>();
+            foreach(var group in groups)
+            {
+                var groupTree = new Models.GroupTreeModel
+                {
+                    Id = group.Id,
+                    Name = group.Name,
+                    Type=Models.GroupTreeTypes.Group,
+                    Goods = group.Goods.Where(g => g.SupplierId == null).ToList()
+                };
+                var goodWithSupplier = group.Goods.Where(g => g.SupplierId != null).ToList();
+                foreach(var good in goodWithSupplier)
+                {
+                    if (groupTree.Childs.Count(s => s.Id == good.SupplierId) == 0)
+                        groupTree.Childs.Add(new Models.GroupTreeModel
+                        {
+                            Id = (int)good.SupplierId,
+                            Type=Models.GroupTreeTypes.Supplier,
+                            Name = good.Supplier?.Name,
+                            Goods = group.Goods.Where(g => g.SupplierId == good.SupplierId).ToList()
+                        });
+                }
+                model.Add(groupTree);
+            };
+            return Ok(model);
+        }
+
         // GET api/<GoodGroupsController>/5
         [HttpGet("{id}")]
         public string Get(int id)

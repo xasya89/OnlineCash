@@ -2,32 +2,41 @@
 <table class="table table-sm table-hover table-bordered">
     <thead>
         <tr>
-            <th>Дата</th>
-            <th>Магазин</th>
-            <th>Продажи</th>
-            <th>Возвраты</th>
-            <th>Внесения</th>
-            <th>Изъятия</th>
-            <th>Остаток</th>
+            <th rowspan="2">Дата</th>
+            <th rowspan="2">Магазин</th>
+            <th colspan="3">Продажи</th>
+            <th rowspan="2">Возвраты</th>
+            <th rowspan="2">Внесения</th>
+            <th rowspan="2">Изъятия</th>
+            <th rowspan="2">Остаток в кассе</th>
+        </tr>
+        <tr>
+            <th>Наличные</th>
+            <th>Безналичные</th>
+            <th>Всего</th>
         </tr>
     </thead>
     <tbody>
         @foreach(var shift in Model)
             {
-                <tr data-id="@shift.Id" onclick="openShift(@shift.Id)">
-                    <td>@shift.Start.ToString("dd.MM.yy")</td>
-                    <td>@shift.Shop?.Name</td>
-                    <td>@shift.SumSell</td>
-                    <td>@shift.SummReturn</td>
-                    <td>@shift.SumIncome</td>
-                    <td>@shift.SumOutcome</td>
-                    <td>@shift.SumAll</td>
-                </tr>
+        <tr data-id="@shift.Id" onclick="openShift(@shift.Id)">
+            <td>@shift.Start.ToString("dd.MM")</td>
+            <td>@shift.Shop?.Name</td>
+            <td>@shift.SumNoElectron</td>
+            <td>@shift.SumElectron</td>
+            <td>@shift.SumSell</td>
+            <td>@shift.SummReturn</td>
+            <td>@shift.SumIncome</td>
+            <td>@shift.SumOutcome</td>
+            <td>@shift.SumAll</td>
+        </tr>
             }
     </tbody>
     <tfoot>
         <tr>
             <th colspan="2"></th>
+            <td>@Model.Sum(s => s.SumNoElectron)</td>
+            <td>@Model.Sum(s => s.SumElectron)</td>
             <th>@Model.Sum(s => s.SumSell)</th>
             <th>@Model.Sum(s => s.SummReturn)</th>
             <th>@Model.Sum(s => s.SumIncome)</th>

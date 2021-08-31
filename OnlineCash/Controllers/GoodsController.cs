@@ -10,6 +10,7 @@ using OnlineCash.ViewModels;
 using OnlineCash.DataBaseModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using OnlineCash.ViewModels.GoodsPrint;
 
 namespace OnlineCash.Controllers
 {
@@ -40,6 +41,10 @@ namespace OnlineCash.Controllers
             find = HttpContext.Session.GetString("SearchGoods");
             ViewBag.Find = find;
             ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
+            var barcode = await db.BarCodes.Where(b => b.Code == find).FirstOrDefaultAsync();
+            if (barcode != null)
+                return View("Index",await db.Goods.Where(g=>g.Id==barcode.GoodId).ToListAsync());
+
             return View("Index", await db.Goods.Where(g => EF.Functions.Like(g.Name, $"%{find}%")).OrderBy(g => g.Name).ToListAsync());
         }
 
@@ -88,12 +93,13 @@ namespace OnlineCash.Controllers
         */
         public async Task<IActionResult> Details(int id)
         {
-            var good = await db.Goods.Where(g=>g.Id==id).FirstOrDefaultAsync(g => g.Id == id);
+            var good = await db.Goods.Include(g=>g.BarCodes).Where(g=>g.Id==id).FirstOrDefaultAsync(g => g.Id == id);
             var model = new GoodViewModel();
             model.Id = good.Id;
             model.Name = good.Name;
             model.GoodGroupId = good.GoodGroupId;
             model.Article = good.Article;
+            model.BarCodes = good.BarCodes;
             model.BarCode = good.BarCode;
             model.Unit = good.Unit;
             model.Price = good.Price;
@@ -145,6 +151,12 @@ namespace OnlineCash.Controllers
                 {
                     var good = new Good { Uuid=Guid.NewGuid(), Name = g.Name, Article = g.Article, BarCode = g.BarCode, Unit = g.Unit, Price = g.Price, GoodGroup=goodGroup, Supplier=supplier };
                     db.Goods.Add(good);
+                    foreach (var barcode in g.BarCodes)
+                        db.BarCodes.Add(new BarCode
+                        {
+                            Good=good,
+                            Code=barcode.Code
+                        });
                     foreach (var p in g.PriceShops)
                     {
                         var shop = await db.Shops.FirstOrDefaultAsync(s => s.Id == p.idShop);
@@ -163,12 +175,13 @@ namespace OnlineCash.Controllers
                 }
                 if (g.Id != 0)
                 {
-                    var good = await db.Goods.FirstOrDefaultAsync(good => good.Id == g.Id);
+                    var good = await db.Goods.Include(g=>g.BarCodes).FirstOrDefaultAsync(good => good.Id == g.Id);
                     if (good != null)
                     {
                         good.Name = g.Name;
                         good.Article = g.Article;
-                        good.BarCode = g.BarCode;
+                        string barcodeForGood = g.BarCodes.FirstOrDefault()?.Code;
+                        good.BarCode = barcodeForGood;
                         good.Unit = g.Unit;
                         good.Price = g.Price;
                         good.GoodGroup = goodGroup;
@@ -187,6 +200,31 @@ namespace OnlineCash.Controllers
                                 price.Price = p.Price;
                             }
                         }
+                        //Определим удаленные штриходы
+                        foreach (var codeDb in good.BarCodes)
+                        {
+                            var flagNotIn = true;
+                            foreach (var code in g.BarCodes.Where(b => b.Id != 0).ToList())
+                                if (codeDb.Id == code.Id)
+                                    flagNotIn = false;
+                            if (flagNotIn)
+                                db.BarCodes.Remove(codeDb);
+                        }
+                        //Изменим текущие штрих коды
+                        foreach (var barcode in g.BarCodes.Where(b => b.Id != 0 & b.Id!=-1).ToList())
+                        {
+                            var code = good.BarCodes.Where(b => b.Id == barcode.Id).FirstOrDefault();
+                            if (code != null)
+                                code.Code = barcode.Code;
+                        }
+                        //Добавим новые штрих коды
+                        foreach (var barcode in g.BarCodes.Where(b => b.Id == 0 || b.Id==-1).ToList())
+                            db.BarCodes.Add(new BarCode
+                            {
+                                Good = good,
+                                Code = barcode.Code
+                            });
+                        
                         db.SaveChanges();
                         return RedirectToAction("Index");
                     }
@@ -255,5 +293,16 @@ namespace OnlineCash.Controllers
             var goods = GoodSelectedListForPrint.FirstOrDefault(d => d.Key == uuid).Value;
             return View("PrintPriceStepPrint_"+ typeprice, goods);
         }
+
+        /// <summary>
+        /// Печать ценников с выбранными группами и магазинами
+        /// </summary>
+        /// <param name="model"></param>
+        public async Task<IActionResult> PrintPriceTagWithSelectionGroup([FromBody] Models.GoodPrint.SelectionGroupShopModel model) =>
+            View(await db.GoodGroups.Where(gr => model.idGroups.Contains(gr.Id))
+                .Include(gr => gr.Goods)
+                .ThenInclude(g => g.GoodPrices.Where(p => model.idShops.Contains(p.ShopId)))
+                .ToListAsync());
+
     }
 }

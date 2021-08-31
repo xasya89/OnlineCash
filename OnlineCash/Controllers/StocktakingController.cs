@@ -138,7 +138,6 @@ namespace OnlineCash.Controllers
                 };
                 if (flagNoInvertoryGoods)
                 {
-
                     var groupNoInvertory = new StockTakingGroup { Stocktaking = stocktaking, Name = "Не учтено" };
                     db.StockTakingGroups.Add(groupNoInvertory);
                     foreach (var b in goodBalances.Where(b=>b.Count!=0))
@@ -163,6 +162,7 @@ namespace OnlineCash.Controllers
                         };
                     };
                     //Теперь учтем продажи после даты выполнения инверторизации
+                    /*
                     var sells = await db.Shifts.Include(s => s.CheckSells).ThenInclude(c => c.CheckGoods).ThenInclude(g => g.Good).Where(s => s.ShopId == stocktaking.ShopId & s.Start >= stocktaking.Create).ToListAsync();
                     foreach (var sell in sells)
                         foreach (var check in sell.CheckSells)
@@ -172,6 +172,7 @@ namespace OnlineCash.Controllers
                                 if (goodbalance != null)
                                     goodbalance.Count -= good.Count;
                             }
+                    */
                 }
                 await db.SaveChangesAsync();
             }

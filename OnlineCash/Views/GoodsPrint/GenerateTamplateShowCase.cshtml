@@ -1,0 +1,57 @@
+﻿@model List<OnlineCash.Models.GoodWithGoodBalanceModel>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        h4, h5 {
+            margin: 1mm;
+            padding: 0;
+            font-family: Arial;
+        }
+
+        h4 {
+            font-size: 18pt;
+        }
+
+        h5 {
+            font-size: 14pt;
+        }
+
+        span[org] {
+            display: block;
+            font-family: Calibri;
+            font-size: 6pt;
+        }
+
+        img {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div style="display:grid; grid-template-columns: repeat(3, 60mm);">
+        @foreach (var goodWithBalance in Model)
+            foreach (var price in goodWithBalance.Good.GoodPrices)
+            {
+                <div style="border: 1px dotted lightgray; padding: 2mm;">
+                    <h5 style="width:56mm; min-height: 15mm; overflow-x: hidden; text-overflow: ellipsis">
+                        @goodWithBalance.Good.Name
+                    </h5>
+                    <div style="clear: both">&nbsp;</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr)">
+                        <h4>@price.Price р.</h4>
+                        <span org>ИП Санина Е М ИНН 312306898510<br>@DateTime.Now.ToString("dd.MM.yy")</span>
+                    </div>
+                </div>
+            }
+    </div>
+    <script>
+        window.print();
+    </script>
+</body>
+</html>

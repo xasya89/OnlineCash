@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
 using Microsoft.AspNetCore.Authorization;
+using OnlineCash.Services;
 
 namespace OnlineCash.Controllers
 {
@@ -16,11 +17,13 @@ namespace OnlineCash.Controllers
         public shopContext db;
         public ILogger<ArrivalsController> logger;
         public IConfiguration configuration;
-        public ArrivalsController(shopContext db, ILogger<ArrivalsController> logger, IConfiguration configuration)
+        IGoodBalanceService goodBalanceService;
+        public ArrivalsController(shopContext db, ILogger<ArrivalsController> logger, IConfiguration configuration, IGoodBalanceService goodBalanceService)
         {
             this.db = db;
             this.logger = logger;
             this.configuration = configuration;
+            this.goodBalanceService = goodBalanceService;
         }
         [Authorize]
         public async Task<IActionResult> Index() =>

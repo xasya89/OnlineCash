@@ -10,6 +10,7 @@ namespace OnlineCash
     {
         public DbSet<Cashier> Cashiers { get; set; }
         public DbSet<Good> Goods { get; set; }
+        public DbSet<BarCode> BarCodes { get; set; }
         public DbSet<Shop> Shops { get; set; }
         public DbSet<GoodPrice> GoodPrices { get; set; }
         public DbSet<GoodAdded> GoodAddeds { get; set; }
@@ -55,6 +56,10 @@ namespace OnlineCash
                 .HasOne(g => g.Supplier)
                 .WithMany(s => s.Goods)
                 .HasForeignKey(g => g.SupplierId);
+            modelBuilder.Entity<BarCode>()
+                .HasOne(b => b.Good)
+                .WithMany(g => g.BarCodes)
+                .HasForeignKey(b => b.GoodId);
             modelBuilder.Entity<GoodPrice>()
                 .HasOne(p => p.Shop)
                 .WithMany(t => t.GoodPrices)

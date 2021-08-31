@@ -127,7 +127,10 @@ namespace OnlineCash.Controllers.Api
                 foreach (var check in shift.CheckSells)
                     foreach (var checkGood in check.Goods)
                         if (goods.Where(g => g.Uuid == Guid.Parse(checkGood.Uuid)).FirstOrDefault() == null)
+                        {
+                            System.Diagnostics.Debug.WriteLine(checkGood.Uuid);
                             return BadRequest();
+                        }
 
                 var cashier = await db.Cashiers.FirstOrDefaultAsync();
                 var shiftdb = new Shift
@@ -139,6 +142,8 @@ namespace OnlineCash.Controllers.Api
                     SumIncome = shift.SumIncome,
                     SummReturn = shift.SummReturn,
                     SumOutcome = shift.SumOutcome,
+                    SumNoElectron=shift.SumNoElectron,
+                    SumElectron=shift.SumElectron,
                     SumSell = shift.SumSell,
                     SumAll = shift.SumAll
                 };

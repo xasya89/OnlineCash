@@ -22,16 +22,31 @@ namespace OnlineCash.Controllers.Api
         }
         [HttpGet]
         public async Task<IActionResult> Get(string Name)
-            => Ok( await db.Goods.Include(g=>g.GoodPrices).Include(g=>g.GoodGroup).Include(g=>g.Supplier).Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync());
+            => Ok( await db.Goods
+                .Include(g=>g.BarCodes)
+                .Include(g=>g.GoodPrices)
+                .Include(g=>g.GoodGroup)
+                .Include(g=>g.Supplier)
+                .Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync());
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Default(int id)
-            => Ok(await db.Goods.Include(g => g.GoodGroup).Include(g=>g.Supplier).Where(g => g.Id == id).FirstOrDefaultAsync());
+            => Ok(await db.Goods
+                .Include(g => g.BarCodes)
+                .Include(g => g.GoodPrices)
+                .Include(g => g.GoodGroup)
+                .Include(g=>g.Supplier)
+                .Where(g => g.Id == id).FirstOrDefaultAsync());
 
         [HttpGet("{id}/{idShop}")]
         public async Task<IActionResult> DefaultShop(int id, int idShop)
         {
-            var good = await db.Goods.Include(g=>g.GoodPrices).Include(g => g.GoodGroup).Include(g => g.Supplier).Where(g => g.Id == id).FirstOrDefaultAsync();
+            var good = await db.Goods
+                .Include(g=>g.BarCodes)
+                .Include(g=>g.GoodPrices)
+                .Include(g => g.GoodGroup)
+                .Include(g => g.Supplier)
+                .Where(g => g.Id == id).FirstOrDefaultAsync();
             if (good != null)
                 good.Price = good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault().Price;
             return Ok(good);
@@ -39,7 +54,12 @@ namespace OnlineCash.Controllers.Api
         [HttpPost("list/{idShop}")]
         public async Task<IActionResult> DefaultList([FromBody] List<int> idGoods, int idShop)
         {
-            var goods = await db.Goods.Include(g=>g.GoodPrices).Where(g=>idGoods.Contains(g.Id)).ToListAsync();
+            var goods = await db.Goods
+                .Include(g=>g.BarCodes)
+                .Include(g=>g.GoodGroup)
+                .Include(g=>g.GoodPrices)
+                .Include(g=>g.Supplier)
+                .Where(g=>idGoods.Contains(g.Id)).ToListAsync();
             foreach (var good in goods)
             {
                 var goodprice = good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault();
@@ -48,6 +68,11 @@ namespace OnlineCash.Controllers.Api
             }
             return Ok(goods);
         }
+        [HttpGet("find/{find}")]
+        public async Task<IActionResult> Find(string find) =>
+            Ok(await db.Goods
+                .Include(g=>g.BarCodes)
+                .Where(g => EF.Functions.Like(g.Name, $"%{find}%")).ToListAsync());
         /*
         [HttpGet("barcode/{barcode}")]
         public async Task<IActionResult> GetBarcode(string barcode)

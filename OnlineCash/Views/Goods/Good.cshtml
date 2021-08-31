@@ -9,16 +9,16 @@
             <label asp-for="Name">Наименование</label>
             <input type="text" asp-for="Name" list="GoodList" class="form-control form-control-sm" />
             <datalist id="GoodList" >
-                @foreach(var good in (List<Good>) ViewBag.Goods)
-            {
+                @foreach (var good in (List<Good>)ViewBag.Goods)
+                {
                 <option>@good.Name</option>
-            }
+                }
             </datalist>
             <span asp-validation-for="Name" />
         </div>
         <div class="form-group">
             <label asp-for="GoodGroupId">Группа</label>
-            <select asp-for="GoodGroupId" asp-items="@(new SelectList(ViewBag.Groups,"Id","Name"))" class="form-select form-select-sm "></select>
+            <select asp-for="GoodGroupId" asp-items="@(new SelectList(ViewBag.Groups, "Id", "Name"))" class="form-select form-select-sm "></select>
             <span asp-validation-for="GoodGroupId" />
         </div>
         <div class="form-group">
@@ -27,10 +27,32 @@
             <span asp-validation-for="Article" />
         </div>
         <div class="form-group">
-            <label asp-for="BarCode">Штрих код</label>
-            <input type="text" asp-for="BarCode" class="form-control form-control-sm" />
-            <input type="button" id="btnGenerateBarCode" class="btn btn-sm btn-outline-info" value="Новый" />
-            <span asp-validation-for="BarCode" />
+            <label>Штрих код</label>
+            <div id="barcodes" class="row mb-2">
+                @{int pos = 0; }
+                @foreach (var barCode in Model.BarCodes)
+                {
+                <div data-id="@barCode.Id" class="col-sm-auto" style="display: grid; grid-template-columns: 100px auto auto">
+                    <input fieldId name="BarCodes[@pos].Id" type="hidden" value="@barCode.Id" />
+                    <input fieldCode class="form-control form-control-sm" name="BarCodes[@pos].Code" value="@barCode.Code" />
+                    <button type="button" onclick="generateBarCode(this.parentElement)" class="btn btn-sm btn-light" style="margin: 0 2px">
+                        <i class="fa fa-barcode"></i>
+                    </button>
+                    <button onclick="removeBarCode(this.parentElement)" type="button" class="btn btn-sm btn-light" style="margin: 0 2px">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+                    pos++;
+                }
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <button onclick="addBarCode()" type="button" class="btn btn-light btn-sm">
+                        <i class="fa fa-plus"></i>
+                        Штрихкод
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <!--
@@ -44,7 +66,14 @@
         </div>
         <div class="form-group">
             <label asp-for="Price">Цена</label>
-            <input type="text" asp-for="Price" class="form-control form-control-sm" />
+            <div class="row">
+                <div class="col-4">
+                    <input shoppricemain type="text" asp-for="Price" class="form-control form-control-sm" />
+                </div>
+                <div class="col-auto">
+                    <button onclick="document.querySelectorAll('input[shopprice]').forEach(inp => inp.value = document.querySelector('[shoppricemain]').value)" type="button" class="btn btn-sm btn-light">=</button>
+                </div>
+            </div>
             <span asp-validation-for="Price" />
         </div>
         <div class="form-group">
@@ -65,7 +94,7 @@
                 @Model.PriceShops[i].ShopName
             </td>
             <td>
-                @Html.EditorFor(Model => Model.PriceShops[i].Price, new { htmlAttributes = new { @class = "form-control form-control-sm" }, })
+                @Html.EditorFor(Model => Model.PriceShops[i].Price, new { htmlAttributes = new { @shopprice="", @class = "form-control form-control-sm" }, })
             </td>
         </tr>
             }
@@ -80,13 +109,50 @@
     window.onload = function () {
         inpUnit.value = 796;
     }
-    const barCode = document.getElementById("BarCode");
-    const btnGenerateBarCode = document.getElementById("btnGenerateBarCode");
-    btnGenerateBarCode.addEventListener("click", () => {
+    //---- Штрих коды ------
+    const barcodes = document.getElementById("barcodes");
+    function generateBarCode(barcodeDiv) {
+        let input = barcodeDiv.querySelector("input[fieldCode]");
         fetch("/api/NewBarCode/")
             .then(r => r.text())
-            .then(code => barCode.value = code);
-    })
+            .then(code => input.value = code);
+    }
+    function addBarCode() {
+        fetch("/api/NewBarCode/")
+            .then(r => r.text())
+            .then(code => {
+                let div = document.createElement("div");
+                div.dataset.id = -1;
+                div.classList.add("col-sm-auto");
+                div.style = "display: grid; grid-template-columns: 100px auto auto";
+                let divCount = barcodes.querySelectorAll("div").length;
+                div.innerHTML = `
+                    <input fieldId name="BarCodes[].Id" type="hidden" value="-1" />
+                    <input fieldCode class="form-control form-control-sm" name="BarCodes[${divCount}].Code" value="${code}" />
+                    <button type="button" onclick="generateBarCode(this.parentElement)" class="btn btn-sm btn-light" style="margin: 0 2px">
+                        <i class="fa fa-barcode"></i>
+                    </button>
+                    <button onclick="removeBarCode(this.parentElement)" type="button" class="btn btn-sm btn-light" style="margin: 0 2px">
+                        <i class="fa fa-trash"></i>
+                    </button>
+`;
+                barcodes.append(div);
+                positionBarCodeRestruct();
+            })
+    }
+    function removeBarCode(barCodeDiv) {
+        barCodeDiv.remove();
+        positionBarCodeRestruct();
+    }
+    function positionBarCodeRestruct() {
+        let i = 0;
+        barcodes.querySelectorAll("div").forEach(div => {
+            console.log(div.querySelector("input[fieldId]"));
+            div.querySelector("input[fieldId]").setAttribute("name", `BarCodes[${i}].Id`);
+            div.querySelector("input[fieldCode]").setAttribute("name", `BarCodes[${i}].Code`);
+            i++;
+        });
+    }
 
     const formGood = document.getElementById("form");
     const btnSubmit = document.getElementById("btnSubmit");
@@ -98,4 +164,14 @@
         if (confirm("Удалить?"))
             window.location.href = "/goods/delete?id=@Model.Id";
     });
+    function save() {
+        let good = {
+            name: document.getElementById("Name").value,
+            goodGroupId: document.getElementById("GoodGroupId").value,
+            article: document.getElementById("Article").value,
+            unit: document.getElementById("Unit").value,
+
+        }
+
+    }
 </script>

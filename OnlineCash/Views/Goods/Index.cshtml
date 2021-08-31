@@ -2,86 +2,84 @@
 @using OnlineCash.DataBaseModels
 @using System
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>Создать</a>
-            <span onclick="goodGroupModal.show()" class="btn btn-primary btn-sm"><i class="fas fa-layer-group"></i> Группы</span>
-            <div class="btn-group">
-                <span class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="fa fa-print"></span> Печать
-                </span>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintPriceStepShop">Выбор позиций</a></li>
-                    <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintAll" target="_blank">Все позиции</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                            <select id="shopList" class="form-select form-select-sm" style="float:left">
-                                @foreach (var shop in (List<Shop>)ViewBag.Shops)
-                                {
-                                    <option value="@shop.Id">@shop.Name</option>
-                                }
-                            </select>
-                    </li>
-                    <li><a class="dropdown-item" onclick="printAllPrice()" href="#">Весь прайс</a></li>
-                </ul>
-            </div>
-            
-            <form class="d-flex" asp-controller="Goods" asp-action="Search" method="get">
-                <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Найти" aria-label="Search">
-                <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
-            </form>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>Создать</a>
+        <span onclick="goodGroupModal.show()" class="btn btn-primary btn-sm"><i class="fas fa-layer-group"></i> Группы</span>
+        <div class="btn-group">
+            <span class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="fa fa-print"></span> Печать
+            </span>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintPriceStepShop">Выбор позиций</a></li>
+                <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintAll" target="_blank">Все позиции</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <select id="shopList" class="form-select form-select-sm" style="float:left">
+                        @foreach (var shop in (List<Shop>)ViewBag.Shops)
+                        {
+                            <option value="@shop.Id">@shop.Name</option>
+                        }
+                    </select>
+                </li>
+                <li><a class="dropdown-item" onclick="printAllPrice()" href="#">Весь прайс</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" asp-controller="GoodsPrint" asp-action="SelectionGoods">Подбор товара</a></li>
+            </ul>
         </div>
-    </nav>
 
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Наименование</th>
-                        <th>Ед. изм</th>
-                        <th>Цена</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var g in Model)
-                    {
-                    <tr>
-                        <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Name</a></td>
-                        <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit</a></td>
-                        <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Price</a></td>
-                        <td><span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id&find=@ViewBag.Find'" class="text-danger">X</span></td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+        <form class="d-flex" asp-controller="Goods" asp-action="Search" method="get">
+            <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Наименование или штрихкод" aria-label="Search">
+            <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
+        </form>
+    </div>
+</nav>
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Ед. изм</th>
+            <th>Цена</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var g in Model)
+        {
+            <tr>
+                <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Name</a></td>
+                <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit</a></td>
+                <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Price</a></td>
+                <td><span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id&find=@ViewBag.Find'" class="text-danger">X</span></td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <!--Диалог добавления группы-->
-            <div class="modal fade" id="modalGroups" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 style="display: block; clear: both;">Группы</h5>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group input-group-sm mb-3">
-                                <input id="goodGroupName" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Новая группа">
-                                <span onclick="addGroup()" class="input-group-text" id="inputGroup-sizing-sm">Добавить</span>
-                            </div>
-                            <ul id="goodGroupList" class="list-group">
-                                <li class="list-group-item">An item</li>
-                                <li class="list-group-item">A second item</li>
-                                <li class="list-group-item">A third item</li>
-                                <li class="list-group-item">A fourth item</li>
-                                <li class="list-group-item">And a fifth one</li>
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                            <button type="button" class="btn btn-sm btn-primary">Сохранить</button>
-                        </div>
-                    </div>
-                </div>
+<div class="modal fade" id="modalGroups" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="display: block; clear: both;">Группы</h5>
             </div>
+            <div class="modal-body">
+                <div class="input-group input-group-sm mb-3">
+                    <input id="goodGroupName" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" placeholder="Новая группа">
+                    <span onclick="addGroup()" class="input-group-text" id="inputGroup-sizing-sm">Добавить</span>
+                </div>
+                <ul id="goodGroupList" class="list-group">
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-sm btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     const shopList = document.getElementById("shopList");
     const goodGroupModal = new bootstrap.Modal(document.getElementById("modalGroups"));
@@ -119,7 +117,7 @@
         goodGroupList.querySelectorAll("li").forEach(li => li.remove());
         fetch("/api/goodgroups")
             .then(resp => resp.json())
-            .then(groups => groups.forEach(group => addGroupIntoList(group) ))
+            .then(groups => groups.forEach(group => addGroupIntoList(group)))
     }
 
     function addGroup() {
@@ -143,5 +141,23 @@
     function printAllPrice() {
         let idShop = shopList.value;
         window.open(`/goods/PrintPriceAll?idShop=${idShop}`, "_blank");
+    }
+
+    //Диалог выбор группы
+
+</script>
+<script src="~/js/modalGroupSelected.js"></script>
+<script>
+    //Печать ценников с выбором группы
+    function printPriceWithGroupSelected() {
+        let modalGroup = new ModalGroupSelected();
+        modalGroup.Open()
+            .then(groups => {
+                let idShops = new Array();
+                idShops.push(parseInt(shopList.value));
+                let idGroups = new Array();
+                groups.forEach(group => idGroups.push(parseInt(group.id)));
+                window.open("/goods/PrintPriceTagWithSelectionGroup?" + JSOn.stringify({ idGroups: idGroups, idShops: idShops }), "_blank");
+            })
     }
 </script>

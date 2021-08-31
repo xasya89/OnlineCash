@@ -33,7 +33,7 @@ namespace OnlineCash.Controllers.Api
         [HttpGet("{idShop}")]
         public async Task<List<Good>> Get(int idShop)
         {
-            List<Good> goods = await db.Goods.ToListAsync();
+            List<Good> goods = await db.Goods.Include(g=>g.BarCodes).ToListAsync();
             List<GoodPrice> prices = await db.GoodPrices.Where(p => p.ShopId == idShop).ToListAsync();
             foreach(var g in goods)
                 foreach(var p in prices)

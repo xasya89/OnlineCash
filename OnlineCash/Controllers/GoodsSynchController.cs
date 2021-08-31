@@ -32,6 +32,6 @@ namespace OnlineCash.Controllers
         }
         [HttpGet("{idShop:int}")]
         public async Task<IActionResult> Get(int idShop)
-            => Ok(JsonSerializer.Serialize(await db.Goods.Include(g => g.GoodPrices.Where(p => p.ShopId == idShop)).ToListAsync(),new JsonSerializerOptions {ReferenceHandler=ReferenceHandler.Preserve }));
+            => Ok(JsonSerializer.Serialize(await db.Goods.Include(g=>g.BarCodes).Include(g => g.GoodPrices.Where(p => p.ShopId == idShop)).ToListAsync(),new JsonSerializerOptions {ReferenceHandler=ReferenceHandler.Preserve }));
     }
 }

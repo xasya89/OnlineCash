@@ -1,0 +1,101 @@
+﻿<div class="mb-3">&nbsp;</div>
+<div class="row mb-2">
+    <div id="shopsContainer" class="col-6">
+        <h6 style="display: inline-block">Выберите магазин: </h6>
+        @foreach (var shop in (List<OnlineCash.DataBaseModels.Shop>)ViewBag.Shops)
+        {
+            <span data-id="@shop.Id" onclick="shopSelectToggle(this)" class="btn btn-sm btn-light">@shop.Name</span>
+        }
+    </div>
+    <div class="col-auto">
+        <span onclick="generateTamplateCashier()" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> кассир</span>
+    </div>
+    <div class="col-auto">
+        <span onclick="generateTamplateShowCase()" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> витрина</span>
+    </div>
+    <div class="col-auto">
+        <span class="btn btn-sm btn-primary"><i class="fa fa-print"></i> прайс</span>
+    </div>
+    <div class="col-auto">
+        <span class="btn btn-sm btn-primary"><i class="fa fa-print"></i> прайс остатки</span>
+    </div>
+</div>
+<div id="findGoodParent" class="mb-2"></div>
+<div class="row">
+    <div class="col-auto">
+        <span id="clearTable" class="btn btn-sm btn-light">Очистить таблицу</span>
+    </div>
+    <div class="col-auto">
+        <span id="selectionGoodBtn" class="btn btn-sm btn-light">Выбрать товары</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table class="table table-sm table-stripped table-hover">
+            <thead>
+                <tr>
+                    <th>Номенклатура</th>
+                    <th>Ед изм</th>
+                    <th>Производитель</th>
+                </tr>
+            </thead>
+            <tbody id="goodsTable"></tbody>
+        </table>
+    </div>
+</div>
+<script src="~/js/findGoodContainer.js"></script>
+<script>
+    const shopsContainer = document.getElementById("shopsContainer");
+    const findGoodParent = document.getElementById("findGoodParent");
+    new findGoodContainer(findGoodParent, (good) => { addGood(good.id); });
+    const selectionGoodBtn = document.getElementById("selectionGoodBtn");
+    const goodsTable = document.getElementById("goodsTable");
+    const clearTable = document.getElementById("clearTable");
+    clearTable.onclick = function () {
+        goodsTable.querySelectorAll("tr").forEach(tr => tr.remove());
+    }
+    //Подбор товара
+    let selectionGood = new SelectionGood();
+    selectionGoodBtn.addEventListener("click", () => selectionGood.OpenDialog());
+    selectionGood.CloseDialogSetEvent((idGoods) => {
+        idGoods.forEach(idGood => {
+            addGood(idGood);
+        })
+    });
+    const findGoods = document.getElementById("findGoods");
+    const goodDatalist = document.querySelector(".list-group");
+    function shopSelectToggle(button) {
+        button.classList.toggle("btn-light");
+        button.classList.toggle("btn-primary");
+    }
+
+    function addGood(idGood) {
+        fetch("/api/goods/" + idGood)
+            .then(resp => resp.json())
+            .then(good => {
+                let tr = document.createElement("tr");
+                tr.dataset.idgood = good.id;
+                let supplier = good.supplier == null ? "" : good.supplier.name;
+                tr.innerHTML = `<td>${good.name}</td><td>${good.unit}</td><td>${supplier}</td>`;
+                goodsTable.append(tr);
+            })
+    }
+
+    function generateTamplateCashier() {
+        let idGoods = new Array();
+        let idShops = new Array();
+        goodsTable.querySelectorAll("tr").forEach(tr => idGoods.push(parseInt(tr.dataset.idgood)));
+        shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
+        if (idShops.length > 0 & idGoods.length > 0)
+            window.open("/GoodsPrint/GenerateTamplateCashier?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
+    }
+
+    function generateTamplateShowCase() {
+        let idGoods = new Array();
+        let idShops = new Array();
+        goodsTable.querySelectorAll("tr").forEach(tr => idGoods.push(parseInt(tr.dataset.idgood)));
+        shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
+        if (idShops.length > 0 & idGoods.length > 0)
+            window.open("/GoodsPrint/GenerateTamplateShowCase?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
+    }
+</script>

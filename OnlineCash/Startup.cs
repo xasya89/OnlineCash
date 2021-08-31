@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using OnlineCash.Services;
 
 namespace OnlineCash
 {
@@ -41,6 +42,7 @@ namespace OnlineCash
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
             services.AddScoped<Filters.ControlCountGoodsFilter>();
+            services.AddScoped<IGoodBalanceService, GoodBalanceService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
             });

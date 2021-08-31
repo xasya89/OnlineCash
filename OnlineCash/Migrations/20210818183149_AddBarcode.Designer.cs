@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20210818183149_AddBarcode")]
+    partial class AddBarcode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -383,19 +385,7 @@ namespace OnlineCash.Migrations
                     b.Property<decimal>("SumAll")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("SumCreditDelivery")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("SumCreditRepayment")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("SumElectron")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<decimal>("SumIncome")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("SumNoElectron")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("SumOutcome")
