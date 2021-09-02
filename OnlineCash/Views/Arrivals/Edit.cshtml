@@ -162,17 +162,17 @@
             {
                 decimal sellpercent = 0;
                 if (arrivalGood.Price != 0)
-                    sellpercent = (arrivalGood.PriceSell / arrivalGood.Price - 1) * 100;
+                    sellpercent = Math.Round((arrivalGood.PriceSell / arrivalGood.Price - 1) * 100);
                 double sum = (double)arrivalGood.Price * arrivalGood.Count;
                 <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
                     <td><span onclick="deleteGood( @arrivalGood.Good.Id )" class="fa fa-trash"></span></td>
                     <td>@arrivalGood.Good?.Name</td>
                     <td>@arrivalGood.Good?.Unit</td>
-                    <td><input oninput="editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" class="form-control form-control-sm "/></td>
-                    <td><input oninput="editGood(@arrivalGood.Good.Id)" PriceSell value="@arrivalGood.PriceSell" class="form-control form-control-sm "/></td>
-                    <td><input oninput="editGood(@arrivalGood.Good.Id)" SellPercent value="@sellpercent" class="form-control form-control-sm "/></td>
-                    <td><input oninput="editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
-                    <td><input oninput="editGood(@arrivalGood.Good.Id)" Sum value="@sum" class="form-control form-control-sm " /></td>
+                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" class="form-control form-control-sm "/></td>
+                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" PriceSell value="@arrivalGood.PriceSell" class="form-control form-control-sm "/></td>
+                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" SellPercent value="@sellpercent" class="form-control form-control-sm "/></td>
+                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
+                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Sum value="@sum" class="form-control form-control-sm " /></td>
                 </tr>
             }
     </tbody>
@@ -323,7 +323,8 @@
             let tdCount = tr.querySelector("input[Count]");
             let tdSum = tr.querySelector("input[Sum]");
             [tdPrice, tdCount, tdPriceSell, tdSum].forEach(td => {
-                td.addEventListener("input", () => {
+                td.addEventListener("input", (el) => {
+                    el.value = el.value.replace(",", ".");
                     editGood(g.id);
                 });
             });
@@ -342,10 +343,10 @@
                 let tdCount = tr.querySelector("input[Count]");
                 let tdSum = tr.querySelector("input[Sum]");
 
-                let price = toFloat(tdPrice.value);
-                let priceSell = toFloat(tdPriceSell.value);
-                tdSellPercent.value = ((priceSell / price - 1) * 100).toFixed(2);
-                let count = toFloat(tdCount.value);
+                let price = parseFloat(tdPrice.value.replace(",", "."));
+                let priceSell = parseFloat(tdPriceSell.value.replace(",","."));
+                tdSellPercent.value = Math.round((priceSell / price - 1) * 100);
+                let count = parseFloat(tdCount.value.replace(",","."));
                 if (isNaN(price) || isNaN(count))
                     tdSum.value = "0";
                 else
@@ -354,6 +355,12 @@
                 calcPaymentSumary();
             }
         })
+    }
+    function fractional_multiplication(a, b) {
+        var arr = [];
+        function sum(x) { var s = 0; for (i = 0; i < x.length; i++) { s += x[i] } return s };
+        if (Number.isInteger(a) == true) { arr.length = a; arr.fill(b); return sum(arr) }
+        else { arr.length = b; arr.fill(a); return sum(arr) }
     }
     function deleteGood(idGood) {
         if (confirm("Удалить?"))
@@ -536,9 +543,9 @@
             arrivalGoods.push({
                 id: parseInt(tr.dataset.id),
                 goodId: toInteger(tr.dataset.idGood),
-                count: toFloat(tr.querySelector("input[Count]").value),
-                price: toFloat(tr.querySelector("input[Price]").value),
-                priceSell: toFloat(tr.querySelector("input[PriceSell]").value)
+                count: parseFloat(tr.querySelector("input[Count]").value.replace(",",".")),
+                price: parseFloat(tr.querySelector("input[Price]").value.replace(",", ".")),
+                priceSell: parseFloat(tr.querySelector("input[PriceSell]").value.replace(",", "."))
             });
         });
         let arrivalPayments = [];

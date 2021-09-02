@@ -28,6 +28,8 @@ namespace OnlineCash
         public DbSet<User> Users { get; set; }
         public DbSet<GoodGroup> GoodGroups { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Writeof> Writeofs { get; set; }
+        public DbSet<WriteofGood> WriteofGoods { get; set; }
 
         public shopContext()
         {
@@ -137,6 +139,20 @@ namespace OnlineCash
                 .HasOne(p => p.BankAccount)
                 .WithMany(b => b.ArrivalPayments)
                 .HasForeignKey(p => p.BankAccountId);
+
+            //Списание
+            modelBuilder.Entity<Writeof>()
+                .HasOne(w => w.Shop)
+                .WithMany(s => s.Writeofs)
+                .HasForeignKey(w => w.ShopId);
+            modelBuilder.Entity<WriteofGood>()
+                .HasOne(wg => wg.Writeof)
+                .WithMany(w => w.WriteofGoods)
+                .HasForeignKey(wg => wg.WriteofId);
+            modelBuilder.Entity<WriteofGood>()
+                .HasOne(wg => wg.Good)
+                .WithMany(g => g.WriteofGoods)
+                .HasForeignKey(wg => wg.GoodId);
 
             OnModelCreatingPartial(modelBuilder);
         }

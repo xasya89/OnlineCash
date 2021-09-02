@@ -1,0 +1,138 @@
+﻿@model OnlineCash.DataBaseModels.Writeof
+<div class="row mt-2">
+    <div class="col">
+        @if (Model.IsSuccess == false)
+        {
+            <button onclick="arrivalSave(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
+            <button onclick="arrivalSave(false)" class="btn btn-sm btn-primary" style="margin-right: 20px">Сохранить</button>
+        }
+        <a asp-action="Index" class="btn btn-sm btn-danger">Отмена</a>
+    </div>
+</div>
+<div class="row">
+    <label class="col-sm-2">Магазин</label>
+    <div class="col-sm-3">
+        <select id="Shops" asp-for="ShopId" asp-items="@(new SelectList(ViewBag.Shops, "Id", "Name"))" class="form-select form-select-sm"></select>
+    </div>
+    <label class="col-sm-3">Дата</label>
+    <div class="col-sm-3">
+        <input id="DateCreate" value="@Model.DateWriteof.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-auto">
+        <span id="btnGoodSelected" class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
+    </div>
+    <div class="col-sm-6">
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Товар</span>
+            </div>
+            <input id="GoodSearch" type="text" list="GoodSearchList" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            <datalist id="GoodSearchList"></datalist>
+            <div class="input-group-append">
+                <span id="GoodSearchBtnAdd" class="input-group-text">Добавить</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>№</th>
+                <th>Товар</th>
+                <th>Ед</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody id="TableGoods"></tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">Итог</th>
+                <th id="SummaryCount"></th>
+                <th></th>
+                <th id="SummarySum"></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<script>
+    var goods = new Array();
+    const tableGoods = document.getElementById("TableGoods");
+    const btnGoodSelected = document.getElementById("btnGoodSelected");
+    const goodSearch = document.getElementById("GoodSearch");
+    const goodSearchList = document.getElementById("GoodSearchList");
+    const goodSearchBtnAdd = document.getElementById("GoodSearchBtnAdd");
+    document.addEventListener("DOMContentLoaded", function (event) {
+        fetch("/api/goods")
+            .then(r => r.json())
+            .then(goodlist => {
+                goods = goodlist;
+                goodlist.forEach(g => {
+                    let option = document.createElement("option");
+                    option.value = g.name;
+                    goodSearchList.appendChild(option);
+                })
+            });
+    })
+    //Подбор товара
+    let selectionGood = new SelectionGood();
+    btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
+    selectionGood.CloseDialogSetEvent((idGoods) => {
+        idGoods.forEach(idGood => {
+            goodAdd(goods.filter(good => good.id == idGood)[0]);
+        })
+    });
+    //Выбор товара из списка
+    goodSearchBtnAdd.addEventListener("click", () => {
+        addGoodBySearch();
+    })
+    goodSearch.addEventListener("keyup", (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13)
+            addGoodBySearch();
+    })
+    function addGoodBySearch() {
+        goods.forEach(g => {
+            if (g.name == goodSearch.value)
+                goodAdd(g);
+        })
+        goodSearch.value = "";
+    }
+    function goodAdd(good) {
+        let tr = document.createElement("tr");
+        tr.dataset.id = -1;
+        tr.dataset.idGood = good.id;
+        let numPP = tableGoods.querySelectorAll("tr").length + 1;
+        // TODO: Добписать определение продажной цены fetch(api/goods/idGood/idShop)
+        tr.innerHTML = `
+    <td><span class="btn btn-sm btn-default"><i class="fa fa-trash"></span></button></td>
+    <td>${numPP}</td>
+    <td>${good.name}</td>
+    <td>${good.unit}</td>
+    <td><input count class="form-control form-control-sm"/></td>
+    <td><input cost class="form-control form-control-sm" readonly /></td>
+    <td><input sum class="form-control form-control-sm" readonly /></td>
+`;
+        let inpCount = tr.querySelector("input[count]");
+        inpCount.addEventListener("input", () => {
+            goodEdit(tr);
+        });
+        tableGoods.append(tr);
+    }
+
+    function goodEdit(tr) {
+        let inpCount = tr.querySelector("input[count]");
+        inpCount.value = inpCount.value.replace(",", ".");
+        let inpPrice = tr.querySelector("input[price]");
+        let inpSum = tr.querySelector("input[sum]");
+        let count = inpCount.value == "" ? 0 : parseFloat(inpCount.value);
+        let price = parseFloat(inpPrice.value);
+        inpSum.value = count * price;
+    }
+</script>

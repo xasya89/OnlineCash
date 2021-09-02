@@ -28,5 +28,6 @@ namespace OnlineCash.DataBaseModels
         public List<GoodBalance> GoodBalances { get; set; }
         public List<ArrivalGood> ArrivalGoods { get; set; }
         public List<GoodAdded> GoodAddeds { get; set; }
+        public List<WriteofGood> WriteofGoods { get; set; }
     }
 }
