@@ -17,9 +17,10 @@ namespace OnlineCash.Controllers
             this.db = db;
         }
         // GET: WriteofController
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var writeofs = await db.Writeofs.Include(w=>w.Shop).OrderBy(w => w.DateWriteof).ToListAsync();
+            return View(writeofs);
         }
 
         // GET: WriteofController/Details/5
@@ -37,37 +38,100 @@ namespace OnlineCash.Controllers
 
         // POST: WriteofController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create([FromBody] Writeof model)
         {
-            try
+            var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
+            if(model.Id==0)
             {
-                return RedirectToAction(nameof(Index));
+                decimal sumAll = model.WriteofGoods.Sum(w => (decimal)w.Count * w.Price);
+                var writeof = new Writeof
+                {
+                    Status=model.IsSuccess ? DocumentStatus.Confirm : DocumentStatus.New,
+                    Shop = shop,
+                    DateWriteof = model.DateWriteof,
+                    IsSuccess=model.IsSuccess,
+                    Note = model.Note,
+                    SumAll = sumAll
+                };
+                db.Writeofs.Add(writeof);
+                foreach(var wgood in model.WriteofGoods)
+                {
+                    var good = await db.Goods.Where(g => g.Id == wgood.GoodId).FirstOrDefaultAsync();
+                    var writeofGood = new WriteofGood
+                    {
+                        Writeof=writeof,
+                        Good = good,
+                        Count = wgood.Count,
+                        Price = wgood.Price
+                    };
+                    db.WriteofGoods.Add(writeofGood);
+                }
+                await db.SaveChangesAsync();
+                return Ok();
             }
-            catch
-            {
-                return View();
-            }
+            return BadRequest();
         }
 
         // GET: WriteofController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var writeof = await db.Writeofs
+                .Include(w => w.Shop)
+                .Include(w => w.WriteofGoods).ThenInclude(wg => wg.Good)
+                .Where(w => w.Id == id)
+                .FirstOrDefaultAsync();
+            ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
+            if (writeof == null)
+                return RedirectToAction(nameof(Index));
+            return View("One",writeof);
         }
 
         // POST: WriteofController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, [FromBody] Writeof model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var writeof = await db.Writeofs.Where(w => w.Id == model.Id).Include(w => w.WriteofGoods).FirstOrDefaultAsync();
+                if (writeof.Status == DocumentStatus.Confirm)
+                    return BadRequest("Акт уже проведен");
+                if (writeof.Status == DocumentStatus.Remove)
+                    return BadRequest("Акт уже отменен");
+                if (writeof == null)
+                    return BadRequest("Акт не найден");
+                writeof.Status = model.IsSuccess ? DocumentStatus.Confirm : DocumentStatus.Edit;
+                writeof.ShopId = model.ShopId;
+                writeof.DateWriteof = model.DateWriteof;
+                writeof.IsSuccess = model.IsSuccess;
+                writeof.Note = model.Note;
+                writeof.SumAll = model.WriteofGoods.Sum(wg => (decimal)wg.Count * wg.Price);
+                await db.SaveChangesAsync();
+                //Добавим новые позиции
+                foreach (var wgood in model.WriteofGoods.Where(wg => wg.Id == -1).ToList())
+                    db.WriteofGoods.Add(new WriteofGood
+                    {
+                        Writeof=writeof,
+                        GoodId = wgood.GoodId,
+                        Count = wgood.Count,
+                        Price = wgood.Price
+                    });
+                //Изменим существующие позиции
+                foreach(var wgood in model.WriteofGoods.Where(wg=>wg.Id!=-1).ToList())
+                {
+                    var writegood = await db.WriteofGoods.Where(wg => wg.Id == wgood.Id).FirstOrDefaultAsync();
+                    writegood.Count = wgood.Count;
+                    writegood.Price = wgood.Price;
+                };
+                //Удалим удаленные позиции
+                foreach (var writegood in writeof.WriteofGoods)
+                    if (model.WriteofGoods.Where(wg => wg.Id == writegood.Id).FirstOrDefault() == null)
+                        db.WriteofGoods.Remove(writegood);
+                await db.SaveChangesAsync();
+                return Ok();
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                return BadRequest(ex.Message);
             }
         }
 

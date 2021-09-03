@@ -1,0 +1,73 @@
+﻿@using OnlineCash.DataBaseModels;
+@model List<OnlineCash.DataBaseModels.Writeof>
+
+<div class="row">
+    <div class="col-12">
+        <a asp-action="Create" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Новое списание</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Статус</th>
+                    <th>Дата</th>
+                    <th>Магазин</th>
+                    <th>Сумма</th>
+                    <th>Примечание</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var writeof in Model)
+                {
+                    var statusstr = "";
+                    switch (writeof.Status)
+                    {
+                        case DocumentStatus.Confirm:
+                            statusstr = "Проведена";
+                            break;
+                        case DocumentStatus.Remove:
+                            statusstr = "Удален";
+                            break;
+                    };
+                    string note = writeof.Note;
+                    if (note != null && note.Length > 100)
+                        note = note.Substring(0, 100);
+                <tr>
+                    <td>
+                        <a asp-action="edit" asp-route-id="@writeof.Id">@statusstr</a>
+                    </td>
+                    <td>
+                        <a asp-action="edit" asp-route-id="@writeof.Id">@writeof.DateWriteof.ToString("dd.MM")</a>
+                    </td>
+                    <td>
+                        <a asp-action="edit" asp-route-id="@writeof.Id">@writeof.Shop?.Name</a>
+                    </td>
+                    <td>
+                        @writeof.SumAll
+                    </td>
+                    <td>
+                        @note
+                    </td>
+                    <td>
+                        @if (writeof.Status != DocumentStatus.Remove)
+                        {
+                            <button class="btn btn-sm btn-light">Отменить</button>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    function canceled() {
+        if (confirm("Отменить списание?")) {
+            // TODO: Дописать отмену акта списания
+        }
+    }
+</script>

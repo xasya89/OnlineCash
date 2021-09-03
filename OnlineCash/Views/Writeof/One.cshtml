@@ -1,26 +1,27 @@
 ﻿@model OnlineCash.DataBaseModels.Writeof
-<div class="row mt-2">
+<input type="hidden" id="idWriteOf" value="@Model.Id"/>
+<div class="row mb-3">
     <div class="col">
         @if (Model.IsSuccess == false)
         {
-            <button onclick="arrivalSave(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
-            <button onclick="arrivalSave(false)" class="btn btn-sm btn-primary" style="margin-right: 20px">Сохранить</button>
+            <button onclick="save(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
+            <button onclick="save(false)" class="btn btn-sm btn-primary" style="margin-right: 20px">Сохранить</button>
         }
         <a asp-action="Index" class="btn btn-sm btn-danger">Отмена</a>
     </div>
 </div>
-<div class="row">
+<div class="row mb-3">
     <label class="col-sm-2">Магазин</label>
     <div class="col-sm-3">
-        <select id="Shops" asp-for="ShopId" asp-items="@(new SelectList(ViewBag.Shops, "Id", "Name"))" class="form-select form-select-sm"></select>
+        <select id="ShopSelect" asp-for="ShopId" asp-items="@(new SelectList(ViewBag.Shops, "Id", "Name"))" class="form-select form-select-sm"></select>
     </div>
     <label class="col-sm-3">Дата</label>
     <div class="col-sm-3">
-        <input id="DateCreate" value="@Model.DateWriteof.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " />
+        <input id="DateWriteof" value="@Model.DateWriteof.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " />
     </div>
 </div>
 
-<div class="row">
+<div class="row mb-3">
     <div class="col-auto">
         <span id="btnGoodSelected" class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
     </div>
@@ -38,7 +39,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row mb-3">
     <table class="table table-sm table-bordered">
         <thead>
             <tr>
@@ -51,24 +52,54 @@
                 <th>Сумма</th>
             </tr>
         </thead>
-        <tbody id="TableGoods"></tbody>
+        <tbody id="TableGoods">
+            @{
+                int numPP = 1;
+                foreach (var wgood in Model.WriteofGoods)
+                {
+                    decimal sum = (decimal)wgood.Count * wgood.Price;
+            <tr data-id="@wgood.Id" data-id-good="@wgood.GoodId">
+                <td><i onclick="goodRemove(this.parentElement.parentElement)" class="fa fa-trash"></i></td>
+                <td>@numPP</td>
+                <td name>@wgood.Good?.Name</td>
+                <td>@wgood.Good?.Unit</td>
+                <td><input count oninput="goodEdit(this.parentElement.parentElement)" class="form-control form-control-sm" value="@wgood.Count"/></td>
+                <td><input price class="form-control form-control-sm" readonly value='@wgood.Price' /></td>
+                <td><input sum class="form-control form-control-sm" readonly value='@sum' /></td>
+            </tr>
+                    numPP++;
+                };
+                }
+        </tbody>
         <tfoot>
             <tr>
-                <th colspan="3">Итог</th>
+                <th colspan="4">Итог</th>
                 <th id="SummaryCount"></th>
                 <th></th>
-                <th id="SummarySum"></th>
+                <th id="SummarySum">@Model.SumAll</th>
             </tr>
         </tfoot>
     </table>
 </div>
+
+<div class="row">
+    <div class="col-12">
+        <textarea id="Note" class="form-control form-control-sm"></textarea>
+    </div>
+</div>
 <script>
     var goods = new Array();
+    const idWriteOf = document.getElementById("idWriteOf");
+    const shopSelect = document.getElementById("ShopSelect");
+    const dateWriteOf = document.getElementById("DateWriteof");
     const tableGoods = document.getElementById("TableGoods");
+    const summaryCountTd = document.getElementById("SummaryCount");
+    const summarySumTd = document.getElementById("SummarySum");
     const btnGoodSelected = document.getElementById("btnGoodSelected");
     const goodSearch = document.getElementById("GoodSearch");
     const goodSearchList = document.getElementById("GoodSearchList");
     const goodSearchBtnAdd = document.getElementById("GoodSearchBtnAdd");
+    const note = document.getElementById("Note");
     document.addEventListener("DOMContentLoaded", function (event) {
         fetch("/api/goods")
             .then(r => r.json())
@@ -105,25 +136,48 @@
         goodSearch.value = "";
     }
     function goodAdd(good) {
-        let tr = document.createElement("tr");
-        tr.dataset.id = -1;
-        tr.dataset.idGood = good.id;
-        let numPP = tableGoods.querySelectorAll("tr").length + 1;
-        // TODO: Добписать определение продажной цены fetch(api/goods/idGood/idShop)
-        tr.innerHTML = `
-    <td><span class="btn btn-sm btn-default"><i class="fa fa-trash"></span></button></td>
+        //Запросим цену из магазина
+        fetch(`/api/goods/${good.id}/${shopSelect.value}`)
+            .then(r => r.json())
+            .then(g => {
+                let flagAdded = false;
+                tableGoods.querySelectorAll("tr").forEach(tr => {
+                    if (tr.dataset.idGood == good.id) {
+                        flagAdded = true;
+                        if (good.unit == 796) {
+                            let inpCount = tr.querySelector("input[count]");
+                            let count = parseFloat(inpCount.value);
+                            count = isNaN(count) ? 1 : count + 1;
+                            inpCount.value = count;
+                            goodEdit(tr);
+                        }
+                    }
+                });
+                if (!flagAdded) {
+                    let tr = document.createElement("tr");
+                    tr.dataset.id = -1;
+                    tr.dataset.idGood = good.id;
+                    let numPP = tableGoods.querySelectorAll("tr").length + 1;
+                    tr.innerHTML = `
+    <td><i class="fa fa-trash"></i></td>
     <td>${numPP}</td>
-    <td>${good.name}</td>
+    <td name>${good.name}</td>
     <td>${good.unit}</td>
     <td><input count class="form-control form-control-sm"/></td>
-    <td><input cost class="form-control form-control-sm" readonly /></td>
-    <td><input sum class="form-control form-control-sm" readonly /></td>
+    <td><input price class="form-control form-control-sm" readonly value='${g.price}' /></td>
+    <td><input sum class="form-control form-control-sm" readonly value='0' /></td>
 `;
-        let inpCount = tr.querySelector("input[count]");
-        inpCount.addEventListener("input", () => {
-            goodEdit(tr);
-        });
-        tableGoods.append(tr);
+                    let btnTrash = tr.querySelector("i");
+                    btnTrash.onclick = () => {
+                        goodRemove(tr);
+                    }
+                    let inpCount = tr.querySelector("input[count]");
+                    inpCount.addEventListener("input", () => {
+                        goodEdit(tr);
+                    });
+                    tableGoods.append(tr);
+                }
+            })
     }
 
     function goodEdit(tr) {
@@ -133,6 +187,64 @@
         let inpSum = tr.querySelector("input[sum]");
         let count = inpCount.value == "" ? 0 : parseFloat(inpCount.value);
         let price = parseFloat(inpPrice.value);
-        inpSum.value = count * price;
+        inpSum.value = (count * price).toFixed(2);
+        calcSummary();
+    }
+
+    function goodRemove(tr) {
+        if (confirm(`Удалить ${tr.querySelector("td[name]").textContent}?`))
+            tr.remove();
+    }
+
+    function calcSummary() {
+        let summarySum = 0;
+        let summaryCount = 0;
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            let inpSum = tr.querySelector("input[sum]");
+            let sum = parseFloat(inpSum.value);
+            summarySum += isNaN(sum) ? 0 : sum;
+            let inpCount = tr.querySelector("input[count]");
+            let count = parseFloat(inpCount.value);
+            summaryCount += isNaN(count) ? 0 : count;
+        });
+        summarySumTd.textContent = summarySum;
+        summaryCountTd.textContent = summaryCount;
+    }
+
+    function save(isSuccess) {
+        let writeOfGoods = new Array();
+        tableGoods.querySelectorAll("tr").forEach(tr => {
+            let id = parseInt(tr.dataset.id);
+            let idGood = parseInt(tr.dataset.idGood);
+            let count = parseFloat(tr.querySelector("input[count]").value);
+            let price = parseFloat(tr.querySelector("input[price]").value);
+            writeOfGoods.push({
+                id: id,
+                goodId: idGood,
+                count: isNaN(count) ? 0 : count,
+                price: price
+            });
+        })
+        let writeof = {
+            id: parseInt(idWriteOf.value),
+            shopId: parseInt(shopSelect.value),
+            dateWriteof: dateWriteOf.value,
+            note: note.value,
+            isSuccess: isSuccess,
+            writeofGoods: writeOfGoods
+        };
+        fetch(idWriteOf.value == 0 ? "create" :  idWriteOf.value, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(writeof)
+            })
+                .then(r => {
+                    if (r.status == 200)
+                        alert("ok");
+                });
+
     }
 </script>
