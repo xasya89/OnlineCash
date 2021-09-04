@@ -21,6 +21,8 @@ namespace OnlineCash.DataBaseModels
         public string BarCode { get; set; }
         public Units Unit { get; set; }
         public decimal Price { get; set; }
+        public SpecialTypes SpecialType { get; set; } = SpecialTypes.None;
+        public double? VPackage { get; set; }
         public List<BarCode> BarCodes { get; set; } = new List<BarCode>();
         public List<GoodPrice> GoodPrices { get; set; }
         public List<CheckGood> CheckGoods { get; set; }
