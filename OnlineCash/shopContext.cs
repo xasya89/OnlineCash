@@ -30,6 +30,8 @@ namespace OnlineCash
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Writeof> Writeofs { get; set; }
         public DbSet<WriteofGood> WriteofGoods { get; set; }
+        public DbSet<MoveDoc> MoveDocs { get; set; }
+        public DbSet<MoveGood> MoveGoods { get; set; }
 
         public shopContext()
         {
@@ -153,6 +155,23 @@ namespace OnlineCash
                 .HasOne(wg => wg.Good)
                 .WithMany(g => g.WriteofGoods)
                 .HasForeignKey(wg => wg.GoodId);
+            //Перемещение между магазинами
+            modelBuilder.Entity<MoveDoc>()
+                .HasOne(m => m.ConsigneeShop)
+                .WithMany(s => s.MoveConsigneeDocs)
+                .HasForeignKey(m => m.ConsigneeShopId);
+            modelBuilder.Entity<MoveDoc>()
+                .HasOne(m => m.ConsignerShop)
+                .WithMany(s => s.MoveConsignerDocs)
+                .HasForeignKey(m => m.ConsignerShopId);
+            modelBuilder.Entity<MoveGood>()
+                .HasOne(m => m.Good)
+                .WithMany(g => g.MoveGoods)
+                .HasForeignKey(m => m.GoodId);
+            modelBuilder.Entity<MoveGood>()
+                .HasOne(m => m.MoveDoc)
+                .WithMany(d => d.MoveGoods)
+                .HasForeignKey(m => m.MoveDocId);
 
             OnModelCreatingPartial(modelBuilder);
         }

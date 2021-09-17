@@ -1,0 +1,47 @@
+﻿@model List<OnlineCash.DataBaseModels.MoveDoc>
+@using OnlineCash.DataBaseModels;
+
+    <div class="row">
+        <div class="col-12">
+            <a asp-action="Create" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Новое перемещение</a>
+        </div>
+    </div>
+<table class="table table-sm table-hover table-bordered table-striped ">
+    <thead>
+        <tr>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Отправитель</th>
+            <th>Получатель</th>
+            <th>Сумма (отправитель)</th>
+            <th>Сумма (получатель)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var move in Model)
+        {
+            string status = "";
+            switch (move.Status)
+            {
+                case DocumentStatus.Confirm:
+                    status = "Подтвержден";
+                    break;
+                case DocumentStatus.Edit:
+                    status = "";
+                    break;
+                case DocumentStatus.Remove:
+                    status = "Отменен";
+                    break;
+            }
+        <tr>
+            <th>@status</th>
+            <th><a asp-action="Edit">@move.DateMove.ToString("dd.MM")</a></th>
+            <th><a asp-action="Edit">@move.ConsignerShop?.Name</a></th>
+            <th><a asp-action="Edit">@move.ConsigneeShop?.Name</a></th>
+            <th>@move.SumAllConsigner</th>
+            <th>@move.SumAllConsignee</th>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -123,7 +123,7 @@ namespace OnlineCash.Controllers.Api
                 var goods = await db.Goods.ToListAsync();
                 var shop = shops.Where(s => s.Id == shift.ShopId).FirstOrDefault();
                 if (shop == null)
-                    return BadRequest();
+                    return BadRequest("Shop is null");
                 foreach (var check in shift.CheckSells)
                     foreach (var checkGood in check.Goods)
                         if (goods.Where(g => g.Uuid == Guid.Parse(checkGood.Uuid)).FirstOrDefault() == null)

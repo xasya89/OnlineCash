@@ -31,21 +31,46 @@ namespace OnlineCash.Controllers
         {
             string find= HttpContext.Session.GetString("SearchGoods");
             ViewBag.Find = find;
+            int searchGroup = 0;
+            int.TryParse(HttpContext.Session.GetString("SearchGoodsGroup"), out searchGroup);
+            ViewBag.FindGroup = searchGroup;
+            ViewBag.GoodGroups = await db.GoodGroups.ToListAsync();
             ViewBag.Shops = await db.Shops.ToListAsync();
             ViewBag.Suppliers = await db.Suppliers.ToListAsync();
-            return View(await db.Goods.Where(g=>EF.Functions.Like(g.Name, $"%{find}%")).OrderBy(g => g.Name).ToListAsync());
+            return View(await db.Goods
+                .Where(g=> EF.Functions.Like(g.Name, $"%{find}%"))
+                .Where(g=>searchGroup==0 || g.GoodGroupId==searchGroup)
+                .Where(g=>g.IsDeleted==false)
+                .Include(g => g.GoodGroup)
+                .Include(g => g.BarCodes)
+                .OrderBy(g => g.Name)
+                .ToListAsync()
+                );
         }
 
-        public async Task<IActionResult> Search(string find)
+        public async Task<IActionResult> Search(string find, int? group)
         {
+            HttpContext.Session.SetString("SearchGoods", find ?? "");
+            string searchGroup = group is null ? "" : group.ToString();
+            HttpContext.Session.SetString("SearchGoodsGroup", searchGroup );
             find = HttpContext.Session.GetString("SearchGoods");
             ViewBag.Find = find;
+            ViewBag.FindGroup = group;
+            ViewBag.GoodGroups = await db.GoodGroups.ToListAsync();
             ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
             var barcode = await db.BarCodes.Where(b => b.Code == find).FirstOrDefaultAsync();
             if (barcode != null)
                 return View("Index",await db.Goods.Where(g=>g.Id==barcode.GoodId).ToListAsync());
 
-            return View("Index", await db.Goods.Where(g => EF.Functions.Like(g.Name, $"%{find}%")).OrderBy(g => g.Name).ToListAsync());
+            return View("Index", await db.Goods
+                .Where(g => EF.Functions.Like(g.Name, $"%{find}%"))
+                .Where(g=>group==null || g.GoodGroupId==group)
+                .Where(g=>g.IsDeleted==false)
+                .Include(g=>g.GoodGroup)
+                .Include(g=>g.BarCodes)
+                .OrderBy(g => g.Name)
+                .ToListAsync()
+                );
         }
 
         public IActionResult SetSearch(string search="")
@@ -233,15 +258,16 @@ namespace OnlineCash.Controllers
             return View(g);
         }
 
-        public async Task<IActionResult> Delete(int id, string find="")
+        public async Task<IActionResult> Delete(int id)
         {
             var good = await db.Goods.Where(g => g.Id == id).FirstOrDefaultAsync();
             if (good != null)
             {
-                db.Goods.Remove(good);
+                good.IsDeleted = true;
+                //db.Goods.Remove(good);
                 await db.SaveChangesAsync();
             };
-            return RedirectToAction("Search", new { find });
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> PrintPriceStepShop()
@@ -266,7 +292,7 @@ namespace OnlineCash.Controllers
                 if(shop.isSelected)
                     idShops.Add(shop.Id);
             ViewData["idShops"] = idShops;
-            return View(await db.Goods.Include(g => g.GoodPrices).ToListAsync());
+            return View(await db.Goods.Where(g=>!g.IsDeleted).Include(g => g.GoodPrices).ToListAsync());
         }
 
         static Dictionary<Guid, List<Models.GoodWithGoodBalanceModel>> GoodSelectedListForPrint = new Dictionary<Guid, List<Models.GoodWithGoodBalanceModel>>();
@@ -300,7 +326,7 @@ namespace OnlineCash.Controllers
         /// <param name="model"></param>
         public async Task<IActionResult> PrintPriceTagWithSelectionGroup([FromBody] Models.GoodPrint.SelectionGroupShopModel model) =>
             View(await db.GoodGroups.Where(gr => model.idGroups.Contains(gr.Id))
-                .Include(gr => gr.Goods)
+                .Include(gr => gr.Goods.Where(g=>g.IsDeleted==false).ToList())
                 .ThenInclude(g => g.GoodPrices.Where(p => model.idShops.Contains(p.ShopId)))
                 .ToListAsync());
 

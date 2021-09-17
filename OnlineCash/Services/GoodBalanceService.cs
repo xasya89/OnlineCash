@@ -19,9 +19,25 @@ namespace OnlineCash.Services
             this.logger = logger;
         }
 
-        public async Task MinusAsync(List<GoodBalanceModel> model)
+        public async Task MinusAsync(List<GoodBalanceModel> goodBalances)
         {
-            throw new NotImplementedException();
+            foreach(var goodModel in goodBalances)
+            {
+                var gb = await db.GoodBalances.Where(b => b.GoodId == goodModel.GoodId & b.ShopId == goodModel.ShopId).FirstOrDefaultAsync();
+                if (gb == null)
+                {
+                    var newGoodBalance = new GoodBalance
+                    {
+                        GoodId = goodModel.GoodId,
+                        ShopId = goodModel.ShopId,
+                        Count = -1 * goodModel.Count
+                    };
+                    db.GoodBalances.Add(newGoodBalance);
+                }
+                else
+                    gb.Count -= goodModel.Count;
+            }
+            await db.SaveChangesAsync();
         }
 
         public async Task PlusAsync(List<GoodBalanceModel> model)

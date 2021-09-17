@@ -4,33 +4,60 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>Создать</a>
-        <span onclick="goodGroupModal.show()" class="btn btn-primary btn-sm"><i class="fas fa-layer-group"></i> Группы</span>
-        <div class="btn-group">
-            <span class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="fa fa-print"></span> Печать
-            </span>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintPriceStepShop">Выбор позиций</a></li>
-                <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintAll" target="_blank">Все позиции</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <select id="shopList" class="form-select form-select-sm" style="float:left">
-                        @foreach (var shop in (List<Shop>)ViewBag.Shops)
-                        {
-                            <option value="@shop.Id">@shop.Name</option>
-                        }
-                    </select>
-                </li>
-                <li><a class="dropdown-item" onclick="printAllPrice()" href="#">Весь прайс</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" asp-controller="GoodsPrint" asp-action="SelectionGoods">Подбор товара</a></li>
-            </ul>
+        <div class="row">
+            <div class="col-auto">
+                <a asp-controller="Goods" asp-action="Create" class="btn btn-sm btn-primary"><span class="fa fa-plus"></span>Создать</a>
+            </div>
+            <div class="col-auto">
+                <span onclick="goodGroupModal.show()" class="btn btn-primary btn-sm"><i class="fas fa-layer-group"></i> Группы</span>
+            </div>
+            <div class="col-auto">
+                <div class="btn-group">
+                    <span class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="fa fa-print"></span> Печать
+                    </span>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintPriceStepShop">Выбор позиций</a></li>
+                        <li><a class="dropdown-item" asp-controller="Goods" asp-action="PrintAll" target="_blank">Все позиции</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <select id="shopList" class="form-select form-select-sm" style="float:left">
+                                @foreach (var shop in (List<Shop>)ViewBag.Shops)
+                                {
+                                    <option value="@shop.Id">@shop.Name</option>
+                                }
+                            </select>
+                        </li>
+                        <li><a class="dropdown-item" onclick="printAllPrice()" href="#">Весь прайс</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-controller="GoodsPrint" asp-action="SelectionGoods">Подбор товара</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
-        <form class="d-flex" asp-controller="Goods" asp-action="Search" method="get">
-            <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Наименование или штрихкод" aria-label="Search">
-            <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
+        <form asp-controller="Goods" asp-action="Search" method="get">
+            <div class="row">
+                <div class="col-auto">
+                    <label class="form-label ">Группа</label>
+                </div>
+                <div class="col-auto">
+                    @{ 
+                        int? groupSearch = ViewBag.FindGroup;
+                    }
+                    <select name="group" asp-for="@groupSearch" asp-items="@(new SelectList(ViewBag.GoodGroups, nameof(GoodGroup.Id), nameof(GoodGroup.Name)))" class="form-select form-select-sm">
+                        <option value="" selected></option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label class="form-label">Наименование</label>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex">
+                        <input name="find" value="@ViewBag?.Find" class="form-control form-control-sm me-2" type="search" placeholder="Наименование или штрихкод" aria-label="Search">
+                        <button class="btn btn-sm btn-outline-success" type="submit">Найти</button>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </nav>
@@ -38,6 +65,8 @@
 <table class="table table-sm table-hover">
     <thead>
         <tr>
+            <th></th>
+            <th>Группа</th>
             <th>Наименование</th>
             <th>Ед. изм</th>
             <th>Цена</th>
@@ -47,11 +76,14 @@
     <tbody>
         @foreach (var g in Model)
         {
+            string barcodeIcon = g.BarCodes.Count == 0 ? "" : "fa fa-barcode";
             <tr>
+                <td><i class="@barcodeIcon"></i></td>
+                <td>@g.GoodGroup?.Name</td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Name</a></td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit</a></td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Price</a></td>
-                <td><span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id&find=@ViewBag.Find'" class="text-danger">X</span></td>
+                <td><span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id'" class="btn btn-sm btn-outline-danger "><i class="fa fa-trash"></i></span></td>
             </tr>
         }
     </tbody>
@@ -81,6 +113,7 @@
 </div>
 
 <script>
+
     const shopList = document.getElementById("shopList");
     const goodGroupModal = new bootstrap.Modal(document.getElementById("modalGroups"));
     const goodGroupName = document.getElementById("goodGroupName");

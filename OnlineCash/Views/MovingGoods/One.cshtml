@@ -1,0 +1,186 @@
+﻿@model OnlineCash.DataBaseModels.MoveDoc
+@using OnlineCash.DataBaseModels;
+
+<input type="hidden" id="idMoveDoc" value="@Model.Id" />
+<div class="row mb-3">
+    <div class="col">
+        @if (Model.Status == DocumentStatus.New || Model.Status == DocumentStatus.Edit)
+        {
+            <button onclick="save(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
+            <button onclick="save(false)" class="btn btn-sm btn-primary" style="margin-right: 20px">Сохранить</button>
+        }
+        <a asp-action="Index" class="btn btn-sm btn-light">Закрыть</a>
+    </div>
+</div>
+
+<div class="row">
+    <label class="col-md-3"></label>
+    <div class="col-md-3">
+        <input id="DateMove" value="@Model.DateMove.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " />
+    </div>
+</div>
+
+<div class="row">
+    <label class="col-md-3">Отрпавитель</label>
+    <div class="col-md-3">
+        <select id="ShopConsigner" asp-for="@Model.ConsignerShopId" asp-items="@(new SelectList(ViewBag.Shops, nameof(Shop.Id), nameof(Shop.Name)))" class="form-select form-select-sm"></select>
+    </div>
+    <label class="col-md-3">Получатель</label>
+    <div class="col-md-3">
+        <select id="ShopConsignee" asp-for="@Model.ConsigneeShopId" asp-items="@(new SelectList(ViewBag.Shops, nameof(Shop.Id), nameof(Shop.Name)))" class="form-select form-select-sm"></select>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-auto">
+        <span id="btnGoodSelected" class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
+    </div>
+    <div class="col-sm-6">
+        <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Товар</span>
+            </div>
+            <input id="GoodSearch" type="text" list="GoodSearchList" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+            <datalist id="GoodSearchList"></datalist>
+            <div class="input-group-append">
+                <span id="GoodSearchBtnAdd" class="input-group-text">Добавить</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th></th>
+            <th>№</th>
+            <th>Наименование</th>
+            <th>Ед. изм</th>
+            <th>Кол-во</th>
+            <th>Цена (отправитель)</th>
+            <th>Сумма (отправитель)</th>
+            <th>Цена (получатель)</th>
+            <th>Сумма (получатель)</th>
+        </tr>
+    </thead>
+    <tbody id="TableGoods">
+        @foreach(var moveGood in Model.MoveGoods)
+        { 
+            <tr data-id="@moveGood.Id" data-id-good="@moveGood.Good.Id">
+                <td><i onclick="goodRemove(this.parentElemnt.parentElemnt)" class="fa fa-trash"></i></td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    var goods = new Array();
+    const idMoveDoc = document.getElementById("");
+    const dateMove = document.getElementById("DateMove");
+    const shopConsigner = document.getElementById("ShopConsigner");
+    const shopConsignee = document.getElementById("ShopConsignee");
+    const tableGoods = document.getElementById("TableGoods");
+    const btnGoodSelected = document.getElementById("btnGoodSelected");
+    const goodSearch = document.getElementById("GoodSearch");
+    const goodSearchList = document.getElementById("GoodSearchList");
+    const goodSearchBtnAdd = document.getElementById("GoodSearchBtnAdd");
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        fetch("/api/goods")
+            .then(r => r.json())
+            .then(goodlist => {
+                goods = goodlist;
+                goodlist.forEach(g => {
+                    let option = document.createElement("option");
+                    option.value = g.name;
+                    goodSearchList.appendChild(option);
+                })
+            });
+    });
+
+    //Подбор товара
+    let selectionGood = new SelectionGood();
+    btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
+    selectionGood.CloseDialogSetEvent((idGoods) => {
+        idGoods.forEach(idGood => {
+            goodAdd(goods.filter(good => good.id == idGood)[0]);
+        })
+    });
+    //Выбор товара из списка
+    goodSearchBtnAdd.addEventListener("click", () => {
+        addGoodBySearch();
+    })
+    goodSearch.addEventListener("keyup", (e) => {
+        if (e.key === 'Enter' || e.keyCode === 13)
+            addGoodBySearch();
+    })
+    function addGoodBySearch() {
+        goods.forEach(g => {
+            if (g.name == goodSearch.value) { }
+                goodAdd(g);
+        })
+        goodSearch.value = "";
+    }
+
+    function goodAdd(good) {
+        //цена отправителя
+        fetch(`/api/goods/${good.id}/${shopConsigner.value}`)
+            .then(r => r.json())
+            .then(g => {
+                let priceConsigner = g.price;
+                fetch(`/api/goods/${good.id}/${shopConsignee.value}`)
+                    .then(r => r.json())
+                    .then(g => {
+                        let flagAdd = true;
+                        tableGoods.querySelectorAll("tr").forEach(tr => {
+                            if (tr.dataset.idGood == good.id)
+                                flagAdd = false;
+                        });
+                        if (!flagAdd)
+                            return false;
+
+                        let priceConsignee = g.price;
+                        let tr = document.createElement("tr");
+                        tr.id = -1;
+                        tr.dataset.idGood = g.id;
+                        tr.innerHTML = `
+<td><i class="fa fa-trash"></i></td>
+<td>1</td>
+<td goodname>${g.name}</td>
+<td>${g.unit}</td>
+<td><input value="" class="form-control form-control-sm"/></td>
+<td priceConsigner>${priceConsigner}</td>
+<td sumConsigner>0</td>
+<td priceConsignee>${priceConsignee}</td>
+<td sumConsignee>0</td>
+`;
+                        let tdCount = tr.querySelector("input");
+                        tdCount.oninput = () => { goodEdit(tr); };
+                        let tdRemove = tr.querySelector("i");
+                        tdRemove.onclick = () => { goodRemove(tr); };
+                        tableGoods.append(tr);
+                    })
+            });
+    }
+
+    function goodEdit(tr) {
+        let inptCount = tr.querySelector("input");
+        inptCount.value = inptCount.value.replace(",", ".");
+        let tdPriceConsigner = tr.querySelector("td[priceConsigner]");
+        let tdPriceConsignee = tr.querySelector("td[priceConsignee]");
+        let tdSumConsigner = tr.querySelector("td[sumConsigner]");
+        let tdSumConsignee = tr.querySelector("td[sumConsignee]");
+
+        let count = isNaN(parseFloat(inptCount.value)) ? 0 : parseFloat(inptCount.value);
+        let priceConsignerFloat = parseFloat(tdPriceConsigner.textContent);
+        let priceConsigneeFloat = parseFloat(tdPriceConsignee.textContent);
+        tdSumConsigner.textContent = (count * priceConsignerFloat).toFixed(2);
+        tdSumConsignee.textContent = (count * priceConsigneeFloat).toFixed(2);
+    }
+    function goodRemove(tr) {
+        let goodName = tr.querySelector("td[goodname]").textContent;
+        if (confirm(`Удалить ${goodName}?`))
+            tr.remove();
+    }
+</script>

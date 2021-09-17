@@ -1,13 +1,14 @@
-﻿@model OnlineCash.DataBaseModels.Writeof
+﻿@using OnlineCash.DataBaseModels;
+@model OnlineCash.DataBaseModels.Writeof
 <input type="hidden" id="idWriteOf" value="@Model.Id"/>
 <div class="row mb-3">
     <div class="col">
-        @if (Model.IsSuccess == false)
+        @if (Model.Status==DocumentStatus.New || Model.Status==DocumentStatus.Edit)
         {
             <button onclick="save(true)" class="btn btn-sm btn-success" style="margin-right: 20px">Сохранить и провести</button>
             <button onclick="save(false)" class="btn btn-sm btn-primary" style="margin-right: 20px">Сохранить</button>
         }
-        <a asp-action="Index" class="btn btn-sm btn-danger">Отмена</a>
+        <a asp-action="Index" class="btn btn-sm btn-light">Закрыть</a>
     </div>
 </div>
 <div class="row mb-3">
@@ -84,7 +85,7 @@
 
 <div class="row">
     <div class="col-12">
-        <textarea id="Note" class="form-control form-control-sm"></textarea>
+        <textarea id="Note" class="form-control form-control-sm">@Model.Note</textarea>
     </div>
 </div>
 <script>

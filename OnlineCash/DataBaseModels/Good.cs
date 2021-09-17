@@ -23,6 +23,7 @@ namespace OnlineCash.DataBaseModels
         public decimal Price { get; set; }
         public SpecialTypes SpecialType { get; set; } = SpecialTypes.None;
         public double? VPackage { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public List<BarCode> BarCodes { get; set; } = new List<BarCode>();
         public List<GoodPrice> GoodPrices { get; set; }
         public List<CheckGood> CheckGoods { get; set; }
@@ -31,5 +32,6 @@ namespace OnlineCash.DataBaseModels
         public List<ArrivalGood> ArrivalGoods { get; set; }
         public List<GoodAdded> GoodAddeds { get; set; }
         public List<WriteofGood> WriteofGoods { get; set; }
+        public List<MoveGood> MoveGoods { get; set; }
     }
 }

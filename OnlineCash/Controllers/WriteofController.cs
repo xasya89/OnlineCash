@@ -6,15 +6,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
+using OnlineCash.Services;
+using OnlineCash.Models;
 
 namespace OnlineCash.Controllers
 {
     public class WriteofController : Controller
     {
         shopContext db;
-        public WriteofController(shopContext db)
+        IGoodBalanceService goodBalance;
+        public WriteofController(shopContext db, IGoodBalanceService goodBalance)
         {
             this.db = db;
+            this.goodBalance = goodBalance;
         }
         // GET: WriteofController
         public async Task<ActionResult> Index()
@@ -67,6 +71,9 @@ namespace OnlineCash.Controllers
                     db.WriteofGoods.Add(writeofGood);
                 }
                 await db.SaveChangesAsync();
+                if(writeof.IsSuccess)
+                    await GoodBalanceMinus(writeof);
+
                 return Ok();
             }
             return BadRequest();
@@ -135,25 +142,33 @@ namespace OnlineCash.Controllers
             }
         }
 
-        // GET: WriteofController/Delete/5
-        public ActionResult Delete(int id)
+        private async Task GoodBalanceMinus(Writeof model)
         {
-            return View();
+            var goodGroups = from WriteofGood in model.WriteofGoods group WriteofGood by WriteofGood.GoodId;
+            List<GoodBalanceModel> goodBalances = new List<GoodBalanceModel>();
+            foreach (IGrouping<int, WriteofGood> group in goodGroups)
+            {
+                goodBalances.Add(new GoodBalanceModel
+                {
+                    GoodId = group.Key,
+                    ShopId = model.ShopId,
+                    Count = group.Sum(gr => gr.Count)
+                });
+            }
+            await goodBalance.MinusAsync(goodBalances);
         }
 
-        // POST: WriteofController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        // GET: WriteofController/Delete/5
+        public async Task<IActionResult> Canceled(int id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var writeof = await db.Writeofs.Where(w => w.Id == id).FirstOrDefaultAsync();
+            if(writeof is null)
+                return BadRequest("Акт не найден");
+            if (writeof.Status == DocumentStatus.Confirm)
+                return BadRequest("Нельзя удалить подтвержденный акт");
+            writeof.Status = DocumentStatus.Remove;
+            await db.SaveChangesAsync();
+            return Ok();
         }
     }
 }
