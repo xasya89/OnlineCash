@@ -94,6 +94,9 @@
                 @Model.PriceShops[i].ShopName
             </td>
             <td>
+                @Html.CheckBoxFor(Model=>Model.PriceShops[i].BuySuccess,new { @buySuccess="", @class = "form-check" })
+            </td>
+            <td>
                 @Html.EditorFor(Model => Model.PriceShops[i].Price, new { htmlAttributes = new { @shopprice="", @class = "form-control form-control-sm" }, })
             </td>
         </tr>

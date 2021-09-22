@@ -33,14 +33,19 @@ namespace OnlineCash.Controllers
             ViewBag.Find = find;
             int searchGroup = 0;
             int.TryParse(HttpContext.Session.GetString("SearchGoodsGroup"), out searchGroup);
+            bool filterIsDeleted = false;
+            bool.TryParse(HttpContext.Session.GetString("SearchGoodsIsDeleted"), out filterIsDeleted);
             ViewBag.FindGroup = searchGroup;
+            ViewBag.FindIsDeleted = filterIsDeleted;
             ViewBag.GoodGroups = await db.GoodGroups.ToListAsync();
             ViewBag.Shops = await db.Shops.ToListAsync();
             ViewBag.Suppliers = await db.Suppliers.ToListAsync();
             return View(await db.Goods
                 .Where(g=> EF.Functions.Like(g.Name, $"%{find}%"))
                 .Where(g=>searchGroup==0 || g.GoodGroupId==searchGroup)
-                .Where(g=>g.IsDeleted==false)
+                .Where(g=>filterIsDeleted || g.IsDeleted==false)
+                .Include(g => g.GoodPrices)
+                .ThenInclude(gp => gp.Shop)
                 .Include(g => g.GoodGroup)
                 .Include(g => g.BarCodes)
                 .OrderBy(g => g.Name)
@@ -54,8 +59,11 @@ namespace OnlineCash.Controllers
             string searchGroup = group is null ? "" : group.ToString();
             HttpContext.Session.SetString("SearchGoodsGroup", searchGroup );
             find = HttpContext.Session.GetString("SearchGoods");
+            bool filterIsDeleted = false;
+            bool.TryParse(HttpContext.Session.GetString("SearchGoodsIsDeleted"), out filterIsDeleted);
             ViewBag.Find = find;
             ViewBag.FindGroup = group;
+            ViewBag.FindIsDeleted = filterIsDeleted;
             ViewBag.GoodGroups = await db.GoodGroups.ToListAsync();
             ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
             var barcode = await db.BarCodes.Where(b => b.Code == find).FirstOrDefaultAsync();
@@ -65,7 +73,9 @@ namespace OnlineCash.Controllers
             return View("Index", await db.Goods
                 .Where(g => EF.Functions.Like(g.Name, $"%{find}%"))
                 .Where(g=>group==null || g.GoodGroupId==group)
-                .Where(g=>g.IsDeleted==false)
+                .Where(g=>filterIsDeleted || g.IsDeleted==false)
+                .Include(g=>g.GoodPrices)
+                .ThenInclude(gp=>gp.Shop)
                 .Include(g=>g.GoodGroup)
                 .Include(g=>g.BarCodes)
                 .OrderBy(g => g.Name)
@@ -75,8 +85,17 @@ namespace OnlineCash.Controllers
 
         public IActionResult SetSearch(string search="")
         {
-            HttpContext.Session.SetString("SearchGoods", search??"");
+            HttpContext.Session.SetString("SearchGoods", Convert.ToString(search));
             return Ok();
+        }
+
+        public IActionResult SetFilterIsDeleted()
+        {
+            bool filterIsDeleted = false;
+            bool.TryParse(HttpContext.Session.GetString("SearchGoodsIsDeleted"), out filterIsDeleted);
+            filterIsDeleted = !filterIsDeleted;
+            HttpContext.Session.SetString("SearchGoodsIsDeleted", Convert.ToString(filterIsDeleted));
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> PrintAll()
@@ -136,7 +155,8 @@ namespace OnlineCash.Controllers
                     idPrice = price.Id,
                     idShop = price.ShopId,
                     ShopName = price.Shop.Name,
-                    Price = price.Price
+                    Price = price.Price,
+                    BuySuccess=price.BuySuccess
                 });
             foreach (var shop in await db.Shops.ToListAsync())
                 if (model.PriceShops.Count(p => p.idShop == shop.Id) == 0)
@@ -216,13 +236,14 @@ namespace OnlineCash.Controllers
                             if (p.idPrice == 0)
                             {
                                 var shop = await db.Shops.FirstOrDefaultAsync(s => s.Id == p.idShop);
-                                var price = new GoodPrice { Good = good, Shop = shop, Price = p.Price };
+                                var price = new GoodPrice { Good = good, Shop = shop, Price = p.Price, BuySuccess=p.BuySuccess };
                                 await db.GoodPrices.AddAsync(price);
                             }
                             if (p.idPrice != 0)
                             {
                                 var price = await db.GoodPrices.FirstOrDefaultAsync(price => price.Id == p.idPrice);
                                 price.Price = p.Price;
+                                price.BuySuccess = p.BuySuccess;
                             }
                         }
                         //Определим удаленные штриходы
@@ -264,6 +285,18 @@ namespace OnlineCash.Controllers
             if (good != null)
             {
                 good.IsDeleted = true;
+                //db.Goods.Remove(good);
+                await db.SaveChangesAsync();
+            };
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Recove(int id)
+        {
+            var good = await db.Goods.Where(g => g.Id == id).FirstOrDefaultAsync();
+            if (good != null)
+            {
+                good.IsDeleted = false;
                 //db.Goods.Remove(good);
                 await db.SaveChangesAsync();
             };

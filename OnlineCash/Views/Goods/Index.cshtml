@@ -70,7 +70,20 @@
             <th>Наименование</th>
             <th>Ед. изм</th>
             <th>Цена</th>
-            <th></th>
+            <th>Магазины</th>
+            <th>
+                <a asp-controller="Goods" asp-action="SetFilterIsDeleted" class="btn btn-sm btn-light">
+                    @if (ViewBag.FindIsDeleted)
+                    {
+                        <i class="fa fa-eye "></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-eye-slash "></i>
+                    }
+                </a>
+                <label class="">Удаленные</label>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -83,7 +96,32 @@
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Name</a></td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit</a></td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Price</a></td>
-                <td><span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id'" class="btn btn-sm btn-outline-danger "><i class="fa fa-trash"></i></span></td>
+                <td>
+                    @if((ViewBag.Shops as List<Shop>).Count==g.GoodPrices.Count(gp => gp.BuySuccess))
+                    {
+                        <span>Все</span>
+                    }
+                    else
+                    @foreach(var goodPrice in g.GoodPrices)
+                    {
+                        string shopNameShort = goodPrice.Shop.Name.Length > 3 ? goodPrice.Shop.Name.Substring(0, 3) : goodPrice.Shop.Name;
+                        if(goodPrice.BuySuccess)
+                        {
+                            <span>@shopNameShort</span>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (g.IsDeleted)
+                    {
+                        <span onclick="if (confirm('Восстановить?')) window.location.href = '/goods/recove?id=@g.Id'" class="btn btn-sm btn-outline-success "><i class="fa fa-dot-circle-o "></i></span>
+                    }
+                    else
+                    {
+                        <span onclick="if (confirm('Удлаить?')) window.location.href = '/goods/delete?id=@g.Id'" class="btn btn-sm btn-outline-danger "><i class="fa fa-trash"></i></span>
+                    }
+
+                </td>
             </tr>
         }
     </tbody>
@@ -115,26 +153,28 @@
 <script>
 
     const shopList = document.getElementById("shopList");
-    const goodGroupModal = new bootstrap.Modal(document.getElementById("modalGroups"));
-    const goodGroupName = document.getElementById("goodGroupName");
-    const goodGroupList = document.getElementById("goodGroupList");
-    var code = "";
-    window.onload = function () {
-        const findInp = document.querySelector("input[name=find]");
-        findInp.oninput = function () {
-            fetch("/goods/SetSearch?search=" + findInp.value);
-        }
-        loadGroups();
-    }
+                        const goodGroupModal = new bootstrap.Modal(document.getElementById("modalGroups"));
+                        const goodGroupName = document.getElementById("goodGroupName");
+                        const goodGroupList = document.getElementById("goodGroupList");
+                        var code = "";
+                        window.onload = function () {
+                            /*
+                            const findInp = document.querySelector("input[name=find]");
+                            findInp.oninput = function () {
+                                fetch("/goods/SetSearch?search=" + findInp.value);
+                            }
+                            */
+                            loadGroups();
+                        }
 
-    function addGroupIntoList(group) {
-        let li = document.createElement("li");
-        li.classList.add("list-group-item");
-        li.dataset.id = group.id;
-        console.log(group);
-        li.innerHTML = `<span class="fa fa-trash"></span> ${group.name}`;
-        li.querySelector("span").addEventListener("click", () => {
-            if (confirm(`Удалить ${group.name}?`))
+                        function addGroupIntoList(group) {
+                            let li = document.createElement("li");
+                            li.classList.add("list-group-item");
+                            li.dataset.id = group.id;
+                            console.log(group);
+                            li.innerHTML = `<span class="fa fa-trash"></span> ${group.name}`;
+                    li.querySelector("span").addEventListener("click", () => {
+                    if (confirm(`Удалить ${group.name}?`))
                 fetch(`/api/goodgroups/${group.id}`, { method: "DELETE" })
                     .then(resp => {
                         if (resp.status == 200)

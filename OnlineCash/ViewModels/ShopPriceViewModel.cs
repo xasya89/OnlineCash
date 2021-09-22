@@ -12,5 +12,6 @@ namespace OnlineCash.ViewModels
         public int idPrice { get; set; }
         public string ShopName { get; set; }
         public decimal Price { get; set; }
+        public bool BuySuccess { get; set; } = true;
     }
 }

@@ -16,5 +16,6 @@ namespace OnlineCash.DataBaseModels
         [System.Text.Json.Serialization.JsonIgnore]
         public Shop Shop { get; set; }
         public decimal Price { get; set; }
+        public bool BuySuccess { get; set; } = true;
     }
 }

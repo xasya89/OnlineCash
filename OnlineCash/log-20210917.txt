@@ -108,3 +108,6 @@ System.ArgumentNullException: String reference not set to an instance of a Strin
 2021-09-17T21:33:48.5191075+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
 2021-09-17T21:33:48.5320016+03:00  [INF] Hosting environment: "Development" (c3307c92)
 2021-09-17T21:33:48.5341160+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2021-09-17T21:38:29.0622199+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2021-09-17T21:38:29.0743793+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2021-09-17T21:38:29.0760796+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
