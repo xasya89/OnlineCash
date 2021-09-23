@@ -137,6 +137,10 @@ namespace OnlineCash.Controllers
         */
         public async Task<IActionResult> Details(int id)
         {
+            /*
+            var enums=Enum.GetValues(typeof(SpecialTypes)).Cast<SpecialTypes>().ToList();
+            foreach(var enum1 in enums) {};
+            */
             var good = await db.Goods.Include(g=>g.BarCodes).Where(g=>g.Id==id).FirstOrDefaultAsync(g => g.Id == id);
             var model = new GoodViewModel();
             model.Id = good.Id;
@@ -146,6 +150,8 @@ namespace OnlineCash.Controllers
             model.BarCodes = good.BarCodes;
             model.BarCode = good.BarCode;
             model.Unit = good.Unit;
+            model.SpecialType = good.SpecialType;
+            model.VPackage = good.VPackage;
             model.Price = good.Price;
             model.SupplierId = good.SupplierId;
             var prices = await db.GoodPrices.Include(p => p.Shop).Where(p => p.GoodId == id).ToListAsync();
@@ -194,7 +200,18 @@ namespace OnlineCash.Controllers
                 supplier = await db.Suppliers.Where(s => s.Id == g.SupplierId).FirstOrDefaultAsync();
                 if (g.Id == 0)
                 {
-                    var good = new Good { Uuid=Guid.NewGuid(), Name = g.Name, Article = g.Article, BarCode = g.BarCode, Unit = g.Unit, Price = g.Price, GoodGroup=goodGroup, Supplier=supplier };
+                    var good = new Good { 
+                        Uuid=Guid.NewGuid(), 
+                        Name = g.Name, 
+                        Article = g.Article, 
+                        BarCode = g.BarCode, 
+                        Unit = g.Unit, 
+                        SpecialType=g.SpecialType,
+                        VPackage=g.VPackage,
+                        Price = g.Price, 
+                        GoodGroup=goodGroup, 
+                        Supplier=supplier 
+                    };
                     db.Goods.Add(good);
                     foreach (var barcode in g.BarCodes)
                         db.BarCodes.Add(new BarCode
@@ -228,6 +245,8 @@ namespace OnlineCash.Controllers
                         string barcodeForGood = g.BarCodes.FirstOrDefault()?.Code;
                         good.BarCode = barcodeForGood;
                         good.Unit = g.Unit;
+                        good.SpecialType = g.SpecialType;
+                        good.VPackage = g.VPackage;
                         good.Price = g.Price;
                         good.GoodGroup = goodGroup;
                         good.SupplierId = g.SupplierId==-1 ? null : g.SupplierId;
@@ -276,7 +295,10 @@ namespace OnlineCash.Controllers
                     }
                 }
             }
-            return View(g);
+            ViewBag.Goods = await db.Goods.ToListAsync();
+            ViewBag.Groups = await db.GoodGroups.OrderBy(gr => gr.Name).ToListAsync();
+            ViewBag.Suppliers = await db.Suppliers.OrderBy(s => s.Name).ToListAsync();
+            return View("Good",g);
         }
 
         public async Task<IActionResult> Delete(int id)

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
+using OnlineCash.Models;
 
 namespace OnlineCash.Controllers.Api
 {
@@ -31,18 +32,36 @@ namespace OnlineCash.Controllers.Api
         }
 
         [HttpGet("{idShop}")]
-        public async Task<List<Good>> Get(int idShop)
+        public async Task<List<GoodSynchModel>> Get(int idShop)
         {
-            List<Good> goods = await db.Goods.Include(g=>g.BarCodes).ToListAsync();
-            List<GoodPrice> prices = await db.GoodPrices.Where(p => p.ShopId == idShop).ToListAsync();
-            foreach(var g in goods)
-                foreach(var p in prices)
-                    if(g.Id==p.GoodId)
+            List<Good> goods = await db.Goods
+                .Include(g => g.BarCodes)
+                .Include(g => g.GoodPrices.Where(gp => gp.ShopId == idShop))
+                .ToListAsync();
+            List<GoodSynchModel> goodsSynch = new List<GoodSynchModel>();
+            foreach (var good in goods)
+                if (good.GoodPrices.Count > 0)
+                {
+                    var price = good.GoodPrices.FirstOrDefault();
+                    bool isDelete = good.IsDeleted;
+                    if (!price.BuySuccess)
+                        isDelete = true;
+                    var goodSynch = new GoodSynchModel
                     {
-                        g.Price = p.Price;
-                        break;
+                        Uuid = good.Uuid,
+                        Name = good.Name,
+                        Article = good.Article,
+                        SpecialType = good.SpecialType,
+                        Unit = good.Unit,
+                        VPackage = good.VPackage,
+                        Price = price.Price,
+                        IsDeleted = isDelete
                     };
-            return goods;
+                    foreach (var barcode in good.BarCodes)
+                        goodSynch.Barcodes.Add(barcode.Code);
+                    goodsSynch.Add(goodSynch);
+                };
+            return goodsSynch;
         }
 
         [HttpPost]

@@ -65,6 +65,14 @@
             </select>
         </div>
         <div class="form-group">
+            <label asp-for="SpecialType" class="form-label">Тип</label>
+            <select asp-for="SpecialType" asp-items="Html.GetEnumSelectList<SpecialTypes>()" class="form-select form-select-sm"></select>
+        </div>
+        <div class="form-group">
+            <label asp-for="VPackage" class="form-label">Объем тары</label>
+            <input asp-for="VPackage" class="form-control form-control-sm" />
+        </div>
+        <div class="form-group">
             <label asp-for="Price">Цена</label>
             <div class="row">
                 <div class="col-4">
