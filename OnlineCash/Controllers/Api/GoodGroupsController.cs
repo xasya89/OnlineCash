@@ -27,7 +27,12 @@ namespace OnlineCash.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<GoodGroup>> Get() => await db.GoodGroups.Include(g=>g.Goods).ThenInclude(g=>g.Supplier).OrderBy(g=>g.Name).ToListAsync();
+        public async Task<IEnumerable<GoodGroup>> Get() => 
+            await db.GoodGroups
+                .Include(g=>g.Goods)
+                .ThenInclude(g=>g.Supplier)
+                .OrderBy(g=>g.Name)
+                .ToListAsync();
 
         [HttpGet("tree")]
         public async Task<IActionResult> GetTree()

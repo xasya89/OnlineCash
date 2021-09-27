@@ -52,6 +52,7 @@ namespace OnlineCash.Controllers.Api
             return Ok(good);
         }
         [HttpPost("list/{idShop}")]
+        //TODO: Проверить необходимость и адекватность данной функции
         public async Task<IActionResult> DefaultList([FromBody] List<int> idGoods, int idShop)
         {
             var goods = await db.Goods
