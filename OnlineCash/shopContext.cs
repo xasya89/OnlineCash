@@ -15,12 +15,14 @@ namespace OnlineCash
         public DbSet<GoodPrice> GoodPrices { get; set; }
         public DbSet<GoodAdded> GoodAddeds { get; set; }
         public DbSet<Shift> Shifts { get; set; }
+        public DbSet<ShiftSale> ShiftSales { get; set; }
         public DbSet<CheckGood> CheckGoods { get; set; }
         public DbSet<CheckSell> CheckSells { get; set; }
         public DbSet<Stocktaking> Stocktakings { get; set; }
         public DbSet<StockTakingGroup> StockTakingGroups { get; set; }
         public DbSet<StocktakingGood> StocktakingGoods { get; set; }
         public DbSet<GoodBalance> GoodBalances { get; set; }
+        public DbSet<GoodBalanceHistory> GoodBalanceHistories { get; set; }
         public DbSet<Arrival> Arrivals { get; set; }
         public DbSet<ArrivalPayment> ArrivalPayments { get; set; }
         public DbSet<ArrivalGood> ArrivalGoods { get; set; }
@@ -46,7 +48,6 @@ namespace OnlineCash
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseMySql("server=172.172.172.120;database=shop;user=root;password=kt38hmapq;treattinyasboolean=true", Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.30-mysql"));
             }
         }
@@ -85,6 +86,14 @@ namespace OnlineCash
                 .HasOne(s => s.Cashier)
                 .WithMany(s => s.Shifts)
                 .HasForeignKey(s => s.CashierId);
+            modelBuilder.Entity<ShiftSale>()
+                .HasOne(s => s.Shift)
+                .WithMany(s => s.ShiftSales)
+                .HasForeignKey(s => s.ShiftId);
+            modelBuilder.Entity<ShiftSale>()
+                .HasOne(s => s.Good)
+                .WithMany(g => g.ShiftSales)
+                .HasForeignKey(s => s.GoodId);
 
             modelBuilder.Entity<CheckGood>()
                 .HasOne(c => c.CheckSell)
@@ -172,6 +181,15 @@ namespace OnlineCash
                 .HasOne(m => m.MoveDoc)
                 .WithMany(d => d.MoveGoods)
                 .HasForeignKey(m => m.MoveDocId);
+            //GoodBalance
+            modelBuilder.Entity<GoodBalanceHistory>()
+                .HasOne(b => b.Good)
+                .WithMany(g => g.GoodBalanceHistories)
+                .HasForeignKey(b => b.GoodId);
+            modelBuilder.Entity<GoodBalanceHistory>()
+                .HasOne(b => b.Shop)
+                .WithMany(g => g.GoodBalanceHistories)
+                .HasForeignKey(g => g.ShopId);
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -166,6 +166,7 @@ namespace OnlineCash.Controllers
             arrival.SumArrivals = model.ArrivalGoods.Sum(a => (decimal) a.Count * a.Price);
             arrival.SumPayments = model.ArrivalPayments.Sum(p => p.Sum);
             await db.SaveChangesAsync();
+            await goodBalanceService.CalcAsync(shop.Id, model.DateArrival);
             return Ok();
         }
 

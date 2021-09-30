@@ -20,5 +20,6 @@ namespace OnlineCash.DataBaseModels
         public List<Writeof> Writeofs { get; set; }
         public List<MoveDoc> MoveConsigneeDocs { get; set; }
         public List<MoveDoc> MoveConsignerDocs { get; set; }
+        public List<GoodBalanceHistory> GoodBalanceHistories { get; set; }
     }
 }
