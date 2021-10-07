@@ -1,0 +1,19 @@
+﻿@model List<OnlineCash.DataBaseModels.GoodBalanceHistory>
+
+<table class="table table-sm table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Кол-во</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var balance in Model)
+            {
+                <tr>
+                    <td>@balance.Good.Name</td>
+                    <td>@balance.CountLast</td>
+                </tr>
+            }
+    </tbody>
+</table>

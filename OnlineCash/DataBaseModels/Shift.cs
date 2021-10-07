@@ -10,7 +10,7 @@ namespace OnlineCash.DataBaseModels
     {
         public int Id { get; set; }
         public DateTime Start { get; set; } = DateTime.Now;
-        public DateTime Stop { get; set; }
+        public DateTime? Stop { get; set; }
         public decimal SumAll { get; set; } = 0;
         public decimal SumNoElectron { get; set; } = 0;
         public decimal SumElectron { get; set; } = 0;

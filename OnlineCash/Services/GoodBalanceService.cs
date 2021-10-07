@@ -53,11 +53,12 @@ namespace OnlineCash.Services
                 foreach (var writeof in writeofs)
                     foreach (var wgood in writeof.WriteofGoods)
                         BalanceGoodMinus(balanceDict, wgood.GoodId, wgood.Count);
-                var shifts = await db.Shifts.Include(s => s.ShiftSales).Where(s => s.ShopId==ShopId & DateTime.Compare(s.Stop, curDate)==0).ToListAsync();
+
+                var shifts = await db.Shifts.Include(s => s.ShiftSales).Where(s => s.ShopId==ShopId & s.Stop!=null && DateTime.Compare(((DateTime)s.Stop).Date, curDate)==0).ToListAsync();
                 foreach (var shift in shifts)
                     foreach (var sale in shift.ShiftSales)
                         BalanceGoodMinus(balanceDict, sale.GoodId, sale.Count);
-
+                
                 foreach (var balance in balanceDict)
                     db.GoodBalanceHistories.Add(new GoodBalanceHistory
                     {

@@ -43,6 +43,8 @@ namespace OnlineCash
                 });
             services.AddScoped<Filters.ControlCountGoodsFilter>();
             services.AddScoped<IGoodBalanceService, GoodBalanceService>();
+            services.AddScoped<ICashBoxService, CashBoxService>();
+            services.AddScoped<IReportsService, ReportsService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
             });

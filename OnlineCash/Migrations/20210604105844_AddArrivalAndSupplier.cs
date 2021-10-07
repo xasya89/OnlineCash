@@ -38,7 +38,7 @@ namespace OnlineCash.Migrations
                     SupplierId = table.Column<int>(type: "int", nullable: false),
                     ShopId = table.Column<int>(type: "int", nullable: false),
                     CountAll = table.Column<double>(type: "double", nullable: false),
-                    PriceAll = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    PriceAll = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {

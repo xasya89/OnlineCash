@@ -45,7 +45,7 @@ namespace OnlineCash.Migrations
                     BarCode = table.Column<string>(type: "longtext", nullable: true, collation: "utf8_general_ci")
                         .Annotation("MySql:CharSet", "utf8"),
                     Unit = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +78,7 @@ namespace OnlineCash.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     GoodId = table.Column<int>(type: "int", nullable: false),
                     ShopId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -107,11 +107,11 @@ namespace OnlineCash.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Start = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Stop = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    SumAll = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    SumSell = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    SummReturn = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    SumIncome = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    SumOutcome = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    SumAll = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SumSell = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SummReturn = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SumIncome = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SumOutcome = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ShopId = table.Column<int>(type: "int", nullable: false),
                     CashierId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -142,9 +142,9 @@ namespace OnlineCash.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DateCreate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IsElectron = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Sum = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    SumDiscont = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    SumAll = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Sum = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SumDiscont = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    SumAll = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     ShiftId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -167,7 +167,7 @@ namespace OnlineCash.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Count = table.Column<double>(type: "double", nullable: false),
-                    Cost = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Cost = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     GoodId = table.Column<int>(type: "int", nullable: false),
                     CheckSellId = table.Column<int>(type: "int", nullable: false)
                 },

@@ -16,7 +16,7 @@ namespace OnlineCash.Migrations
             migrationBuilder.AddColumn<decimal>(
                 name: "Price",
                 table: "StocktakingGoods",
-                type: "decimal(65,30)",
+                type: "decimal(10,2)",
                 nullable: false,
                 defaultValue: 0m);
         }

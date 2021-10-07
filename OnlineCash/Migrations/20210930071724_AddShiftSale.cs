@@ -22,13 +22,13 @@ namespace OnlineCash.Migrations
                 {
                     table.PrimaryKey("PK_ShiftSales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ShiftSale_Goods_GoodId",
+                        name: "FK_ShiftSales_Goods_GoodId",
                         column: x => x.GoodId,
                         principalTable: "Goods",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ShiftSale_Shifts_ShiftId",
+                        name: "FK_ShiftSales_Shifts_ShiftId",
                         column: x => x.ShiftId,
                         principalTable: "Shifts",
                         principalColumn: "Id",
@@ -38,13 +38,13 @@ namespace OnlineCash.Migrations
                 .Annotation("Relational:Collation", "utf8_general_ci");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShiftSale_GoodId",
-                table: "ShiftSale",
+                name: "IX_ShiftSales_GoodId",
+                table: "ShiftSales",
                 column: "GoodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShiftSale_ShiftId",
-                table: "ShiftSale",
+                name: "IX_ShiftSales_ShiftId",
+                table: "ShiftSales",
                 column: "ShiftId");
         }
 
