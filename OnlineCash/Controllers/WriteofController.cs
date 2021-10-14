@@ -71,8 +71,8 @@ namespace OnlineCash.Controllers
                     db.WriteofGoods.Add(writeofGood);
                 }
                 await db.SaveChangesAsync();
-                if(writeof.IsSuccess)
-                    await GoodBalanceMinus(writeof);
+                if (writeof.IsSuccess)
+                    await goodBalance.CalcAsync(writeof.ShopId, writeof.DateWriteof);
 
                 return Ok();
             }
@@ -106,6 +106,7 @@ namespace OnlineCash.Controllers
                     return BadRequest("Акт уже отменен");
                 if (writeof == null)
                     return BadRequest("Акт не найден");
+                var docStatusOld = writeof.Status;
                 writeof.Status = model.IsSuccess ? DocumentStatus.Confirm : DocumentStatus.Edit;
                 writeof.ShopId = model.ShopId;
                 writeof.DateWriteof = model.DateWriteof;
@@ -113,6 +114,10 @@ namespace OnlineCash.Controllers
                 writeof.Note = model.Note;
                 writeof.SumAll = model.WriteofGoods.Sum(wg => (decimal)wg.Count * wg.Price);
                 await db.SaveChangesAsync();
+                //Удалим удаленные позиции
+                foreach (var writegood in writeof.WriteofGoods)
+                    if (model.WriteofGoods.Where(wg => wg.Id == writegood.Id).FirstOrDefault() == null)
+                        db.WriteofGoods.Remove(writegood);
                 //Добавим новые позиции
                 foreach (var wgood in model.WriteofGoods.Where(wg => wg.Id == -1).ToList())
                     db.WriteofGoods.Add(new WriteofGood
@@ -129,11 +134,9 @@ namespace OnlineCash.Controllers
                     writegood.Count = wgood.Count;
                     writegood.Price = wgood.Price;
                 };
-                //Удалим удаленные позиции
-                foreach (var writegood in writeof.WriteofGoods)
-                    if (model.WriteofGoods.Where(wg => wg.Id == writegood.Id).FirstOrDefault() == null)
-                        db.WriteofGoods.Remove(writegood);
                 await db.SaveChangesAsync();
+                if (docStatusOld!=DocumentStatus.Confirm & writeof.Status == DocumentStatus.Confirm)
+                    await goodBalance.CalcAsync(writeof.ShopId, writeof.DateWriteof);
                 return Ok();
             }
             catch(Exception ex)

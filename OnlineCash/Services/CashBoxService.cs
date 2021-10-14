@@ -36,16 +36,7 @@ namespace OnlineCash.Services
                     Price = buy.Price,
                     Count = buy.Count
                 });
-                var balance = db.GoodBalances.Where(b => b.ShopId == idShop & b.GoodId == good.Id).FirstOrDefault();
-                if (balance == null)
-                    db.GoodBalances.Add(new GoodBalance
-                    {
-                        Good = good,
-                        ShopId = idShop,
-                        Count = -1 * buy.Count
-                    });
-                else
-                    balance.Count -= buy.Count;
+                await goodBalanceService.MinusAsync(idShop, good.Id, buy.Count);
             }
             shift.SumSell += buylist.Sum(b => (decimal)b.Count * b.Price);
             shift.SumElectron+=buylist.Where(b=>b.IsElectron).Sum(b => (decimal)b.Count * b.Price);

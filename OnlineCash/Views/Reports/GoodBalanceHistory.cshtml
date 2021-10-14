@@ -1,5 +1,32 @@
-﻿@model List<OnlineCash.DataBaseModels.GoodBalanceHistory>
+﻿@model OnlineCash.Models.ReportGoodBalanceModel;
 
+<form asp-action="GoodBalanceHistory" method="post">
+    <div class="row">
+        <div class="col-md-auto">
+            <label class="form-label">Дата</label>
+        </div>
+        <div class="col-md-auto">
+            <input type="date" asp-for="@Model.CurDate" class="form-control form-control-sm" />
+        </div>
+        <div class="col-md-auto">
+            <label class="form-label">Магазин</label>
+        </div>
+        <div class="col-md-auto">
+            <select asp-for="@Model.ShopId" asp-items="@(new SelectList(ViewBag.Shops,"Id","Name"))" class="form-select form-select-sm"></select>
+        </div>
+        <div class="col-md-auto">
+            <label class="form-label">Магазин</label>
+        </div>
+        <div class="col-md-auto">
+            <select asp-for="@Model.GoodGroupId" asp-items="@(new SelectList(ViewBag.GoodGroups,"Id","Name"))" class="form-select form-select-sm">
+                <option value="null" selected></option>
+            </select>
+        </div>
+        <div class="col-md-auto">
+            <input type="submit" value="Выбрать" class="btn btn-sm btn-primary" />
+        </div>
+    </div>
+</form>
 <table class="table table-sm table-hover table-bordered">
     <thead>
         <tr>
@@ -8,12 +35,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var balance in Model)
-            {
-                <tr>
-                    <td>@balance.Good.Name</td>
-                    <td>@balance.CountLast</td>
-                </tr>
-            }
+        @foreach (var balance in Model.GoodBalanceHistories)
+        {
+            <tr>
+                <td>@balance.Good.Name</td>
+                <td>@balance.CountLast</td>
+            </tr>
+        }
     </tbody>
 </table>

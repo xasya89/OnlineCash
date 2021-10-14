@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Hangfire;
 using OnlineCash.Services;
+using Hangfire.MemoryStorage;
 
 namespace OnlineCash
 {
@@ -26,6 +28,13 @@ namespace OnlineCash
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseDefaultTypeSerializer()
+                .UseMemoryStorage());
+            services.AddHangfireServer();
+
             services.AddSession(options =>
             {
                 options.Cookie.Name = "App.OnlineCash.Session";
@@ -51,8 +60,17 @@ namespace OnlineCash
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(
+            IApplicationBuilder app, 
+            IWebHostEnvironment env, 
+            IConfiguration configuration,
+            IBackgroundJobClient backgroundJobClient,
+            IRecurringJobManager recurringJobManager,
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory)
         {
+            int shopIdDefault = Convert.ToInt32(configuration.GetSection("ShopIdDefault").Value);
+
             loggerFactory.AddFile("log-{Date}.txt");
             if (env.IsDevelopment())
             {
@@ -75,6 +93,14 @@ namespace OnlineCash
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseHangfireDashboard();
+            backgroundJobClient.Enqueue(() => Console.WriteLine("Hello Hanfire job!"));
+            recurringJobManager.AddOrUpdate(
+                "Run every minute",
+                () => serviceProvider.GetService<IGoodBalanceService>().CalcAsync(shopIdDefault, DateTime.Now),
+                configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
+                );
         }
     }
 }

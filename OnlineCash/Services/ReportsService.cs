@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OnlineCash.Models;
 
 namespace OnlineCash.Services
 {
@@ -15,7 +16,7 @@ namespace OnlineCash.Services
             this.db = db;
         }
 
-        public async Task<List<GoodBalanceHistory>> GetGoodBalanceHistory(DateTime curDay, int idShop)
+        public async Task<ReportGoodBalanceModel> GetGoodBalanceHistory(DateTime curDay, int idShop, int? idGoodGroup)
         {
             curDay = curDay.Date;
             var balancesDb=await db.GoodBalanceHistories
@@ -27,8 +28,15 @@ namespace OnlineCash.Services
             List<GoodBalanceHistory> balances = new List<GoodBalanceHistory>();
             foreach (var balance in balancesDb)
                 if (balance.Good.IsDeleted==false && balance.Good.GoodPrices.Count(p => p.ShopId == idShop & p.BuySuccess==true) == 1)
-                    balances.Add(balance);
-            return balances;
+                    if(idGoodGroup==null || balance.Good.GoodGroupId==idGoodGroup)
+                        balances.Add(balance);
+            return new ReportGoodBalanceModel
+            {
+                CurDate = curDay,
+                ShopId = idShop,
+                GoodGroupId = idGoodGroup,
+                GoodBalanceHistories = balances
+            };
         }
     }
 }

@@ -8,8 +8,21 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <style>
+            .prices {
+                display: grid;
+                font-size: 7pt;
+                grid-template-columns: repeat(3, 1fr);
+                width: 100%
+            }
+
+            .price {
+                border: 1px dotted lightgray;
+                padding: 2mm;
+                page-break-inside: avoid;
+            }
+
             h5 {
-                font-size: 14pt;
+                font-size: 10pt;
                 margin: 1mm;
                 padding: 0;
             }
@@ -20,16 +33,15 @@
         </style>
     </head>
     <body>
-        <div style="display:grid; font-size: 7pt; grid-template-columns: repeat(3, 1fr); width:100%">
+        <div class="prices">
             @foreach (var goodWithBalance in Model)
             foreach (var price in goodWithBalance.Good.GoodPrices)
             {
-            <div style="border: 1px dotted lightgray; padding: 2mm;">
-                <h5 style="display: block; float:left; min-height: 15mm">@goodWithBalance.Good.Name</h5>
+            <div class="price">
+                <h5 style="display: block; float:left; min-height: 10mm">@goodWithBalance.Good.Name</h5>
                 <div style="clear: both">&nbsp;</div>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr)">
-                    <h5>@price.Price р.</h5>
-                    <barcode content="@goodWithBalance.Good.BarCode" width="140" height="10" margin="0" barcodeformat="CODE_128" outputformat="PNG" />
+                    <barcode content="@goodWithBalance.Good.BarCodes.FirstOrDefault().Code" width="140" height="10" margin="0" barcodeformat="CODE_128" outputformat="PNG" />
                 </div>
             </div>
             }

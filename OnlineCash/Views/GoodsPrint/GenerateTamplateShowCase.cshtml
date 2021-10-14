@@ -8,6 +8,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+        .prices {
+            display: grid;
+            grid-template-columns: repeat(3, 70mm);
+        }
+        .price {
+            page-break-inside: avoid;
+            border: 1px dotted lightgray;
+            padding: 2mm;
+        }
         h4, h5 {
             margin: 1mm;
             padding: 0;
@@ -34,16 +43,18 @@
     </style>
 </head>
 <body>
-    <div style="display:grid; grid-template-columns: repeat(3, 70mm);">
+    <div class="prices">
         @foreach (var goodWithBalance in Model)
             foreach (var price in goodWithBalance.Good.GoodPrices)
             {
-        <div style="border: 1px dotted lightgray; padding: 2mm;">
+        <div class="price">
             <h5 style="width:56mm; min-height: 15mm; overflow-x: hidden; text-overflow: ellipsis">
                 @goodWithBalance.Good.Name
             </h5>
             <div style="clear: both">&nbsp;</div>
-            <barcode content="@goodWithBalance.Good.BarCodes.FirstOrDefault()?.Code" width="140" height="10" margin="2" barcodeformat="CODE_128" outputformat="PNG" />
+            <!--
+    <barcode content="@goodWithBalance.Good.BarCodes.FirstOrDefault()?.Code" width="140" height="10" margin="2" barcodeformat="CODE_128" outputformat="PNG" />
+    -->
             <div style="display: grid; grid-template-columns: repeat(2, 1fr);">
                 <h4>@price.Price р.</h4>
                 <span org>@price.Shop?.OrgName <br />ИНН @price.Shop?.Inn<br>@DateTime.Now.ToString("dd.MM.yy")</span>

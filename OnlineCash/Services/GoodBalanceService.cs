@@ -99,6 +99,34 @@ namespace OnlineCash.Services
                 balance.Add(goodId, -1*count);
         }
 
+        public async Task MinusAsync(int ShopId, int GoodId, double Count)
+        {
+            var balanceHistory = await db.GoodBalanceHistories
+                .Where(b => b.ShopId == ShopId & b.GoodId == GoodId & b.CurDate == DateTime.Now.Date).FirstOrDefaultAsync();
+            if (balanceHistory != null)
+                balanceHistory.CountLast -= Count;
+            else
+                db.GoodBalanceHistories.Add(new GoodBalanceHistory
+                {
+                    ShopId = ShopId,
+                    GoodId = GoodId,
+                    CurDate = DateTime.Now,
+                    CountLast = -1 * Count
+                });
+
+            var balance = await db.GoodBalances.Where(b => b.ShopId == ShopId & b.GoodId == GoodId).FirstOrDefaultAsync();
+            if (balance == null)
+                db.GoodBalances.Add(new GoodBalance
+                {
+                    GoodId = GoodId,
+                    ShopId = ShopId,
+                    Count = -1 * Count
+                });
+            else
+                balance.Count -= Count;
+            await db.SaveChangesAsync();
+        }
+
         public async Task MinusAsync(List<GoodBalanceModel> goodBalances)
         {
             foreach(var goodModel in goodBalances)
@@ -118,6 +146,11 @@ namespace OnlineCash.Services
                     gb.Count -= goodModel.Count;
             }
             await db.SaveChangesAsync();
+        }
+
+        public async Task PlusAsync(int ShopId, int GoodId, double Count)
+        {
+
         }
 
         public async Task PlusAsync(List<GoodBalanceModel> model)
