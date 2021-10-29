@@ -21,5 +21,6 @@ namespace OnlineCash.DataBaseModels
         public List<MoveDoc> MoveConsigneeDocs { get; set; }
         public List<MoveDoc> MoveConsignerDocs { get; set; }
         public List<GoodBalanceHistory> GoodBalanceHistories { get; set; }
+        public List<SumBalanceHistory> SumBalanceHistories { get; set; }
     }
 }

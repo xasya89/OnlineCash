@@ -9,6 +9,7 @@ namespace OnlineCash.DataBaseModels
     public class Shift
     {
         public int Id { get; set; }
+        public Guid Uuid { get; set; }
         public DateTime Start { get; set; } = DateTime.Now;
         public DateTime? Stop { get; set; }
         public decimal SumAll { get; set; } = 0;

@@ -23,6 +23,7 @@ namespace OnlineCash
         public DbSet<StocktakingGood> StocktakingGoods { get; set; }
         public DbSet<GoodBalance> GoodBalances { get; set; }
         public DbSet<GoodBalanceHistory> GoodBalanceHistories { get; set; }
+        public DbSet<SumBalanceHistory> SumBalanceHistories { get; set; }
         public DbSet<Arrival> Arrivals { get; set; }
         public DbSet<ArrivalPayment> ArrivalPayments { get; set; }
         public DbSet<ArrivalGood> ArrivalGoods { get; set; }
@@ -190,6 +191,12 @@ namespace OnlineCash
                 .HasOne(b => b.Shop)
                 .WithMany(g => g.GoodBalanceHistories)
                 .HasForeignKey(g => g.ShopId);
+
+            //SumBalance
+            modelBuilder.Entity<SumBalanceHistory>()
+                .HasOne(b => b.Shop)
+                .WithMany(s => s.SumBalanceHistories)
+                .HasForeignKey(b => b.ShopId);
 
             OnModelCreatingPartial(modelBuilder);
         }

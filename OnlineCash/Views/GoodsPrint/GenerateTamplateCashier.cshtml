@@ -41,7 +41,7 @@
                 <h5 style="display: block; float:left; min-height: 10mm">@goodWithBalance.Good.Name</h5>
                 <div style="clear: both">&nbsp;</div>
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr)">
-                    <barcode content="@goodWithBalance.Good.BarCodes.FirstOrDefault().Code" width="140" height="10" margin="0" barcodeformat="CODE_128" outputformat="PNG" />
+                    <barcode content="@goodWithBalance.Good.BarCodes.FirstOrDefault()?.Code" width="140" height="10" margin="0" barcodeformat="CODE_128" outputformat="PNG" />
                 </div>
             </div>
             }

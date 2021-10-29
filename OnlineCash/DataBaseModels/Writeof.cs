@@ -8,6 +8,7 @@ namespace OnlineCash.DataBaseModels
     public class Writeof
     {
         public int Id { get; set; }
+        public Guid? Uuid { get; set; } = null;
         public DocumentStatus Status { get; set; } = DocumentStatus.New;
         public DateTime DateWriteof { get; set; }
         public int ShopId { get; set; }

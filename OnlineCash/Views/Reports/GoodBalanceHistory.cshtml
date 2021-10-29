@@ -32,15 +32,26 @@
         <tr>
             <th>Товар</th>
             <th>Кол-во</th>
+            <th>Цена</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var balance in Model.GoodBalanceHistories)
+        @foreach (var balance in Model.Balances)
         {
             <tr>
-                <td>@balance.Good.Name</td>
-                <td>@balance.CountLast</td>
+                <td>@balance.GoodName</td>
+                <td>@balance.Count</td>
+                <td>@balance.Price</td>
+                <td>@balance.Sum</td>
             </tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <th>Итог</th>
+            <th>@Model.CountAll</th>
+            <th></th>
+            <th>@Model.SumAll</th>
+        </tr>
+    </tfoot>
 </table>

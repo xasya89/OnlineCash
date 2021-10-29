@@ -61,5 +61,23 @@ namespace OnlineCash.Controllers
 
             return View(goodBalances);
         }
+
+        /// <summary>
+        /// Печать ценника на витрине за 100г
+        /// </summary>
+        public async Task<IActionResult> GenerateTamplateShowCase100()
+        {
+            List<int> idShops = JsonSerializer.Deserialize<List<int>>(Request.Query["idShops"]);
+            List<int> idGoods = JsonSerializer.Deserialize<List<int>>(Request.Query["idGoods"]);
+            var goodBalances = new List<GoodWithGoodBalanceModel>();
+            var goods = await db.Goods.Where(g => idGoods.Contains(g.Id)).Include(g => g.BarCodes).Include(g => g.GoodPrices.Where(p => idShops.Contains(p.ShopId))).ThenInclude(p => p.Shop).ToListAsync();
+            foreach (var good in goods)
+                goodBalances.Add(new GoodWithGoodBalanceModel
+                {
+                    Good = good
+                });
+
+            return View(goodBalances);
+        }
     }
 }

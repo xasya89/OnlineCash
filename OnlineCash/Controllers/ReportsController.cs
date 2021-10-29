@@ -13,10 +13,12 @@ namespace OnlineCash.Controllers
     {
         shopContext db;
         IReportsService reportsService;
-        public ReportsController(shopContext db, IReportsService reportsService)
+        IGoodBalanceService goodBalanceService;
+        public ReportsController(shopContext db, IReportsService reportsService, IGoodBalanceService goodBalanceService)
         {
             this.db = db;
             this.reportsService = reportsService;
+            this.goodBalanceService = goodBalanceService;
         }
 
         [HttpGet]
@@ -33,6 +35,14 @@ namespace OnlineCash.Controllers
             ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
             ViewBag.GoodGroups = await db.GoodGroups.OrderBy(gr=>gr.Name).ToListAsync();
             return View(await reportsService.GetGoodBalanceHistory(model.CurDate, model.ShopId, model.GoodGroupId));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GoodBalanceCalc(int shopId, string day)
+        {
+            var daycalc = Convert.ToDateTime(day);
+            await goodBalanceService.CalcAsync(shopId, daycalc);
+            return RedirectToAction(nameof(GoodBalanceHistory));
         }
     }
 }

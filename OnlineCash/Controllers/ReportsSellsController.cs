@@ -29,29 +29,21 @@ namespace OnlineCash.Controllers
         // GET: ReportsSellsController/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var shift = await db.Shifts.Include(s => s.Shop).Include(s => s.CheckSells).ThenInclude(c => c.CheckGoods).ThenInclude(c => c.Good).Where(s => s.Id == id).FirstOrDefaultAsync();
+            var shift = await db.Shifts
+                .Include(s => s.Shop)
+                .Include(s => s.ShiftSales)
+                .ThenInclude(c => c.Good)
+                .Where(s => s.Id == id).FirstOrDefaultAsync();
             var reportSell = new ReportSellModel { Shop = shift.Shop, Start = shift.Start };
-            foreach(var sell in shift.CheckSells)
-                foreach(var checkGood in sell.CheckGoods)
+            foreach (var sell in shift.ShiftSales)
+                reportSell.ReportGoods.Add(new ReportSellGoodModel
                 {
-                    var reportGood = reportSell.ReportGoods.Where(r => r.Good.Id == checkGood.GoodId).FirstOrDefault();
-                    if (reportGood == null)
-                        reportSell.ReportGoods.Add(new ReportSellGoodModel
-                        {
-                            Good = checkGood.Good,
-                            CountSell = checkGood.Count,
-                            CountReturn = 0,
-                            CountAll = checkGood.Count - 0,
-                            SumAll = (decimal)checkGood.Count * checkGood.Cost
-                        });
-                    else
-                    {
-                        reportGood.CountSell += checkGood.Count;
-                        reportGood.CountReturn += 0;
-                        reportGood.CountAll += checkGood.Count - (double)0;
-                        reportGood.SumAll += (decimal)checkGood.Count * checkGood.Cost;
-                    }
-                }
+                    Good = sell.Good,
+                    CountSell = sell.Count,
+                    CountReturn = 0,
+                    CountAll = sell.Count,
+                    SumAll = (decimal)sell.Count * sell.Price
+                });
             return View("Details", reportSell);
         }
 

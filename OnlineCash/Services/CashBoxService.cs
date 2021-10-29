@@ -18,25 +18,29 @@ namespace OnlineCash.Services
             this.db = db;
             this.goodBalanceService = goodBalanceService;
         }
-        public async Task<bool> Buy(int idShop, List<CashBoxBuyReturnModel> buylist)
+        public async Task<bool> Buy(Guid uuid, List<CashBoxBuyReturnModel> buylist)
         {
-            var shift = await db.Shifts.Where(s => s.ShopId == idShop & s.Stop == null).FirstOrDefaultAsync();
+            var shift = await db.Shifts.Where(s => s.Uuid == uuid & s.Stop == null).FirstOrDefaultAsync();
             if (shift == null)
                 return false;
             var goods = db.Goods.ToList();
-            foreach(var buy in buylist)
+            foreach (var buy in buylist)
             {
                 var good = goods.Where(g => g.Uuid == buy.Uuid).FirstOrDefault();
                 if (good == null)
                     return false;
-                db.ShiftSales.Add(new ShiftSale
-                {
-                    Shift = shift,
-                    Good = good,
-                    Price = buy.Price,
-                    Count = buy.Count
-                });
-                await goodBalanceService.MinusAsync(idShop, good.Id, buy.Count);
+                var sale = await db.ShiftSales.Where(s => s.ShiftId == shift.Id & s.GoodId == good.Id & s.Price == buy.Price).FirstOrDefaultAsync();
+                if (sale != null)
+                    sale.Count += buy.Count;
+                else
+                    db.ShiftSales.Add(new ShiftSale
+                    {
+                        Shift = shift,
+                        Good = good,
+                        Price = buy.Price,
+                        Count = buy.Count
+                    });
+                await goodBalanceService.MinusAsync(shift.ShopId, good.Id, buy.Count);
             }
             shift.SumSell += buylist.Sum(b => (decimal)b.Count * b.Price);
             shift.SumElectron+=buylist.Where(b=>b.IsElectron).Sum(b => (decimal)b.Count * b.Price);
@@ -46,18 +50,18 @@ namespace OnlineCash.Services
             return true;
         }
 
-        public async Task<bool> CloseShift(int idShop)
+        public async Task<bool> CloseShift(Guid uuid, DateTime stop)
         {
-            var shift = await db.Shifts.Where(s => s.ShopId == idShop & s.Stop == null).FirstOrDefaultAsync();
+            var shift = await db.Shifts.Where(s => s.Uuid==uuid & s.Stop == null).FirstOrDefaultAsync();
             if (shift == null)
                 return false;
-            shift.Stop = DateTime.Now;
-            await goodBalanceService.CalcAsync(idShop, DateTime.Now);
+            shift.Stop = stop;
+            await goodBalanceService.CalcAsync(shift.ShopId, shift.Start);
             await db.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> OpenShift(int idShop)
+        public async Task<bool> OpenShift(int idShop, Guid uuid, DateTime start)
         {
             try
             {
@@ -70,9 +74,10 @@ namespace OnlineCash.Services
                     throw new Exception("Магазин не найден");
                 db.Shifts.Add(new Shift
                 {
+                    Uuid=uuid,
                     ShopId = idShop,
                     CashierId = cashier.Id,
-                    Start = DateTime.Now
+                    Start = start
                 });
                 await db.SaveChangesAsync();
                 return true;

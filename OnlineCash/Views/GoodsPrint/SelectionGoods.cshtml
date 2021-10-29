@@ -14,6 +14,9 @@
         <span onclick="generateTamplateShowCase()" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> витрина</span>
     </div>
     <div class="col-auto">
+        <span onclick="generateTamplateShowCase100()" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> витрина 100г</span>
+    </div>
+    <div class="col-auto">
         <span class="btn btn-sm btn-primary"><i class="fa fa-print"></i> прайс</span>
     </div>
     <div class="col-auto">
@@ -97,5 +100,14 @@
         shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
         if (idShops.length > 0 & idGoods.length > 0)
             window.open("/GoodsPrint/GenerateTamplateShowCase?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
+    }
+
+    function generateTamplateShowCase100() {
+        let idGoods = new Array();
+        let idShops = new Array();
+        goodsTable.querySelectorAll("tr").forEach(tr => idGoods.push(parseInt(tr.dataset.idgood)));
+        shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
+        if (idShops.length > 0 & idGoods.length > 0)
+            window.open("/GoodsPrint/GenerateTamplateShowCase100?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
     }
 </script>

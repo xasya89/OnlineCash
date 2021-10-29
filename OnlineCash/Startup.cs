@@ -54,6 +54,7 @@ namespace OnlineCash
             services.AddScoped<IGoodBalanceService, GoodBalanceService>();
             services.AddScoped<ICashBoxService, CashBoxService>();
             services.AddScoped<IReportsService, ReportsService>();
+            services.AddScoped<IWriteofService, WriteofService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
             });

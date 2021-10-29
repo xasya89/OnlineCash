@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20211018190930_AddSumBalanceHistory")]
+    partial class AddSumBalanceHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -512,9 +514,6 @@ namespace OnlineCash.Migrations
                     b.Property<decimal>("SummReturn")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<Guid>("Uuid")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CashierId");
@@ -772,9 +771,6 @@ namespace OnlineCash.Migrations
 
                     b.Property<decimal>("SumAll")
                         .HasColumnType("decimal(65,30)");
-
-                    b.Property<Guid?>("Uuid")
-                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
