@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
 using Microsoft.AspNetCore.Authorization;
+using OnlineCash.Services;
+using OnlineCash.Models.StockTackingModels;
 
 namespace OnlineCash.Controllers
 {
@@ -15,10 +17,12 @@ namespace OnlineCash.Controllers
     {
         shopContext db;
         ILogger<StocktakingController> logger;
-        public StocktakingController(shopContext db, ILogger<StocktakingController> logger)
+        IStockTackingService stockTackingService;
+        public StocktakingController(shopContext db, ILogger<StocktakingController> logger, IStockTackingService stockTackingService)
         {
             this.db = db;
             this.logger = logger;
+            this.stockTackingService = stockTackingService;
         }
 
         public async Task<IActionResult> Index()
@@ -190,5 +194,9 @@ namespace OnlineCash.Controllers
         [HttpGet]
         public async Task<IActionResult> Print(int id)
             => View(await db.Stocktakings.Include(s => s.Shop).Include(s => s.StockTakingGroups).ThenInclude(g => g.StocktakingGoods).ThenInclude(g => g.Good).Where(s => s.Id == id).FirstOrDefaultAsync());
+        
+        [HttpGet("Stocktaking/DetailsGroups/{id}")]
+        public async Task<IActionResult> DetailsGroups(int id) => View(await stockTackingService.GetDetailsGroups(id));
+        
     }
 }

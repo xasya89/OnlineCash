@@ -48,6 +48,7 @@
             <td onclick="openStocktaking(@stocktaking.Id)">@(stocktaking.SumFact - stocktaking.SumDb)</td>
             <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.SumFact</td>
             <td>
+                <a href="/stocktaking/DetailsGroups/@stocktaking.Id"  class="btn btn-sm btn-light ">Обобщенно</a>
                 <span onclick="cancelStocktaking(@stocktaking.Id)" class="btn btn-sm btn-light" style="margin-right: 10px"><i class="fa fa-trash"></i> Отменить</span>
                 <a asp-controller="stocktaking" asp-action="Print" asp-route-id="@stocktaking.Id" class="btn btn-sm btn-light "><i class="fa fa-print"></i>Печать</a>
             </td>
