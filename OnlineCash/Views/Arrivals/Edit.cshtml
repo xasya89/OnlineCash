@@ -172,7 +172,7 @@
                     <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" PriceSell value="@arrivalGood.PriceSell" class="form-control form-control-sm "/></td>
                     <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" SellPercent value="@sellpercent" class="form-control form-control-sm "/></td>
                     <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
-                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Sum value="@sum" class="form-control form-control-sm " /></td>
+                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Sum value="@arrivalGood.Sum" class="form-control form-control-sm " /></td>
                 </tr>
             }
     </tbody>
@@ -180,7 +180,7 @@
         <tr>
             <th colspan="6"></th>
             <th id="ArrivalTableSummaryCount">@Model.CountAll</th>
-            <th id="ArrivalTableSummarySum">@Model.PriceAll</th>
+            <th id="ArrivalTableSummarySum">@Model.SumArrivals</th>
         </tr>
     </tfoot>
 </table>
@@ -285,15 +285,6 @@
     function goodAdd(good) {
         let g = good;
         let flag = false;
-        arrivalTable.querySelectorAll("tr").forEach(tr => {
-            if (tr.dataset.idGood == g.id) {
-                let price = parseFloat(tr.querySelector("input[Price]").value);
-                let count = parseFloat(tr.querySelector("input[Count]").value) + 1;
-                tr.querySelector("input[Count]").value = count;
-                tr.querySelector("input[Sum]").value = (price * count).toFixed(2);
-                flag = true;
-            }
-        });
         if (!flag) {
             let tr = document.createElement("tr");
             tr.dataset.id = -1;
@@ -324,7 +315,7 @@
             let tdSum = tr.querySelector("input[Sum]");
             [tdPrice, tdCount, tdPriceSell, tdSum].forEach(td => {
                 td.addEventListener("input", (el) => {
-                    el.value = el.value.replace(",", ".");
+                    el.target.value = el.target.value.replace(",", ".");
                     editGood(g.id);
                 });
             });

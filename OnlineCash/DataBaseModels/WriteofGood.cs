@@ -14,5 +14,6 @@ namespace OnlineCash.DataBaseModels
         public Good Good { get; set; }
         public double Count { get; set; }
         public decimal Price { get; set; }
+        public decimal Sum { get => Math.Round((decimal)Count * Price, 2); }
     }
 }

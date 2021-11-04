@@ -13,6 +13,7 @@ namespace OnlineCash.DataBaseModels
         public double Count { get; set; }
         public decimal Price { get; set; }
         public decimal PriceSell { get; set; }
+        public decimal Sum { get => Math.Round((decimal)Count * Price,2); }
         public int ArrivalId { get; set; }
         public Arrival Arrival { get; set; }
     }

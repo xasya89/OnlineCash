@@ -58,7 +58,6 @@
                 int numPP = 1;
                 foreach (var wgood in Model.WriteofGoods)
                 {
-                    decimal sum = (decimal)wgood.Count * wgood.Price;
             <tr data-id="@wgood.Id" data-id-good="@wgood.GoodId">
                 <td><i onclick="goodRemove(this.parentElement.parentElement)" class="fa fa-trash"></i></td>
                 <td>@numPP</td>
@@ -66,7 +65,7 @@
                 <td>@wgood.Good?.Unit</td>
                 <td><input count oninput="goodEdit(this.parentElement.parentElement)" class="form-control form-control-sm" value="@wgood.Count"/></td>
                 <td><input price class="form-control form-control-sm" readonly value='@wgood.Price' /></td>
-                <td><input sum class="form-control form-control-sm" readonly value='@sum' /></td>
+                <td><input sum class="form-control form-control-sm" readonly value='@wgood.Sum' /></td>
             </tr>
                     numPP++;
                 };
