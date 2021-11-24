@@ -10,6 +10,7 @@ using OnlineCash.ViewModels;
 using OnlineCash.DataBaseModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using OnlineCash.Services;
 using OnlineCash.ViewModels.GoodsPrint;
 
 namespace OnlineCash.Controllers

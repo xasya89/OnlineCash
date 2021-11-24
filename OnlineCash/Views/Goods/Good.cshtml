@@ -32,7 +32,7 @@
                 @{int pos = 0; }
                 @foreach (var barCode in Model.BarCodes)
                 {
-                <div data-id="@barCode.Id" class="col-sm-auto" style="display: grid; grid-template-columns: 100px auto auto">
+                <div data-id="@barCode.Id" class="col-sm-auto" style="display: grid; grid-template-columns: 150px auto auto">
                     <input fieldId name="BarCodes[@pos].Id" type="hidden" value="@barCode.Id" />
                     <input fieldCode class="form-control form-control-sm" name="BarCodes[@pos].Code" value="@barCode.Code" />
                     <button type="button" onclick="generateBarCode(this.parentElement)" class="btn btn-sm btn-light" style="margin: 0 2px">
