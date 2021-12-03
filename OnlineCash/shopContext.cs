@@ -36,6 +36,8 @@ namespace OnlineCash
         public DbSet<MoveDoc> MoveDocs { get; set; }
         public DbSet<MoveGood> MoveGoods { get; set; }
 
+        public DbSet<DiscountCard> DiscountCards { get; set; }
+
         public shopContext()
         {
         }

@@ -57,6 +57,7 @@ namespace OnlineCash
             services.AddScoped<IWriteofService, WriteofService>();
             services.AddScoped<ArrivalService>();
             services.AddScoped<IStockTackingService, StockTackingService>();
+            services.AddTransient<BuyerRegistration>();
             //services.AddScoped<IEvotorService, EvotorService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
