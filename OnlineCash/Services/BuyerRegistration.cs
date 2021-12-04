@@ -13,9 +13,11 @@ namespace OnlineCash.Services
         static ObservableCollection<VerificationCardAndPhone> registrtions = new ObservableCollection<VerificationCardAndPhone>();
 
         shopContext _db;
-        public BuyerRegistration(shopContext db)
+        ISmsService _sms;
+        public BuyerRegistration(shopContext db, ISmsService sms)
         {
             _db = db;
+            _sms = sms;
         }
 
         public bool Verification(VerificationCardAndPhone model)
@@ -36,6 +38,7 @@ namespace OnlineCash.Services
         {
             model.Uuid = Guid.NewGuid();
             model.Code = GenerationCode();
+            _sms.Send(model.Phone, model.Code);
             registrtions.Add(model);
             return model;
         }
