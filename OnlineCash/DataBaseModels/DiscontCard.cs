@@ -10,5 +10,6 @@ namespace OnlineCash.DataBaseModels
         public int Id { get; set; }
         public string Num { get; set; }
         public bool isFree { get; set; } = true;
+        public List<Buyer> Buyers { get; set; }
     }
 }

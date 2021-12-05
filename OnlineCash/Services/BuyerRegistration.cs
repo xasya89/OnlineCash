@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OnlineCash.Models.BuyerRegister;
 using Microsoft.EntityFrameworkCore;
+using OnlineCash.DataBaseModels;
 
 namespace OnlineCash.Services
 {
@@ -22,23 +23,34 @@ namespace OnlineCash.Services
 
         public bool Verification(VerificationCardAndPhone model)
         {
-            if (!VerificationCard(model.CardNum))
+            var discount = VerificationCard(model.CardNum);
+            if (discount==null || discount.isFree==false)
                 return false;
             if (!VerificationPhone(model.Phone))
                 return false;
             return true;
         }
 
-        private bool VerificationCard(string cardNum)
-            => _db.DiscountCards.Where(c =>c.Num==cardNum & c.isFree == true).FirstOrDefault() != null;
+        public DiscountCard VerificationCard(string cardNum)
+            => _db.DiscountCards.Where(c => c.Num == cardNum).FirstOrDefault();
 
-        private bool VerificationPhone(string phone) => true;
+        public bool VerificationPhone(string phone)
+        {
+            phone = phone.Trim().Replace(" ","").Replace("+", "").Replace("(","").Replace(")", "");
+            if (int.TryParse(phone, out int i))
+                return false;
+            if (phone.Length != "79192847021".Length)
+                return false;
+            if (phone.Substring(0, 1) != "7")
+                return false;
+            return true;
+        }
 
-        public VerificationCardAndPhone SendSMSVerification(VerificationCardAndPhone model)
+        public VerificationCardAndPhone SandSMS(VerificationCardAndPhone model)
         {
             model.Uuid = Guid.NewGuid();
             model.Code = GenerationCode();
-            _sms.Send(model.Phone, model.Code);
+            //_sms.Send(model.Phone, model.Code);
             registrtions.Add(model);
             return model;
         }
@@ -50,9 +62,15 @@ namespace OnlineCash.Services
         {
             if (registrtions.Where(r => r.Uuid == model.Uuid & r.Code == model.Code) == null)
                 return false;
-            var discount= await _db.DiscountCards.Where(c => c.Num == model.Code).FirstOrDefaultAsync();
+            var discount= await _db.DiscountCards.Where(c => c.Num == model.CardNum).FirstOrDefaultAsync();
             discount.isFree = false;
-            
+            _db.Buyers.Add(new Buyer
+            {
+                Name = model.Name,
+                Phone = model.Phone,
+                Birthday = model.Birthday,
+                DiscountCard = discount
+            });
             await _db.SaveChangesAsync();
             return true;
         }

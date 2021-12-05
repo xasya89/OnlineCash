@@ -24,9 +24,16 @@ namespace OnlineCash.Controllers.Api
         [HttpPost]
         public async Task<IActionResult> Post(VerificationCardAndPhone model)
         {
+            var discount = _buyerRegistration.VerificationCard(model.CardNum);
+            if (discount == null)
+                return BadRequest("Неправильный номер карты");
+            if (discount.isFree==false)
+                return BadRequest("Карта уже зарегестрирована");
+            if (!_buyerRegistration.VerificationPhone(model.Phone))
+                return BadRequest("телефон не прошел проверку");
             if (!_buyerRegistration.Verification(model))
                 return BadRequest();
-            model = _buyerRegistration.SendSMSVerification(model);
+            model = _buyerRegistration.SandSMS(model);
             return Ok(model);
         }
 

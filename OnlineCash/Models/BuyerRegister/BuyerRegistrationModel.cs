@@ -16,10 +16,8 @@ namespace OnlineCash.Models.BuyerRegister
         public string Phone { get; set; }
         [JsonPropertyName("code")]
         public string Code { get; set; }
-        [JsonPropertyName("firstName")]
-        public string FirstName { get; set; }
-        [JsonPropertyName("lastName")]
-        public string LastName { get; set; }
+        [JsonPropertyName("Name")]
+        public string Name { get; set; }
         public DateTime? Birthday { get; set; }
     }
 }
