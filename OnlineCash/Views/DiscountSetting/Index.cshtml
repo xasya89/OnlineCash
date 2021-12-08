@@ -1,0 +1,239 @@
+﻿@model OnlineCash.Models.Discounts.DiscountParamContainerModel
+@using OnlineCash.Models.Discounts;
+<div class="row mb-4">
+</div>
+<div class="row mb-3">
+    <div class="col-12 pillbox clearfix">
+        <div class="btn btn-sm btn-success">Сохранить</div>
+        <div class="btn btn-sm btn-success">Отмена</div>
+        <div class="btn-group btn-group-sm">
+            <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-plus"></i> Добавить
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <li><button onclick="addSumBuy()" class="dropdown-item" type="button">Скидка по накоплению</button></li>
+                <li><button onclick="addSumOneBuy()" class="dropdown-item" type="button">Скидка одноразовой покупке</button></li>
+                <li><button onclick="addNumBuyer()" class="dropdown-item" type="button">N-ый покупатель</button></li>
+                <li><button onclick="addHoliday()" class="dropdown-item" type="button">Скидка в праздник</button></li>
+                <li><button onclick="addBirthday()" class="dropdown-item" type="button">Скидка в день рождения</button></li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th>Включено</th>
+            <th>Правило</th>
+        </tr>
+    </thead>
+    <tbody id="discountParamSumBuys">
+        @foreach(DiscountParamSumBuyModel sumBuy in Model.SumBuys)
+        { 
+            
+            <tr uuid="@sumBuy.Uuid">
+                <td>
+                    <div class="form-check">
+                        @Html.CheckBox("IsEnable",sumBuy.IsEnable,new { @class = "form-check-input" })
+                    </div>
+                </td>
+                <td>
+                    Если накопление больше
+                    <input type="text" sumBuyesMore value="@sumBuy.SumBuyesMore" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    р. скидка =
+                    <input type="text" discountPercent value="@sumBuy.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    %
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tbody id="discountParamSumOneBuy">
+        @foreach(var sumOneBuy in Model.SumOneBuys)
+        { 
+            <tr uuid="@sumOneBuy.Uuid">
+                <td>
+                    @Html.CheckBox("IsEnable", sumOneBuy.IsEnable, new { @class = "form-check-input" })
+                </td>
+                <td>
+                    Если единоразовая покупка больше
+                    <input type="text" sumBuy value="@sumOneBuy.SumBuy" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    , то скидка =
+                    <input type="text" discountPercent value="@sumOneBuy.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     %
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tbody id="discountParamNumBuyer">
+        @foreach(var numBuyer in Model.NumBuyer)
+        {
+            <tr uuid="@numBuyer.Uuid">
+                <td>
+                    @Html.CheckBox("IsEnable", numBuyer.IsEnable, new { @class = "form-check-input" })
+                </td>
+                <td>
+                    Если по счету покупатель является
+                    <input type="text" numBuyer value="@numBuyer.NumBuyer" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    , то скидка =
+                    <input type="text" discountSum value="@numBuyer.DiscountSum" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     или 
+                    <input type="text" discountPercent value="@numBuyer.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    <br />
+                    <textarea textSms class="form-control form-control-sm" placeholder="Текст смс">@numBuyer.TextSms</textarea>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tbody id="discountParamHolidays">
+        @foreach(var holiday in Model.Holidays)
+        {
+            <tr uuid="@holiday.Uuid">
+                <td>
+                    @Html.CheckBox("IsEnable", holiday.IsEnable, new { @class = "form-check-input" })
+                </td>
+                <td>
+                    Дата праздника
+                    <input type="date" dateHoliday value="@holiday.DateHoliday.ToString("yyyy-MM-dd")" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    скидка
+                    <input type="text" discountPercent value="@holiday.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    %
+                    <br />
+                    <textarea textSms class="form-control form-control-sm" placeholder="Текст смс">@holiday.TextSms</textarea>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tbody id="discountParamBirthday">
+        @foreach(var birthday in Model.Birthdays)
+        {
+            <tr uuid="@birthday.Uuid">
+                <td>
+                    @Html.CheckBox("IsEnable", birthday.IsEnable, new { @class = "form-check-input" })
+                </td>
+                <td>
+                    Если день рождения, то действует кол-во
+                    <input type="text" dayEnable value="@birthday.DayEnable" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    дней и равна =
+                    <input type="text" discountPercent value="@birthday.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     % 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h5>Скидки по дням недели</h5>
+
+
+<script>
+    const sumBuyTable = document.getElementById("discountParamSumBuys");
+    const sumOneBuyTable = document.getElementById("discountParamSumOneBuy");
+    const discountParamNumBuyer = document.getElementById("discountParamNumBuyer");
+    const discountParamHolidays = document.getElementById("discountParamHolidays");
+    const discountParamBirthday = document.getElementById("discountParamBirthday");
+
+    function addSumBuy() {
+        let tr = document.createElement("tr");
+        tr.setAttribute("uuid", "");
+        tr.innerHTML = `
+    <td>
+                    <div class="form-check">
+                        <input type=checkbox checked=true class='form-check-input'/>
+                    </div>
+                </td>
+                <td>
+                    Если накопление больше
+                    <input type="text" sumBuyesMore value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    р. скидка =
+                    <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    %
+                </td>
+`;
+        sumBuyTable.prepend(tr);
+    }
+
+    function addSumOneBuy() {
+        let tr = document.createElement("tr");
+        tr.setAttribute("uuid", "");
+        tr.innerHTML = `
+    <td>
+                    <div class="form-check">
+                        <input type=checkbox checked=true class='form-check-input'/>
+                    </div>
+                </td>
+                <td>
+                    Если единоразовая покупка больше
+                    <input type="text" sumBuy value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    , то скидка =
+                    <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     %
+                </td>
+`;
+        sumOneBuyTable.prepend(tr);
+    }
+
+    function addNumBuyer() {
+        let tr = document.createElement("tr");
+        tr.setAttribute("uuid", "");
+        tr.innerHTML = `
+    <td>
+                    <input type=checkbox checked=true class='form-check-input'/>
+                </td>
+                <td>
+                    Если по счету покупатель является
+                    <input type="text" numBuyer value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    , то скидка =
+                    <input type="text" discountSum value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     или
+                    <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    <br />
+                    <textarea textSms class="form-control form-control-sm" placeholder="Текст смс"></textarea>
+                </td>
+`;
+        discountParamNumBuyer.prepend(tr);
+    }
+
+    function addHoliday() {
+        let tr = document.createElement("tr");
+        tr.setAttribute("uuid", "");
+        tr.innerHTML = `
+<td>
+                    <div class="form-check">
+                        <input type=checkbox checked=true class='form-check-input'/>
+                    </div>
+                </td>
+                <td>
+                    Дата праздника
+                    <input type="date" dateHoliday class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    скидка
+                    <input type="text" discountPercent class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    %
+                    <br />
+                    <textarea textSms class="form-control form-control-sm" placeholder="Текст смс"></textarea>
+                </td>
+`;
+        discountParamHolidays.prepend(tr);
+    }
+
+    function addBirthday() {
+        let tr = document.createElement("tr");
+        tr.setAttribute("uuid", "");
+        tr.innerHTML = `
+        <td>
+                    <div class="form-check">
+                        <input type=checkbox checked=true class='form-check-input'/>
+                    </div>
+                </td>
+                <td>
+                    Если день рождения, то действует кол-во
+                    <input type="text" dayEnable value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    дней и равна =
+                    <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     %
+                </td>
+`;
+        discountParamBirthday.prepend(tr);
+    }
+</script>
