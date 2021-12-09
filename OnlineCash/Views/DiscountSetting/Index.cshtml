@@ -1,10 +1,10 @@
 ﻿@model OnlineCash.Models.Discounts.DiscountParamContainerModel
-@using OnlineCash.Models.Discounts;
+@using OnlineCash.Models.Discounts
 <div class="row mb-4">
 </div>
 <div class="row mb-3">
     <div class="col-12 pillbox clearfix">
-        <div class="btn btn-sm btn-success">Сохранить</div>
+        <div onclick="save()" class="btn btn-sm btn-success">Сохранить</div>
         <div class="btn btn-sm btn-success">Отмена</div>
         <div class="btn-group btn-group-sm">
             <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -117,7 +117,9 @@
                     <input type="text" dayEnable value="@birthday.DayEnable" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                     дней и равна =
                     <input type="text" discountPercent value="@birthday.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                     % 
+                    %
+                    <br />
+                    <textarea textSms class="form-control form-control-sm" placeholder="Текст смс">@birthday.TextSms</textarea>
                 </td>
             </tr>
         }
@@ -125,7 +127,30 @@
 </table>
 
 <h5>Скидки по дням недели</h5>
-
+<table class="table table-sm table-bordered table-hover table-striped ">
+    <thead>
+        <tr>
+            <th>День</th>
+            <th>Время</th>
+            <th>Скидка</th>
+        </tr>
+    </thead>
+    <tbody id="discountWeeks">
+        @foreach(var week in Model.Weeks)
+        { 
+            <tr dayNum="@week.DayNum" dayName="@week.DayName">
+                <td>@week.DayName</td>
+                <td>
+                    с <input timeWith value="@week.TimeWith" class="form-control form-control-sm" style="display: inline-block; width: 50px" /> 
+                    по <input timeBy value="@week.TimeBy" class="form-control form-control-sm" style="display: inline-block; width: 50px" />
+                </td>
+                <td>
+                    <input discountPercent value="@week.DiscountPercent" class="form-control form-control-sm" style="display: inline-block; width: 50px" /> %
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 <script>
     const sumBuyTable = document.getElementById("discountParamSumBuys");
@@ -133,6 +158,7 @@
     const discountParamNumBuyer = document.getElementById("discountParamNumBuyer");
     const discountParamHolidays = document.getElementById("discountParamHolidays");
     const discountParamBirthday = document.getElementById("discountParamBirthday");
+    const discountWeeks = document.getElementById("discountWeeks");
 
     function addSumBuy() {
         let tr = document.createElement("tr");
@@ -232,8 +258,99 @@
                     дней и равна =
                     <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                      %
+                    <br />
+                    <textarea textSms class="form-control form-control-sm" placeholder="Текст смс"></textarea>
                 </td>
 `;
         discountParamBirthday.prepend(tr);
+    }
+
+
+    function save() {
+        let sumBuyes = new Array();
+        sumBuyTable.querySelectorAll("tr").forEach(tr => {
+            let uuid = tr.getAttribute("uuid");
+            if (uuid == "") uuid = null;
+            let isEnable = tr.querySelector("input[type=checkbox]").checked;
+            let sumBuyesMore = parseFloat(tr.querySelector("input[sumBuyesMore]").value);
+            if (isNaN(sumBuyesMore)) sumBuyesMore = null;
+            let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
+            if (isNaN(discountPercent)) discountPercent = null;
+            sumBuyes.push({ uuid: uuid, isEnable: isEnable, sumBuyesMore: sumBuyesMore, discountPercent: discountPercent });
+        })
+
+        let sumOneBuyes = new Array();
+        sumOneBuyTable.querySelectorAll("tr").forEach(tr => {
+            let uuid = tr.getAttribute("uuid");
+            if (uuid == "") uuid = null;
+            let isEnable = tr.querySelector("input[type=checkbox]").checked;
+            let sumBuy = parseFloat(tr.querySelector("input[sumBuy]").value);
+            if (isNaN(sumBuy)) sumBuy = null;
+            let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
+            if (isNaN(discountPercent)) discountPercent = null;
+            sumOneBuyes.push({ uuid: uuid, isEnable: isEnable, sumBuy: sumBuy, discountPercent: discountPercent });
+        });
+
+        let numBuyers = new Array();
+        discountParamNumBuyer.querySelectorAll("tr").forEach(tr => {
+            let uuid = tr.getAttribute("uuid");
+            if (uuid == "") uuid = null;
+            let isEnable = tr.querySelector("input[type=checkbox]").checked;
+            let numBuyer = parseInt(tr.querySelector("input[numBuyer]").value);
+            if (isNaN(numBuyer)) numBuyer = null;
+            let textSms = tr.querySelector("textarea").value;
+            if (textSms == "") textSms = null;
+            let discountSum = parseFloat(tr.querySelector("input[discountSum]").value);
+            if (isNaN(discountSum)) discountSum = null;
+            let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
+            if (isNaN(discountPercent)) discountPercent = null;
+            numBuyers.push({ uuid: uuid, isEnable: isEnable, numBuyer: numBuyer, textSms: textSms, discountPercent: discountPercent, discountSum: discountSum });
+        });
+
+        let holidays = new Array();
+        discountParamHolidays.querySelectorAll("tr").forEach(tr => {
+            let uuid = tr.getAttribute("uuid");
+            if (uuid == "") uuid = null;
+            let isEnable = tr.querySelector("input[type=checkbox]").checked;
+            let dateHoliday = tr.querySelector("input[dateHoliday]").value;
+            let textSms = tr.querySelector("textarea").value;
+            let discountPercent = tr.querySelector("input[discountPercent]").value;
+            holidays.push({ uuid: uuid, isEnable: isEnable, dateHoliday: dateHoliday, textSms: textSms, discountPercent: discountPercent });
+        });
+
+        let birthdays = new Array();
+        discountParamBirthday.querySelectorAll("tr").forEach(tr => {
+            let uuid = tr.getAttribute("uuid");
+            if (uuid == "") uuid = null;
+            let isEnable = tr.querySelector("input[type=checkbox]").checked;
+            let dayEnable = parseInt(tr.querySelector("input[dayEnable]").value);
+            let textSms = tr.querySelector("textarea").value;
+            let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
+            birthdays.push({ uuid: uuid, isEnable: isEnable, dayEnable: dayEnable, textSms: textSms, discountPercent: discountPercent });
+        });
+
+        let weeks = new Array();
+        discountWeeks.querySelectorAll("tr").forEach(tr => {
+            let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
+            if (isNaN(discountPercent)) discountPercent = null;
+            weeks.push({
+                dayNum: tr.getAttribute("dayNum"),
+                dayName: tr.getAttribute("dayName"),
+                timeWith: tr.querySelector("input[timeWith]").value,
+                timeBy: tr.querySelector("input[timeBy]").value,
+                discountPercent: discountPercent
+            })
+        });
+
+        fetch("discountsetting/save", {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({ sumBuys: sumBuyes, sumOneBuys: sumOneBuyes, numBuyer: numBuyers, holidays: holidays, birthdays: birthdays, weeks: weeks })
+        })
+            .then(resp => resp.json())
+            .then(model => console.log(model));
     }
 </script>

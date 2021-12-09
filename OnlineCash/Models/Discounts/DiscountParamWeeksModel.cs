@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace OnlineCash.Models.Discounts
 {
     public class DiscountParamWeeksModel
     {
-        public int? MonDiscountPercent { get; set; }
-        public int? TueDiscountPercent { get; set; }
-        public int? WedDiscountPercent { get; set; }
-        public int? ThuDiscountPercent { get; set; }
-        public int? FriDiscountPercent { get; set; }
-        public int? SatDiscountPercent { get; set; }
-        public int? SunDiscountPercent { get; set; }
+        [JsonPropertyName("dayNum")]
+        public int DayNum { get; set; }
+        [JsonPropertyName("dayName")]
+        public string DayName { get; set; }
+        [JsonPropertyName("timeWith")]
+        public string? TimeWith { get; set; }
+        [JsonPropertyName("timeBy")]
+        public string? TimeBy { get; set; }
+        [JsonPropertyName("discountPercent")]
+        public int? DiscountPercent { get; set; }
     }
 }

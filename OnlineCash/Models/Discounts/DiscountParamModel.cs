@@ -7,7 +7,7 @@ namespace OnlineCash.Models.Discounts
 {
     public class DiscountParamModel
     {
-        public Guid Uuid { get; set; } = new Guid();
+        public Guid? Uuid { get; set; } = new Guid();
         public bool IsEnable { get; set; } = true;
     }
 }
