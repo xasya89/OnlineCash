@@ -40,11 +40,13 @@
                     </div>
                 </td>
                 <td>
-                    Если накопление больше
+                    Если предыдущие покупки больше 
                     <input type="text" sumBuyesMore value="@sumBuy.SumBuyesMore" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    р. скидка =
+                    р. , то начислить 
+                    <input type="text" discountSum value="@sumBuy.DiscountSum" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     р. или скидка 
                     <input type="text" discountPercent value="@sumBuy.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    %
+                    % (выдается единоразово)
                 </td>
             </tr>
         }
@@ -57,11 +59,13 @@
                     @Html.CheckBox("IsEnable", sumOneBuy.IsEnable, new { @class = "form-check-input" })
                 </td>
                 <td>
-                    Если единоразовая покупка больше
+                    Если текущая покупка больше
                     <input type="text" sumBuy value="@sumOneBuy.SumBuy" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    , то скидка =
+                    р. , то начислить
+                    <input type="text" discountSum value="@sumOneBuy.DiscountSum" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     или скидка 
                     <input type="text" discountPercent value="@sumOneBuy.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                     %
+                    %
                 </td>
             </tr>
         }
@@ -76,10 +80,11 @@
                 <td>
                     Если по счету покупатель является
                     <input type="text" numBuyer value="@numBuyer.NumBuyer" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    , то скидка =
+                    , то начислить 
                     <input type="text" discountSum value="@numBuyer.DiscountSum" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                     или 
+                     р. или скидка 
                     <input type="text" discountPercent value="@numBuyer.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     %
                     <br />
                     <textarea textSms class="form-control form-control-sm" placeholder="Текст смс">@numBuyer.TextSms</textarea>
                 </td>
@@ -96,7 +101,9 @@
                 <td>
                     Дата праздника
                     <input type="date" dateHoliday value="@holiday.DateHoliday.ToString("yyyy-MM-dd")" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    скидка
+                    , то начилить
+                    <input type="text" discountSum value="@holiday.DiscountSum" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     р. или скидка
                     <input type="text" discountPercent value="@holiday.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                     %
                     <br />
@@ -115,7 +122,9 @@
                 <td>
                     Если день рождения, то действует кол-во
                     <input type="text" dayEnable value="@birthday.DayEnable" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    дней и равна =
+                    дней и начислить
+                    <input type="text" discountSum value="@birthday.DiscountSum" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    или скидка
                     <input type="text" discountPercent value="@birthday.DiscountPercent" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                     %
                     <br />
@@ -170,9 +179,11 @@
                     </div>
                 </td>
                 <td>
-                    Если накопление больше
+                    Если предыдущие покупки больше
                     <input type="text" sumBuyesMore value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    р. скидка =
+                    р. , то начислить
+                    <input type="text" discountSum value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     р. или скидка
                     <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                     %
                 </td>
@@ -190,9 +201,11 @@
                     </div>
                 </td>
                 <td>
-                    Если единоразовая покупка больше
+                    Если текущая покупка больше
                     <input type="text" sumBuy value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    , то скидка =
+                     р. , то  начислить
+                    <input type="text" discountSum value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     или скидка
                     <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                      %
                 </td>
@@ -210,10 +223,11 @@
                 <td>
                     Если по счету покупатель является
                     <input type="text" numBuyer value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    , то скидка =
+                    , то начислить
                     <input type="text" discountSum value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                     или
+                     р. или скидка
                     <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     %
                     <br />
                     <textarea textSms class="form-control form-control-sm" placeholder="Текст смс"></textarea>
                 </td>
@@ -233,8 +247,10 @@
                 <td>
                     Дата праздника
                     <input type="date" dateHoliday class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
-                    скидка
-                    <input type="text" discountPercent class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                    , то начилить
+                    <input type="text" discountSum value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
+                     р. или скидка
+                    <input type="text" discountPercent value="" class="form-control form-control-sm mb-2 mr-sm-2" style="width: 100px; display: inline-block">
                     %
                     <br />
                     <textarea textSms class="form-control form-control-sm" placeholder="Текст смс"></textarea>
@@ -274,9 +290,11 @@
             let isEnable = tr.querySelector("input[type=checkbox]").checked;
             let sumBuyesMore = parseFloat(tr.querySelector("input[sumBuyesMore]").value);
             if (isNaN(sumBuyesMore)) sumBuyesMore = null;
+            let discountSum = parseFloat(tr.querySelector("input[discountSum]").value);
+            if (isNaN(discountSum)) discountSum = null;
             let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
             if (isNaN(discountPercent)) discountPercent = null;
-            sumBuyes.push({ uuid: uuid, isEnable: isEnable, sumBuyesMore: sumBuyesMore, discountPercent: discountPercent });
+            sumBuyes.push({ uuid: uuid, isEnable: isEnable, sumBuyesMore: sumBuyesMore, discountSum: discountSum, discountPercent: discountPercent });
         })
 
         let sumOneBuyes = new Array();
@@ -286,9 +304,11 @@
             let isEnable = tr.querySelector("input[type=checkbox]").checked;
             let sumBuy = parseFloat(tr.querySelector("input[sumBuy]").value);
             if (isNaN(sumBuy)) sumBuy = null;
+            let discountSum = parseInt(tr.querySelector("input[discountSum]").value);
+            if (isNaN(discountSum)) discountSum = null;
             let discountPercent = parseInt(tr.querySelector("input[discountPercent]").value);
             if (isNaN(discountPercent)) discountPercent = null;
-            sumOneBuyes.push({ uuid: uuid, isEnable: isEnable, sumBuy: sumBuy, discountPercent: discountPercent });
+            sumOneBuyes.push({ uuid: uuid, isEnable: isEnable, sumBuy: sumBuy, discountSum: discountSum, discountPercent: discountPercent });
         });
 
         let numBuyers = new Array();
@@ -314,8 +334,11 @@
             let isEnable = tr.querySelector("input[type=checkbox]").checked;
             let dateHoliday = tr.querySelector("input[dateHoliday]").value;
             let textSms = tr.querySelector("textarea").value;
+            let discountSum = parseFloat(tr.querySelector("input[discountSum]").value);
+            if (isNaN(discountSum)) discountSum = null;
             let discountPercent = tr.querySelector("input[discountPercent]").value;
-            holidays.push({ uuid: uuid, isEnable: isEnable, dateHoliday: dateHoliday, textSms: textSms, discountPercent: discountPercent });
+            if (isNaN(discountPercent)) discountPercent = null;
+            holidays.push({ uuid: uuid, isEnable: isEnable, dateHoliday: dateHoliday, textSms: textSms, discountSum: discountSum, discountPercent: discountPercent });
         });
 
         let birthdays = new Array();

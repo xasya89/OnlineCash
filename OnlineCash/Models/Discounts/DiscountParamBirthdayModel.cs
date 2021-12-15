@@ -9,6 +9,7 @@ namespace OnlineCash.Models.Discounts
     {
         public int DayEnable { get; set; }
         public string TextSms { get; set; }
-        public int DiscountPercent { get; set; }
+        public decimal? DiscountSum { get; set; }
+        public int? DiscountPercent { get; set; }
     }
 }

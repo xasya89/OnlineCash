@@ -10,6 +10,8 @@ namespace OnlineCash.DataBaseModels
     {
         public int Id { get; set; }
         public DateTime DateCreate { get; set; } = DateTime.Now;
+        public int? BuyerId { get; set; }
+        public Buyer Buyer { get; set; }
         public bool IsElectron { get; set; }
         public decimal Sum { get; set; }
         public decimal SumDiscont { get; set; } = 0;

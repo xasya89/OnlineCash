@@ -7,7 +7,8 @@ namespace OnlineCash.Models.Discounts
 {
     public class DiscountParamSumBuyModel:DiscountParamModel
     {
-        public decimal SumBuyesMore { get; set; }
-        public int DiscountPercent { get; set; }
+        public decimal? SumBuyesMore { get; set; }
+        public int? DiscountPercent { get; set; }
+        public decimal? DiscountSum { get; set; }
     }
 }

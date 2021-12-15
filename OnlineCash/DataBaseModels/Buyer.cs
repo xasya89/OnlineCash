@@ -17,7 +17,9 @@ namespace OnlineCash.DataBaseModels
         public DateTime? Birthday { get; set; }
         public DiscountType DiscountType { get; set; } = DiscountType.Default;
         public int? DiscountPercant { get; set; }
+        public decimal DiscountSum { get; set; }
         public decimal SumBuy { get; set; }
         public bool isBlock { get; set; } = false;
+        public List<CheckSell> CheckSells { get; set; }
     }
 }

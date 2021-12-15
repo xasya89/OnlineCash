@@ -205,6 +205,10 @@ namespace OnlineCash
                 .HasOne(b => b.DiscountCard)
                 .WithMany(d => d.Buyers)
                 .HasForeignKey(b=>b.DiscountCardId);
+            modelBuilder.Entity<CheckSell>()
+                .HasOne(c => c.Buyer)
+                .WithMany(b => b.CheckSells)
+                .HasForeignKey(b => b.BuyerId);
 
             OnModelCreatingPartial(modelBuilder);
         }
