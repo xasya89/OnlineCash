@@ -13,6 +13,7 @@ namespace OnlineCash.Models.BuyerSynchronization
         public DateTime? Birthday { get; set; } = null;
         public string DiscountCardNum { get; set; }
         public DiscountType DiscountType { get; set; }
+        public int? DiscountPercent { get; set; }
         public decimal SumBuy { get; set; }
     }
 }

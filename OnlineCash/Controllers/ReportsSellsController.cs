@@ -34,7 +34,11 @@ namespace OnlineCash.Controllers
                 .Include(s => s.ShiftSales)
                 .ThenInclude(c => c.Good)
                 .Where(s => s.Id == id).FirstOrDefaultAsync();
-            var reportSell = new ReportSellModel { Shop = shift.Shop, Start = shift.Start };
+            var reportSell = new ReportSellModel { 
+                Shop = shift.Shop, 
+                Start = shift.Start,
+                SumSell=shift.SumSell
+            };
             foreach (var sell in shift.ShiftSales)
                 reportSell.ReportGoods.Add(new ReportSellGoodModel
                 {
@@ -42,7 +46,7 @@ namespace OnlineCash.Controllers
                     CountSell = sell.Count,
                     CountReturn = 0,
                     CountAll = sell.Count,
-                    SumAll = (decimal)sell.Count * sell.Price
+                    SumAll = sell.Price*(decimal)sell.Count
                 });
             return View("Details", reportSell);
         }

@@ -9,6 +9,7 @@ namespace OnlineCash.Models
     {
         public int id { get; set; }
         public int idGood{get;set;}
+        public Guid Uuid { get; set; }
         public double CountFact { get; set; }
     }
 }

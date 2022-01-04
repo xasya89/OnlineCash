@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using OnlineCash.Services;
 using OnlineCash.Models;
+using OnlineCash.Models.CashBox;
 
 namespace OnlineCash.Controllers.Api
 {
@@ -32,6 +33,13 @@ namespace OnlineCash.Controllers.Api
         {
             if (!await service.Buy(uuid, buylist))
                 return BadRequest();
+            return Ok();
+        }
+
+        [HttpPost("sell/{uuidShift}")]
+        public async Task<IActionResult> Sell(Guid uuidShift, [FromBody] CashBoxCheckSellModel check)
+        {
+            await service.Sell(uuidShift, check);
             return Ok();
         }
 

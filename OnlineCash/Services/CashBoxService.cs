@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
+using OnlineCash.Models.CashBox;
 
 namespace OnlineCash.Services
 {
@@ -48,6 +49,38 @@ namespace OnlineCash.Services
             shift.SumAll+= buylist.Sum(b => (decimal)b.Count * b.Price);
             await db.SaveChangesAsync();
             return true;
+        }
+
+        public async Task Sell(Guid uuid, CashBoxCheckSellModel check)
+        {
+            var shift = await db.Shifts.Where(s => s.Uuid == uuid & s.Stop == null).FirstOrDefaultAsync();
+            if (shift == null)
+                throw new Exception($"Смена с uuid {uuid} не найдена");
+            var goods = await db.Goods.ToListAsync();
+            foreach (var good in check.Goods)
+                if (goods.Where(g => g.Uuid == good.Uuid).FirstOrDefault() == null)
+                    throw new Exception($"Товар с uuid {good.Uuid} не найден");
+            foreach(var checkGood in check.Goods)
+            {
+                var good = goods.Where(g => g.Uuid == checkGood.Uuid).FirstOrDefault();
+                var sale = await db.ShiftSales.Where(s => s.ShiftId == shift.Id & s.GoodId == good.Id & s.Price == checkGood.Price).FirstOrDefaultAsync();
+                if (sale != null)
+                    sale.Count += (double)checkGood.Count;
+                else
+                    db.ShiftSales.Add(new ShiftSale
+                    {
+                        Shift = shift,
+                        Good = good,
+                        Price = checkGood.Price,
+                        Count = (double)checkGood.Count
+                    });
+                await goodBalanceService.MinusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
+            }
+            shift.SumSell += check.SumCash+check.SumElectron-check.SumDiscount;
+            shift.SumElectron += check.SumElectron;
+            shift.SumNoElectron += check.SumCash;
+            shift.SumAll += check.SumCash + check.SumElectron - check.SumDiscount;
+            await db.SaveChangesAsync();
         }
 
         public async Task<bool> CloseShift(Guid uuid, DateTime stop)

@@ -33,6 +33,7 @@ namespace OnlineCash.Controllers.Api.OnlineCash
                     Birthday = buyer.Birthday,
                     DiscountCardNum = buyer.DiscountCard.Num,
                     DiscountType = buyer.DiscountType,
+                    DiscountPercent=buyer.DiscountPercant,
                     SumBuy = buyer.SumBuy
                 });
             return Ok(result);

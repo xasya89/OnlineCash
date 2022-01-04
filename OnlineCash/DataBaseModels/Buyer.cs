@@ -21,5 +21,6 @@ namespace OnlineCash.DataBaseModels
         public decimal SumBuy { get; set; }
         public bool isBlock { get; set; } = false;
         public List<CheckSell> CheckSells { get; set; }
+        public List<PersonalDiscount> PersonalDiscounts { get; set; }
     }
 }

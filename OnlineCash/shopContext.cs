@@ -38,6 +38,7 @@ namespace OnlineCash
 
         public DbSet<DiscountCard> DiscountCards { get; set; }
         public DbSet<Buyer> Buyers { get; set; }
+        public DbSet<PersonalDiscount> PersonalDiscounts { get; set; }
 
         public shopContext()
         {
@@ -209,6 +210,10 @@ namespace OnlineCash
                 .HasOne(c => c.Buyer)
                 .WithMany(b => b.CheckSells)
                 .HasForeignKey(b => b.BuyerId);
+            modelBuilder.Entity<PersonalDiscount>()
+                .HasOne(p => p.Buyer)
+                .WithMany(b => b.PersonalDiscounts)
+                .HasForeignKey(p => p.BuyerId);
 
             OnModelCreatingPartial(modelBuilder);
         }
