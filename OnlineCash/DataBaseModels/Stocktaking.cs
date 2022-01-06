@@ -13,6 +13,7 @@ namespace OnlineCash.DataBaseModels
         public int Id { get; set; }
         public int Num { get; set; }
         public DateTime Create { get; set; } = DateTime.Now;
+        public DateTime Start { get; set; } = DateTime.Now;
         public int ShopId { get; set; }
         public Shop Shop { get; set; }
         public bool isSuccess { get; set; }
@@ -22,5 +23,6 @@ namespace OnlineCash.DataBaseModels
         public decimal SumFact { get; set; }
         public DocumentStatus Status { get; set; } = DocumentStatus.New;
         public List<StockTakingGroup> StockTakingGroups { get; set; } = new List<StockTakingGroup>();
+        public List<StocktakingSummaryGood> StocktakingSummaryGoods { get; set; } = new List<StocktakingSummaryGood>();
     }
 }

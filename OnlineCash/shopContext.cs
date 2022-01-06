@@ -21,6 +21,7 @@ namespace OnlineCash
         public DbSet<Stocktaking> Stocktakings { get; set; }
         public DbSet<StockTakingGroup> StockTakingGroups { get; set; }
         public DbSet<StocktakingGood> StocktakingGoods { get; set; }
+        public DbSet<StocktakingSummaryGood> StocktakingSummaryGoods { get; set; }
         public DbSet<GoodBalance> GoodBalances { get; set; }
         public DbSet<GoodBalanceHistory> GoodBalanceHistories { get; set; }
         public DbSet<SumBalanceHistory> SumBalanceHistories { get; set; }
@@ -129,6 +130,14 @@ namespace OnlineCash
                 .HasOne(g => g.GoodGroup)
                 .WithMany(gr => gr.Goods)
                 .HasForeignKey(g => g.GoodGroupId);
+            modelBuilder.Entity<StocktakingSummaryGood>()
+                .HasOne(s => s.Stocktaking)
+                .WithMany(s => s.StocktakingSummaryGoods)
+                .HasForeignKey(s => s.StocktakingId);
+            modelBuilder.Entity<StocktakingSummaryGood>()
+                .HasOne(s => s.Good)
+                .WithMany(g => g.StocktakingSummaryGoods)
+                .HasForeignKey(s => s.GoodId);
 
             //Поступления
             modelBuilder.Entity<ArrivalGood>()

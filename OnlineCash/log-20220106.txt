@@ -1,0 +1,230 @@
+2022-01-06T17:02:48.8057371+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T17:02:48.8575510+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T17:02:48.8798315+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T17:03:23.6639635+03:00  [INF] Server desktop-jn52ups:7680:bd10ab47 successfully announced in 476,7519 ms (3b5ca34b)
+2022-01-06T17:03:23.7146874+03:00  [INF] Server desktop-jn52ups:7680:bd10ab47 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T17:03:23.9452564+03:00  [INF] Server desktop-jn52ups:7680:bd10ab47 all the dispatchers started (3b5ca34b)
+2022-01-06T17:03:24.5841298+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T17:03:24.5899396+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T17:03:24.6005778+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T17:05:09.6053206+03:00  [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T18:15:59.1847029+03:00 80000031-0001-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T19:34:12.1241055+03:00  [INF] Server desktop-jn52ups:20816:fba1b87f successfully announced in 784,2122 ms (3b5ca34b)
+2022-01-06T19:34:12.1628114+03:00  [INF] Server desktop-jn52ups:20816:fba1b87f is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T19:34:13.0993071+03:00  [INF] Server desktop-jn52ups:20816:fba1b87f all the dispatchers started (3b5ca34b)
+2022-01-06T19:34:14.0453349+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T19:34:14.0555054+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T19:34:14.0580446+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T19:35:13.6583419+03:00  [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T19:35:34.3150275+03:00 8000003e-0002-ff00-b63f-84710c7967bb [ERR] Failed executing DbCommand ("6"ms) [Parameters=["@p0='?' (DbType = Decimal), @p1='?' (DbType = Decimal), @p2='?' (DbType = Int32), @p3='?' (DbType = Decimal), @p4='?' (DbType = Int32), @p5='?' (DbType = Decimal), @p6='?' (DbType = Decimal), @p7='?' (DbType = Int32), @p8='?' (DbType = Decimal), @p9='?' (DbType = Int32), @p10='?' (DbType = Decimal), @p11='?' (DbType = Decimal), @p12='?' (DbType = Int32), @p13='?' (DbType = Decimal), @p14='?' (DbType = Int32), @p15='?' (DbType = Double), @p16='?' (DbType = Double), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = Int32), @p20='?' (DbType = DateTime), @p21='?' (DbType = Int32), @p22='?' (DbType = Decimal), @p23='?' (DbType = Decimal), @p24='?' (DbType = Boolean)"], CommandType='Text', CommandTimeout='30']"
+""INSERT INTO `StocktakingSummaryGoods` (`CountDb`, `CountFact`, `GoodId`, `Price`, `StocktakingId`)
+VALUES (@p0, @p1, @p2, @p3, @p4);
+SELECT `Id`
+FROM `StocktakingSummaryGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `StocktakingSummaryGoods` (`CountDb`, `CountFact`, `GoodId`, `Price`, `StocktakingId`)
+VALUES (@p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `StocktakingSummaryGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `StocktakingSummaryGoods` (`CountDb`, `CountFact`, `GoodId`, `Price`, `StocktakingId`)
+VALUES (@p10, @p11, @p12, @p13, @p14);
+SELECT `Id`
+FROM `StocktakingSummaryGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `Stocktakings` (`CountDb`, `CountFact`, `Create`, `Num`, `ShopId`, `Start`, `Status`, `SumDb`, `SumFact`, `isSuccess`)
+VALUES (@p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `Stocktakings`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();" (627a98df)
+2022-01-06T19:35:34.4821374+03:00 8000003e-0002-ff00-b63f-84710c7967bb [ERR] An exception occurred in the database while saving changes for context type '"OnlineCash.shopContext"'."
+""Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`shop`.`stocktakingsummarygoods`, CONSTRAINT `FK_StocktakingSummaryGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 135
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 314
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)" (170f029e)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`shop`.`stocktakingsummarygoods`, CONSTRAINT `FK_StocktakingSummaryGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 135
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 314
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at OnlineCash.Services.StockTackingService.SaveFromOnlinCash(Int32 shopId, StocktakingReciveDataModel model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\StockTackingService.cs:line 109
+   at OnlineCash.Controllers.Api.OnlineCash.Stocktaking.Save(Int32 shopId, StocktakingReciveDataModel model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\Stocktaking.cs:line 28
+2022-01-06T19:37:13.5764749+03:00 8000000a-0000-fc00-b63f-84710c7967bb [ERR] Failed executing DbCommand ("4"ms) [Parameters=["@p0='?' (DbType = Decimal), @p1='?' (DbType = Decimal), @p2='?' (DbType = Int32), @p3='?' (DbType = Decimal), @p4='?' (DbType = Int32), @p5='?' (DbType = Decimal), @p6='?' (DbType = Decimal), @p7='?' (DbType = Int32), @p8='?' (DbType = Decimal), @p9='?' (DbType = Int32), @p10='?' (DbType = Decimal), @p11='?' (DbType = Decimal), @p12='?' (DbType = Int32), @p13='?' (DbType = Decimal), @p14='?' (DbType = Int32), @p15='?' (DbType = Double), @p16='?' (DbType = Double), @p17='?' (DbType = DateTime), @p18='?' (DbType = Int32), @p19='?' (DbType = Int32), @p20='?' (DbType = DateTime), @p21='?' (DbType = Int32), @p22='?' (DbType = Decimal), @p23='?' (DbType = Decimal), @p24='?' (DbType = Boolean)"], CommandType='Text', CommandTimeout='30']"
+""INSERT INTO `StocktakingSummaryGoods` (`CountDb`, `CountFact`, `GoodId`, `Price`, `StocktakingId`)
+VALUES (@p0, @p1, @p2, @p3, @p4);
+SELECT `Id`
+FROM `StocktakingSummaryGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `StocktakingSummaryGoods` (`CountDb`, `CountFact`, `GoodId`, `Price`, `StocktakingId`)
+VALUES (@p5, @p6, @p7, @p8, @p9);
+SELECT `Id`
+FROM `StocktakingSummaryGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `StocktakingSummaryGoods` (`CountDb`, `CountFact`, `GoodId`, `Price`, `StocktakingId`)
+VALUES (@p10, @p11, @p12, @p13, @p14);
+SELECT `Id`
+FROM `StocktakingSummaryGoods`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();
+
+INSERT INTO `Stocktakings` (`CountDb`, `CountFact`, `Create`, `Num`, `ShopId`, `Start`, `Status`, `SumDb`, `SumFact`, `isSuccess`)
+VALUES (@p15, @p16, @p17, @p18, @p19, @p20, @p21, @p22, @p23, @p24);
+SELECT `Id`
+FROM `Stocktakings`
+WHERE ROW_COUNT() = 1 AND `Id` = LAST_INSERT_ID();" (627a98df)
+2022-01-06T19:37:13.6310435+03:00 8000000a-0000-fc00-b63f-84710c7967bb [ERR] An exception occurred in the database while saving changes for context type '"OnlineCash.shopContext"'."
+""Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`shop`.`stocktakingsummarygoods`, CONSTRAINT `FK_StocktakingSummaryGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 119
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)" (170f029e)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while updating the entries. See the inner exception for details.
+ ---> MySqlConnector.MySqlException (0x80004005): Cannot add or update a child row: a foreign key constraint fails (`shop`.`stocktakingsummarygoods`, CONSTRAINT `FK_StocktakingSummaryGoods_Stocktakings_StocktakingId` FOREIGN KEY (`StocktakingId`) REFERENCES `stocktakings` (`Id`) ON DELETE CASCADE)
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 119
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at OnlineCash.Services.StockTackingService.SaveFromOnlinCash(Int32 shopId, StocktakingReciveDataModel model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\StockTackingService.cs:line 109
+   at OnlineCash.Controllers.Api.OnlineCash.Stocktaking.Save(Int32 shopId, StocktakingReciveDataModel model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\Stocktaking.cs:line 28
+2022-01-06T19:48:00.3812738+03:00  [INF] Server desktop-jn52ups:16248:6d3bfa0b successfully announced in 768,4256 ms (3b5ca34b)
+2022-01-06T19:48:00.4160617+03:00  [INF] Server desktop-jn52ups:16248:6d3bfa0b is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T19:48:01.3069658+03:00  [INF] Server desktop-jn52ups:16248:6d3bfa0b all the dispatchers started (3b5ca34b)
+2022-01-06T19:48:02.1735716+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T19:48:02.1941624+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T19:48:02.1982750+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T19:52:04.8854337+03:00  [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T19:52:04.8854337+03:00 80000010-0000-fc00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-06T20:09:48.2765628+03:00  [INF] Server desktop-jn52ups:14676:6e75d351 successfully announced in 555,8233 ms (3b5ca34b)
+2022-01-06T20:09:48.3356057+03:00  [INF] Server desktop-jn52ups:14676:6e75d351 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T20:09:48.5238890+03:00  [INF] Server desktop-jn52ups:14676:6e75d351 all the dispatchers started (3b5ca34b)
+2022-01-06T20:09:49.2028095+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T20:09:49.2092372+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T20:09:49.2117556+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T20:10:05.4351112+03:00 80000013-0003-ff00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-06T20:10:05.6351477+03:00  [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T20:11:36.2011518+03:00 80000016-0000-fc00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T20:19:30.0294933+03:00  [INF] Server desktop-jn52ups:25020:83c40fbc successfully announced in 377,92 ms (3b5ca34b)
+2022-01-06T20:19:30.0545588+03:00  [INF] Server desktop-jn52ups:25020:83c40fbc is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T20:19:30.2486887+03:00  [INF] Server desktop-jn52ups:25020:83c40fbc all the dispatchers started (3b5ca34b)
+2022-01-06T20:19:30.7414416+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T20:19:30.7605539+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T20:19:30.7672554+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T20:20:22.5201389+03:00 8000001a-0000-fc00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-06T20:25:31.9278896+03:00  [INF] Server desktop-jn52ups:16744:4cf418cd successfully announced in 401,1175 ms (3b5ca34b)
+2022-01-06T20:25:31.9804469+03:00  [INF] Server desktop-jn52ups:16744:4cf418cd is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T20:25:32.4334259+03:00  [INF] Server desktop-jn52ups:16744:4cf418cd all the dispatchers started (3b5ca34b)
+2022-01-06T20:25:32.8446342+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T20:25:32.8505987+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T20:25:32.8533329+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T20:26:19.8576109+03:00 80000087-0003-fd00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-06T20:28:14.5854843+03:00 8000003f-0002-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T20:28:58.9325694+03:00 80000040-0001-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T20:29:35.8217642+03:00 80000046-0001-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T21:48:36.0288326+03:00  [INF] Server desktop-jn52ups:18520:2eb4d024 successfully announced in 363,3166 ms (3b5ca34b)
+2022-01-06T21:48:36.0743085+03:00  [INF] Server desktop-jn52ups:18520:2eb4d024 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T21:48:36.2323825+03:00  [INF] Server desktop-jn52ups:18520:2eb4d024 all the dispatchers started (3b5ca34b)
+2022-01-06T21:48:36.6639212+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T21:48:36.6718312+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T21:48:36.6774452+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T23:20:58.3230149+03:00  [INF] Server desktop-jn52ups:3456:4e6a7d1e successfully announced in 507,4084 ms (3b5ca34b)
+2022-01-06T23:20:58.3556867+03:00  [INF] Server desktop-jn52ups:3456:4e6a7d1e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T23:20:58.5437750+03:00  [INF] Server desktop-jn52ups:3456:4e6a7d1e all the dispatchers started (3b5ca34b)
+2022-01-06T23:20:59.0361205+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T23:20:59.0418674+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T23:20:59.0460950+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T23:22:41.0860877+03:00 8000000a-0002-fc00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-06T23:24:28.2227625+03:00  [INF] Server desktop-jn52ups:23368:0bba8e49 successfully announced in 400,749 ms (3b5ca34b)
+2022-01-06T23:24:28.2516048+03:00  [INF] Server desktop-jn52ups:23368:0bba8e49 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T23:24:28.4329020+03:00  [INF] Server desktop-jn52ups:23368:0bba8e49 all the dispatchers started (3b5ca34b)
+2022-01-06T23:24:28.9097699+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T23:24:28.9168110+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T23:24:28.9196961+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T23:26:49.7811113+03:00  [INF] Server desktop-jn52ups:19504:7da2d04e successfully announced in 541,5304 ms (3b5ca34b)
+2022-01-06T23:26:49.8115140+03:00  [INF] Server desktop-jn52ups:19504:7da2d04e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T23:26:49.9672627+03:00  [INF] Server desktop-jn52ups:19504:7da2d04e all the dispatchers started (3b5ca34b)
+2022-01-06T23:26:50.4012105+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T23:26:50.4064086+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T23:26:50.4095641+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T23:29:13.3805108+03:00  [INF] Server desktop-jn52ups:13224:cc12f116 successfully announced in 413,8883 ms (3b5ca34b)
+2022-01-06T23:29:13.4053467+03:00  [INF] Server desktop-jn52ups:13224:cc12f116 is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T23:29:13.5960834+03:00  [INF] Server desktop-jn52ups:13224:cc12f116 all the dispatchers started (3b5ca34b)
+2022-01-06T23:29:14.0011829+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T23:29:14.0064458+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T23:29:14.0087059+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-06T23:40:33.1582290+03:00 80000099-0003-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-06T23:43:13.0955741+03:00  [INF] Server desktop-jn52ups:22056:451c624f successfully announced in 476,6119 ms (3b5ca34b)
+2022-01-06T23:43:13.1253054+03:00  [INF] Server desktop-jn52ups:22056:451c624f is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... (3b5ca34b)
+2022-01-06T23:43:13.2804899+03:00  [INF] Server desktop-jn52ups:22056:451c624f all the dispatchers started (3b5ca34b)
+2022-01-06T23:43:13.7482084+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-06T23:43:13.7536364+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-06T23:43:13.7570617+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)

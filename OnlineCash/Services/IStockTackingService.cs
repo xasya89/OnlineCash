@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.Models.StockTackingModels;
+using OnlineCash.DataBaseModels;
 
 namespace OnlineCash.Services
 {
@@ -11,5 +12,6 @@ namespace OnlineCash.Services
     {
         public Task<StockTackingGruppingModel> GetDetailsGroups(int idStocktaking);
         public Task SaveFromOnlinCash(int shopId, StocktakingReciveDataModel model);
+        public Task<Stocktaking> GetSummary(int id);
     }
 }

@@ -1,0 +1,56 @@
+﻿@model OnlineCash.DataBaseModels.Stocktaking
+
+<div class="row mb-2 mt-4">
+    <div class="col-12">
+        <h5 class="mb-1">Сумма товара в магазине до инверторизации @Model.SumDb</h5>
+        <h5 class="mb-1">Сумма товара в магазине по инверторизации @Model.SumFact</h5>
+        @if(Model.SumFact-Model.SumDb>0)
+        {
+            <h5>Недостача @(Model.SumFact - Model.SumDb) руб.</h5>
+        }
+        @if(Model.SumFact-Model.SumDb < 0)
+        {
+            <h5>Пересорт @(Model.SumDb - Model.SumFact) руб.</h5>
+        }
+    </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th rowspan="2">Товар</th>
+            <th rowspan="2">Ед</th>
+            <th colspan="2">До инверторизации</th>
+            <th colspan="2">В инверторизации</th>
+            <th rowspan="2">Разница</th>
+        </tr>
+        <tr>
+            <th>Кол-во</th>
+            <th>Стоимость</th>
+            <th>Кол-во</th>
+            <th>Стоимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var summary in Model.StocktakingSummaryGoods)
+        {
+        <tr>
+            <td>@summary.Good?.Name</td>
+            <td>@summary.Good?.Unit.GetDescription()</td>
+            <td>@summary.CountDb</td>
+            <td>@(summary.CountDb * summary.Price)</td>
+            <td>@summary.CountFact</td>
+            <td>@(summary.CountFact * summary.Price)</td>
+            <td>@(summary.CountFact * summary.Price - summary.CountDb * summary.Price)</td>
+        </tr>
+        }
+    </tbody>
+    <thead>
+        <tr>
+            <th colspan="2">Итого</th>
+            <th colspan="2">@Model.SumDb</th>
+            <th colspan="2">@Model.SumFact</th>
+            <th>@(Model.SumFact - Model.SumDb)</th>
+        </tr>
+    </thead>
+</table>

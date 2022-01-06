@@ -31,36 +31,39 @@ namespace OnlineCash.Services
                 var shop = await db.Shops.Where(s => s.Id == ShopId).FirstOrDefaultAsync();
                 Dictionary<int, double> balanceDict = new Dictionary<int, double>();
 
+                var historyLastDay = await db.GoodBalanceHistories.Where(h => h.ShopId == ShopId & DateTime.Compare(h.CurDate, curDate.AddDays(-1)) == 0).ToListAsync();
+                foreach (var history in historyLastDay)
+                    BalanceGoodPlus(balanceDict, history.GoodId, history.CountLast);
+
+                var startCalcDateTime = curDate; // Определим время последней инверторизации за сегодня
                 var stocktakings = await db.Stocktakings
-                    .Include(s => s.StockTakingGroups)
-                    .ThenInclude(gr => gr.StocktakingGoods)
-                    .Where(s => s.ShopId == ShopId & DateTime.Compare(s.Create, curDate) == 0)
+                    .Include(s=>s.StocktakingSummaryGoods)
+                    .Where(s => s.ShopId == ShopId & DateTime.Compare(s.Create, curDate) == 0 & s.Status==DocumentStatus.Confirm)
                     .ToListAsync();
                 foreach (var stocktaking in stocktakings)
-                    foreach (var group in stocktaking.StockTakingGroups)
-                        foreach (var stgood in group.StocktakingGoods)
-                            if (balanceDict.ContainsKey(stgood.GoodId))
-                                balanceDict[stgood.GoodId] += stgood.CountFact;
-                            else
-                                balanceDict.Add(stgood.GoodId, stgood.CountFact);
-                if (stocktakings.Count == 0)
                 {
-                    var historyLastDay = await db.GoodBalanceHistories.Where(h => h.ShopId == ShopId & DateTime.Compare(h.CurDate, curDate.AddDays(-1)) == 0).ToListAsync();
-                    foreach (var history in historyLastDay)
-                        BalanceGoodPlus(balanceDict, history.GoodId, history.CountLast);
+                    foreach (var summary in stocktaking.StocktakingSummaryGoods)
+                        if (balanceDict.ContainsKey(summary.GoodId))
+                            balanceDict[summary.GoodId] = (double)summary.CountFact;
+                        else
+                            balanceDict.Add(summary.GoodId, (double)summary.CountFact);
+                    startCalcDateTime = stocktaking.Start;
                 }
-                var arrivalLastDay = await db.Arrivals.Include(a => a.ArrivalGoods).Where(a => a.ShopId == ShopId & DateTime.Compare(a.DateArrival, curDate) == 0).ToListAsync();
+
+                var arrivalLastDay = await db.Arrivals.Include(a => a.ArrivalGoods)
+                    .Where(a => a.ShopId == ShopId & DateTime.Compare(a.DateArrival, startCalcDateTime) > 0)
+                    .ToListAsync();
                 foreach (var arrival in arrivalLastDay)
                     foreach (var arrivalgood in arrival.ArrivalGoods)
                         BalanceGoodPlus(balanceDict, arrivalgood.GoodId, arrivalgood.Count);
-                var writeofs = await db.Writeofs.Include(w => w.WriteofGoods).Where(w => w.ShopId == ShopId & DateTime.Compare(w.DateWriteof, curDate) == 0).ToListAsync();
+                var writeofs = await db.Writeofs.Include(w => w.WriteofGoods).Where(w => w.ShopId == ShopId & DateTime.Compare(w.DateWriteof, startCalcDateTime) > 0).ToListAsync();
                 foreach (var writeof in writeofs)
                     foreach (var wgood in writeof.WriteofGoods)
                         BalanceGoodMinus(balanceDict, wgood.GoodId, wgood.Count);
 
                 var shifts = await db.Shifts
                     .Include(s => s.ShiftSales)
-                    .Where(s => s.ShopId == ShopId && DateTime.Compare(((DateTime)s.Start).Date, curDate) == 0)
+                    .Where(s => s.ShopId == ShopId && DateTime.Compare(((DateTime)s.Start).Date, startCalcDateTime) > 0)
                     .ToListAsync();
                 foreach (var shift in shifts)
                     foreach (var sale in shift.ShiftSales)

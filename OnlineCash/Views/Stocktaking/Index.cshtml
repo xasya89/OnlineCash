@@ -23,8 +23,9 @@
             <th>Дата</th>
             <th>Номер</th>
             <th>Магазин</th>
-            <th>Рассхождение руб.</th>
-            <th>Факт руб.</th>
+            <th>Было в магазине р.</th>
+            <th>Стало в магазине р.</th>
+            <th>Рассхождение р.</th>
             <th></th>
         </tr>
     </thead>
@@ -45,12 +46,15 @@
             <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Create.ToString("dd.MM")</td>
             <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Num</td>
             <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.Shop.Name</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.SumDb</td>
+            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.SumFact</td>
             <td onclick="openStocktaking(@stocktaking.Id)">@(stocktaking.SumFact - stocktaking.SumDb)</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.SumFact</td>
             <td>
-                <a href="/stocktaking/DetailsGroups/@stocktaking.Id"  class="btn btn-sm btn-light ">Обобщенно</a>
+                <a href="/stocktaking/summary/@stocktaking.Id" class="btn btn-sm btn-light ">Обобщенно</a>
+                <!--
                 <span onclick="cancelStocktaking(@stocktaking.Id)" class="btn btn-sm btn-light" style="margin-right: 10px"><i class="fa fa-trash"></i> Отменить</span>
                 <a asp-controller="stocktaking" asp-action="Print" asp-route-id="@stocktaking.Id" class="btn btn-sm btn-light "><i class="fa fa-print"></i>Печать</a>
+            -->
             </td>
         </tr>
         }

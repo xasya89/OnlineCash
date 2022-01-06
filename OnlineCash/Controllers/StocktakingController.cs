@@ -197,6 +197,9 @@ namespace OnlineCash.Controllers
         
         [HttpGet("Stocktaking/DetailsGroups/{id}")]
         public async Task<IActionResult> DetailsGroups(int id) => View(await stockTackingService.GetDetailsGroups(id));
-        
+
+        [HttpGet("Stocktaking/Summary/{id}")]
+        public async Task<IActionResult> Summary(int id) => View(await stockTackingService.GetSummary(id));
+
     }
 }
