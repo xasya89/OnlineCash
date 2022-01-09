@@ -115,6 +115,35 @@ namespace OnlineCash.Services
                         summary.CountDb += (decimal)good.CountFact;
                 }
             }
+            //Найдем не указанные в инверторизации товары и добавим их в нераспределенные
+            var groupNoFind = new StockTakingGroup { Stocktaking = stocktaking, Name = "Не указан в инверторизации" };
+            db.StockTakingGroups.Add(groupNoFind);
+            foreach (var balance in balances)
+                if (balance.Count != 0)
+                {
+                    var find = false;
+                    var good = goods.Where(g => g.Id == balance.GoodId & g.IsDeleted == false).FirstOrDefault();
+                    var pricedb = good?.GoodPrices.Where(p => p.ShopId == shopId).FirstOrDefault().Price;
+                    if (good != null)
+                    {
+                        foreach (var stGroup in model.Groups)
+                            foreach (var stGood in stGroup.Goods)
+                                if (stGood.Uuid == balance.Good.Uuid)
+                                    find = true;
+                        if (!find)
+                        {
+                            db.StocktakingGoods.Add(new StocktakingGood { StockTakingGroup = groupNoFind, GoodId = good.Id, CountDB = balance.Count, CountFact = 0 });
+                            db.StocktakingSummaryGoods.Add(new StocktakingSummaryGood
+                            {
+                                Stocktaking = stocktaking,
+                                GoodId = good.Id,
+                                Price = (decimal)pricedb,
+                                CountDb = (decimal)balance.Count,
+                                CountFact = 0
+                            });
+                        }
+                    }
+                };
 
             //запишем итоги
             db.StocktakingSummaryGoods.AddRange(summaryes);
