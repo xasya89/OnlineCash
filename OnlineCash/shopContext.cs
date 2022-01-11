@@ -41,6 +41,8 @@ namespace OnlineCash
         public DbSet<Buyer> Buyers { get; set; }
         public DbSet<PersonalDiscount> PersonalDiscounts { get; set; }
 
+        public DbSet<CashMoney> CashMoneys { get; set; }
+
         public shopContext()
         {
         }
@@ -223,6 +225,12 @@ namespace OnlineCash
                 .HasOne(p => p.Buyer)
                 .WithMany(b => b.PersonalDiscounts)
                 .HasForeignKey(p => p.BuyerId);
+
+            //Внесение и изЪятие денег в кассе
+            modelBuilder.Entity<CashMoney>()
+                .HasOne(c => c.Shop)
+                .WithMany(s => s.CashMoneys)
+                .HasForeignKey(c => c.ShopId);
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -192,25 +192,75 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> PaymentsList()
         {
             ViewBag.Banks = await db.BankAccounts.ToListAsync();
-            return View(await db.Arrivals.Where(a => a.SumArrivals - a.SumPayments > 0).Include(a => a.Shop).OrderBy(a=>a.DateArrival).OrderBy(a=>a.DateArrival).ToListAsync());
+            return View(await db.Arrivals
+                .Include(a => a.Shop)
+                .Include(a => a.Supplier)
+                .Include(a => a.ArrivalPayments)
+                .Where(a => a.isSuccess == true & a.SumArrivals - a.SumPayments > 0 & a.SumArrivals - a.SumPayments > 0)
+                .OrderBy(a => a.DateArrival)
+                .OrderBy(a => a.DateArrival)
+                .ToListAsync());
         }
+
         [HttpPost]
         public async Task<IActionResult> PaymentsList([Bind]string with, [Bind] string by)
         {
             ViewBag.Banks = await db.BankAccounts.ToListAsync();
+            if(!string.IsNullOrEmpty(with) & string.IsNullOrEmpty(by))
+            {
+                var withDate = Convert.ToDateTime(with).Date;
+                return View(await db.Arrivals
+                    .Include(a => a.Shop)
+                    .Include(a => a.Supplier)
+                    .Include(a => a.ArrivalPayments)
+                    .Where(a => DateTime.Compare(a.DateArrival, withDate) >= 0)
+                    .OrderBy(a => a.DateArrival)
+                    .OrderBy(a => a.DateArrival)
+                    .ToListAsync());
+            };
+                
+            if (!string.IsNullOrEmpty(by) & string.IsNullOrEmpty(with))
+            {
+                DateTime byDate = Convert.ToDateTime(by).Date;
+                return View(await db.Arrivals
+                    .Include(a => a.Shop)
+                    .Include(a => a.Supplier)
+                    .Include(a => a.ArrivalPayments)
+                    .Where(a => a.isSuccess & DateTime.Compare(a.DateArrival, byDate) <= 0)
+                    .OrderBy(a => a.DateArrival)
+                    .OrderBy(a => a.DateArrival)
+                    .ToListAsync());
+            }
 
-            if(with!="" & string.IsNullOrEmpty(by))
-                return View(await db.Arrivals.Where(a => DateTime.Compare(a.DateArrival, Convert.ToDateTime(with).AddDays(-1)) >0).Include(a => a.Shop).OrderBy(a => a.DateArrival).OrderBy(a => a.DateArrival).ToListAsync());
-            if (by != "" & string.IsNullOrEmpty(with))
-                return View(await db.Arrivals.Where(a => DateTime.Compare(a.DateArrival, Convert.ToDateTime(by).AddDays(-1)) < 0).Include(a => a.Shop).OrderBy(a => a.DateArrival).OrderBy(a => a.DateArrival).ToListAsync());
-            if(!string.IsNullOrEmpty(with) & !string.IsNullOrEmpty(by))
-                return View(await db.Arrivals.Where(a => DateTime.Compare(a.DateArrival, Convert.ToDateTime(with)) <= 0 & DateTime.Compare(a.DateArrival, Convert.ToDateTime(by)) >= 0).Include(a => a.Shop).OrderBy(a => a.DateArrival).OrderBy(a => a.DateArrival).ToListAsync());
-            return View(await db.Arrivals.Where(a => a.SumArrivals - a.SumPayments > 0).Include(a => a.Shop).OrderBy(a => a.DateArrival).OrderBy(a => a.DateArrival).ToListAsync());
+            if (!string.IsNullOrEmpty(with) & !string.IsNullOrEmpty(by))
+            {
+                DateTime withDate = Convert.ToDateTime(with).Date;
+                DateTime byDate = Convert.ToDateTime(by).Date;
+                return View(await db.Arrivals
+                    .Include(a => a.Shop)
+                    .Include(a => a.Supplier)
+                    .Include(a => a.ArrivalPayments)
+                    .Where(a => a.isSuccess == true & DateTime.Compare(a.DateArrival, Convert.ToDateTime(with)) >= 0 & DateTime.Compare(a.DateArrival, Convert.ToDateTime(by)) <= 0)
+                    .OrderBy(a => a.DateArrival)
+                    .OrderBy(a => a.DateArrival)
+                    .ToListAsync());
+            }
+                
+            return View(await db.Arrivals
+                .Include(a => a.Shop)
+                .Include(a=>a.Supplier)
+                .Include(a=>a.ArrivalPayments)
+                .Where(a => a.isSuccess==true & a.SumArrivals - a.SumPayments > 0 & a.SumArrivals - a.SumPayments > 0)
+                .OrderBy(a => a.DateArrival)
+                .OrderBy(a => a.DateArrival)
+                .ToListAsync());
         }
 
         [HttpPut]
         public async Task<IActionResult> PaymentsList([FromBody]Models.PaymentListSaveModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
             if (model.Sum == 0 || model.ArrivalId == 0 || model.BankId == 0)
                 return BadRequest();
             var payment = new ArrivalPayment { ArrivalId = model.ArrivalId, BankAccountId = model.BankId, DatePayment = DateTime.Now, Sum = model.Sum };

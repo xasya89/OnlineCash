@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220111185002_AddCashMoney")]
+    partial class AddCashMoney
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,11 +222,7 @@ namespace OnlineCash.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("ShopId")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("Sum")
                         .HasColumnType("decimal(65,30)");
@@ -236,8 +234,6 @@ namespace OnlineCash.Migrations
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ShopId");
 
                     b.ToTable("CashMoneys");
                 });
@@ -1056,17 +1052,6 @@ namespace OnlineCash.Migrations
                     b.Navigation("DiscountCard");
                 });
 
-            modelBuilder.Entity("OnlineCash.DataBaseModels.CashMoney", b =>
-                {
-                    b.HasOne("OnlineCash.DataBaseModels.Shop", "Shop")
-                        .WithMany("CashMoneys")
-                        .HasForeignKey("ShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Shop");
-                });
-
             modelBuilder.Entity("OnlineCash.DataBaseModels.CheckGood", b =>
                 {
                     b.HasOne("OnlineCash.DataBaseModels.CheckSell", "CheckSell")
@@ -1457,8 +1442,6 @@ namespace OnlineCash.Migrations
             modelBuilder.Entity("OnlineCash.DataBaseModels.Shop", b =>
                 {
                     b.Navigation("Arrivals");
-
-                    b.Navigation("CashMoneys");
 
                     b.Navigation("GoodBalanceHistories");
 

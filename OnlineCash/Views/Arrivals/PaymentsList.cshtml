@@ -6,18 +6,6 @@
 
 <form asp-action="@nameof(OnlineCash.Controllers.ArrivalsController.PaymentsList)" method="post" class="row">
     <div class="col-auto">
-        <label for="bankId">Счет</label>
-    </div>
-    <div class="col-auto">
-        <select class="form-select form-select-sm mb-2 mr-sm-2" name="bankId">
-            <option value="-1" selected></option>
-            @foreach (var bank in ViewBag.Banks as IEnumerable<BankAccount>)
-            {
-                <option value="@bank.Id">@bank.Alias</option>
-            }
-        </select>
-    </div>
-    <div class="col-auto">
         <label for="bankId">Период</label>
     </div>
     <div class="col-auto">
@@ -38,27 +26,37 @@
             <tr>
                 <th>Номер</th>
                 <th>Дата</th>
+                <th>Поставщик</th>
                 <th>Магазин</th>
                 <th>Сумма</th>
-                <th>Оплачено</th>
-                <th>Банк</th>
-                <th>К оплате</th>
+                <th>Задолжность</th>
+                <th>Оплаты</th>
                 <th></th>
             </tr>
         </thead>
         <tbody id="arrivals">
             @foreach (var arrival in Model)
             {
-                <tr data-id="@arrival.Id">
-                    <td ttnNum>@arrival.Num</td>
-                    <td ttnDate>@arrival.DateArrival.ToString("dd.MM")</td>
-                    <td shop>@arrival.Shop.Name</td>
-                    <td sumArrivals>@arrival.SumArrivals</td>
-                    <td sumPayments>@arrival.SumPayments</td>
-                    <td></td>
-                    <td sumDiff>@(arrival.SumArrivals - arrival.SumPayments)</td>
-                    <td><button onclick="paymentAction(@arrival.Id)" class="btn btn-sm btn-secondary"><i class="fa fa-ruble-sign"></i> Оплатить</button></td>
-                </tr>
+            <tr data-id="@arrival.Id">
+                <td ttnNum>@arrival.Num</td>
+                <td ttnDate>@arrival.DateArrival.ToString("dd.MM")</td>
+                <td>@arrival.Supplier?.Name</td>
+                <td shop>@arrival.Shop.Name</td>
+                <td sumArrivals>@arrival.SumArrivals</td>
+                <td sumDiff>@(arrival.SumArrivals - arrival.SumPayments)</td>
+                <td sumPayments>
+                    @foreach(var pay in arrival.ArrivalPayments)
+                    { 
+                        <div>@pay.Sum р. @pay.DatePayment.ToString("dd.MM")</div>
+                    }
+                </td>
+                <td>
+                    @if (arrival.SumArrivals - arrival.SumPayments != 0)
+                    {
+                        <button onclick="paymentAction(@arrival.Id)" class="btn btn-sm btn-secondary"><i class="fa fa-ruble-sign"></i> Оплатить</button>
+                    }
+                </td>
+            </tr>
             }
         </tbody>
     </table>
@@ -122,13 +120,13 @@
             modalPaymentNumTTN.value = tr.querySelector("td[ttnNum]").textContent;
             modalPaymentDateTTN.value = tr.querySelector("td[ttnDate]").textContent;
             modalPaymentSummPayment.value = tr.querySelector("td[sumDiff]").textContent;
-            modalPaymentPayment.value = 0;
+            modalPaymentPayment.value = "";
             paymentDialog.show();
         }
         function addPayment() {
             if (modalPaymentSummPayment.value != "")
                 fetch("PaymentsList", {
-                    method: "POST",
+                    method: "PUT",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
