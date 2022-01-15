@@ -1,1 +1,0 @@
-2021-12-16T19:48:04.0662038+03:00 80000028-0001-fd00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)

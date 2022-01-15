@@ -105,14 +105,17 @@ namespace OnlineCash.Services
                     if (summary == null)
                         summaryes.Add(new StocktakingSummaryGood
                         {
-                            Stocktaking=stocktaking,
+                            Stocktaking = stocktaking,
                             GoodId = gooddb.Id,
                             CountFact = (decimal)good.CountFact,
                             CountDb = countDb,
-                            Price=pricedb
+                            Price = pricedb
                         });
                     else
-                        summary.CountDb += (decimal)good.CountFact;
+                    {
+                        summary.CountDb += (decimal)countDb;
+                        summary.CountFact += (decimal)good.CountFact;
+                    }
                 }
             }
             //Найдем не указанные в инверторизации товары и добавим их в нераспределенные

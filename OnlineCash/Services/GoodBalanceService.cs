@@ -40,12 +40,16 @@ namespace OnlineCash.Services
                     .Where(s => s.ShopId == ShopId & DateTime.Compare(s.Create, curDate) == 0 & s.Status==DocumentStatus.Confirm)
                     .OrderByDescending(s=>s.Num)
                     .FirstOrDefaultAsync();
-                if(stocktaking!=null)
+                DateTime startStocktaking = curDate;
+                if (stocktaking != null)
+                {
                     foreach (var summary in stocktaking.StocktakingSummaryGoods)
                         if (balanceDict.ContainsKey(summary.GoodId))
                             balanceDict[summary.GoodId] = (double)summary.CountFact;
                         else
                             balanceDict.Add(summary.GoodId, (double)summary.CountFact);
+                    startStocktaking = stocktaking.Start;
+                }
 
                 var arrivalLastDay = await db.Arrivals.Include(a => a.ArrivalGoods)
                     .Where(a => a.ShopId == ShopId & DateTime.Compare(a.DateArrival, curDate) == 0)
@@ -60,7 +64,7 @@ namespace OnlineCash.Services
 
                 var shifts = await db.Shifts
                     .Include(s => s.ShiftSales)
-                    .Where(s => s.ShopId == ShopId && DateTime.Compare(((DateTime)s.Start).Date, curDate) == 0)
+                    .Where(s => s.ShopId == ShopId && DateTime.Compare(s.Start, startStocktaking) >= 0 && DateTime.Compare(s.Start.Date,curDate)==0)
                     .ToListAsync();
                 foreach (var shift in shifts)
                     foreach (var sale in shift.ShiftSales)
