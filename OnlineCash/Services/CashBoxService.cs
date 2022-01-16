@@ -14,8 +14,8 @@ namespace OnlineCash.Services
     {
         shopContext db;
         IGoodBalanceService goodBalanceService;
-        MoneyBalanceService _moneyService;
-        public CashBoxService(shopContext db, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyService)
+        CashMoneyService _moneyService;
+        public CashBoxService(shopContext db, IGoodBalanceService goodBalanceService, CashMoneyService moneyService)
         {
             this.db = db;
             this.goodBalanceService = goodBalanceService;
@@ -83,7 +83,6 @@ namespace OnlineCash.Services
             shift.SumNoElectron += check.SumCash;
             shift.SumAll += check.SumCash + check.SumElectron - check.SumDiscount;
             await db.SaveChangesAsync();
-            await _moneyService.AddSale(shift.ShopId, check.SumCash + check.SumElectron);
         }
 
         public async Task<bool> CloseShift(Guid uuid, DateTime stop)
@@ -94,6 +93,20 @@ namespace OnlineCash.Services
             shift.Stop = stop;
             await goodBalanceService.CalcAsync(shift.ShopId, shift.Start);
             await db.SaveChangesAsync();
+            await _moneyService.Add(shift.ShopId, new CashMoney {
+                Create = stop,
+                TypeOperation = CashMoneyTypeOperations.Sale,
+                Sum = shift.SumNoElectron,
+                Note = $"Смена № {shift.Id} от {shift.Start.ToString("dd.MM.yy")}"
+            });
+            if(shift.SummReturn>0)
+                await _moneyService.Add(shift.ShopId, new CashMoney
+                {
+                    Create = stop,
+                    TypeOperation = CashMoneyTypeOperations.Return,
+                    Sum = shift.SummReturn,
+                    Note = $"Смена № {shift.Id} от {shift.Start.ToString("dd.MM.yy")}"
+                });
             return true;
         }
 

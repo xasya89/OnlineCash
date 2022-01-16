@@ -27,21 +27,21 @@
         <tr>
             <th>Дата</th>
             <th>Магазин</th>
-            <th>Внесение</th>
-            <th>Изъятие</th>
+            <th>Внесение <br />Продажи</th>
+            <th>Изъятие <br />Возвраты</th>
             <th>Примечание</th>
         </tr>
     </thead>
     <tbody>
         @foreach(var cashMoney in Model)
         {
-            var sumIncome = cashMoney.TypeOperation == CashMoneyTypeOperations.Income ? cashMoney.Sum : 0;
-            var sumOutcome = cashMoney.TypeOperation == CashMoneyTypeOperations.Outcome ? cashMoney.Sum : 0;
+            var sumPlus = cashMoney.TypeOperation == CashMoneyTypeOperations.Income || cashMoney.TypeOperation== CashMoneyTypeOperations.Sale ? cashMoney.Sum : 0;
+            var sumMinus = cashMoney.TypeOperation == CashMoneyTypeOperations.Outcome || cashMoney.TypeOperation == CashMoneyTypeOperations.Return ? cashMoney.Sum : 0;
             <tr>
                 <td>@cashMoney.Create.ToString("dd.MM.yy HH:mm")</td>
                 <td>@cashMoney.Shop?.Name</td>
-                <td>@sumIncome</td>
-                <td>@sumOutcome</td>
+                <td>@sumPlus</td>
+                <td>@sumMinus</td>
                 <td>@cashMoney.Note</td>
             </tr>
         }

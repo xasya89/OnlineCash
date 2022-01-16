@@ -29,6 +29,10 @@ namespace OnlineCash.DataBaseModels
         [Description("Внесение")]
         Income = 0,
         [Description("Изъятие")]
-        Outcome = 1
+        Outcome = 1,
+        [Description("Продажи")]
+        Sale=2,
+        [Description("Возврат покупателем")]
+        Return=3
     }
 }

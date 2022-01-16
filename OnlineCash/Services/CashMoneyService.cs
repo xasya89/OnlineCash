@@ -54,6 +54,10 @@ namespace OnlineCash.Services
                 throw new Exception($"Операция {model.TypeOperation.GetDescription()} с uuid - {model.Uuid} уже существует");
             _db.CashMoneys.Add(new CashMoney { Shop=shop, Uuid = model.Uuid, Create = model.Create, TypeOperation = model.TypeOperation, Sum = model.Sum, Note = model.Note });
             await _db.SaveChangesAsync();
+            if (model.TypeOperation == CashMoneyTypeOperations.Sale)
+                await _moneyService.AddSale(shopId, model.Sum);
+            if (model.TypeOperation == CashMoneyTypeOperations.Return)
+                await _moneyService.AddReturn(shopId, model.Sum);
             if (model.TypeOperation == CashMoneyTypeOperations.Income)
                 await _moneyService.AddIncome(shopId, model.Sum);
             if (model.TypeOperation == CashMoneyTypeOperations.Outcome)

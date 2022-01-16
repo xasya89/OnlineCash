@@ -1,0 +1,33 @@
+﻿@model List<OnlineCash.DataBaseModels.MoneyBalanceHistory>
+
+<div class="row mt-2">
+    <div class="col-12 table-responsive">
+        <table class="table table-sm table-hover table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Продажи</th>
+                    <th>Возвраты</th>
+                    <th>Внесение</th>
+                    <th>Изъятие</th>
+                    <th>Прочее</th>
+                    <th>Остаток</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var balance in Model)
+                {
+                <tr>
+                    <td>@balance.DateBalance.ToString("dd.MM.yy")</td>
+                    <td>@balance.SumSale</td>
+                    <td>@balance.SumReturn</td>
+                    <td>@balance.SumIncome</td>
+                    <td>@balance.SumOutcome</td>
+                    <td>@balance.SumOther</td>
+                    <td>@balance.SumEnd</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

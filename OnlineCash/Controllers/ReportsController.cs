@@ -44,5 +44,9 @@ namespace OnlineCash.Controllers
             await goodBalanceService.CalcAsync(shopId, daycalc);
             return RedirectToAction(nameof(GoodBalanceHistory));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MoneyBalanceHistory(int shopId)
+            => View(await db.MoneyBalanceHistories.OrderByDescending(m => m.DateBalance).ToListAsync());
     }
 }
