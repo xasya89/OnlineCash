@@ -59,12 +59,13 @@ namespace OnlineCash
             services.AddScoped<IStockTackingService, StockTackingService>();
             services.AddTransient<BuyerRegistration>();
             services.AddScoped<ISmsService, SmsStreamTelecom>();
-            services.AddTransient<CashMoneyService>()
-                .AddTransient<MoneyBalanceService>();
+            services.AddTransient<CashMoneyService>();
+            services.AddTransient<MoneyBalanceService>();
             //services.AddScoped<IEvotorService, EvotorService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +76,8 @@ namespace OnlineCash
             IBackgroundJobClient backgroundJobClient,
             IRecurringJobManager recurringJobManager,
             IServiceProvider serviceProvider,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            shopContext db)
         {
             int shopIdDefault = Convert.ToInt32(configuration.GetSection("ShopIdDefault").Value);
 
@@ -109,6 +111,8 @@ namespace OnlineCash
                 () => serviceProvider.GetService<IGoodBalanceService>().CalcAsync(shopIdDefault, DateTime.Now),
                 configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
                 );
+
+            db.Database.Migrate();
         }
     }
 }

@@ -9,13 +9,13 @@
         <label for="bankId">Период</label>
     </div>
     <div class="col-auto">
-        <input name="with" type="date" class="form-control form-control-sm " />
+        <input name="with" type="date" value="@((ViewBag.With as DateTime?)?.ToString("yyyy-MM-dd"))" class="form-control form-control-sm " />
     </div>
     <div class="col-auto">
         <label for="bankId"> : </label>
     </div>
     <div class="col-auto">
-        <input name="by" type="date" class="form-control form-control-sm " />
+        <input name="by" type="date" value="@((ViewBag.By as DateTime?)?.ToString("yyyy-MM-dd"))" class="form-control form-control-sm " />
     </div>
 
     <button type="submit" class="btn btn-primary col-auto">Выбрать</button>
@@ -40,7 +40,7 @@
             <tr data-id="@arrival.Id">
                 <td ttnNum>@arrival.Num</td>
                 <td ttnDate>@arrival.DateArrival.ToString("dd.MM")</td>
-                <td>@arrival.Supplier?.Name</td>
+                <td supplier>@arrival.Supplier?.Name</td>
                 <td shop>@arrival.Shop.Name</td>
                 <td sumArrivals>@arrival.SumArrivals</td>
                 <td sumDiff>@(arrival.SumArrivals - arrival.SumPayments)</td>
@@ -65,7 +65,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Внести оплату</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Внести оплату
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -75,8 +77,12 @@
                         <input type="text" class="form-control form-control-sm" id="modalPaymentNumTTN">
                     </div>
                     <div class="mb-3">
-                        <label for="modalPaymentDateTTN" class="form-label">Дата</label>
-                        <input type="text" class="form-control form-control-sm" id="modalPaymentDateTTN">
+                        <label for="modalPaymentDateTTN" class="form-label">Поставщик</label>
+                        <input type="text" class="form-control form-control-sm" id="modalPaymentSupplier">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalPaymentSummPayment" class="form-label">Дата оплаты</label>
+                        <input type="date" class="form-control form-control-sm" id="modalPaymentDatePayment">
                     </div>
                     <div class="mb-3">
                         <label for="modalPaymentBank" class="form-label">Банк</label>
@@ -108,7 +114,8 @@
         const paymentDialog = new bootstrap.Modal(modalPaymentDialog);
         const modalPaymentArrivalId = document.getElementById("modalPaymentArrivalId");
         const modalPaymentNumTTN = document.getElementById("modalPaymentNumTTN");
-        const modalPaymentDateTTN = document.getElementById("modalPaymentDateTTN");
+        const modalPaymentSupplier = document.getElementById("modalPaymentSupplier");
+        const modalPaymentDatePayment = document.getElementById("modalPaymentDatePayment");
         const modalPaymentBank = document.getElementById("modalPaymentBank");
         const modalPaymentSummPayment = document.getElementById("modalPaymentSummPayment");
         const modalPaymentPayment = document.getElementById("modalPaymentPayment");
@@ -117,8 +124,10 @@
         function paymentAction(idArrival) {
             let tr = arrivals.querySelector(`tr[data-id="${idArrival}"]`);
             modalPaymentArrivalId.value = tr.dataset.id;
-            modalPaymentNumTTN.value = tr.querySelector("td[ttnNum]").textContent;
-            modalPaymentDateTTN.value = tr.querySelector("td[ttnDate]").textContent;
+            modalPaymentNumTTN.value = tr.querySelector("td[ttnNum]").textContent + " от " + tr.querySelector("td[ttnDate]").textContent;
+            modalPaymentSupplier.value = tr.querySelector("td[supplier]").textContent;
+
+            modalPaymentDatePayment.value = "";
             modalPaymentSummPayment.value = tr.querySelector("td[sumDiff]").textContent;
             modalPaymentPayment.value = "";
             paymentDialog.show();
@@ -132,6 +141,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        datePayment: modalPaymentDatePayment.value,
                         arrivalId: parseInt(modalPaymentArrivalId.value),
                         bankId: parseInt(modalPaymentBank.value),
                         sum: parseFloat(modalPaymentPayment.value)

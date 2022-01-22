@@ -19,5 +19,6 @@ namespace OnlineCash.Models
         public Guid GoodUuid { get; set; }
         public decimal Price { get; set; }
         public decimal Count { get; set; }
+        public string Nds { get; set; }
     }
 }

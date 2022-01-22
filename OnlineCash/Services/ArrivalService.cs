@@ -16,16 +16,16 @@ namespace OnlineCash.Services
             this.db = db;
         }
 
-        public async Task<bool> SaveSynchAsync(int shopId, ArrivalSynchModel model)
+        public async Task SaveSynchAsync(int shopId, ArrivalSynchModel model)
         {
             if (db.Shops.Where(s => s.Id == shopId) == null)
-                return false;
+                throw new Exception($"Магазин shopId - {shopId} не найден");
             if (db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefault() == null)
-                return false;
+                throw new Exception($"Поставщик supplierId - {model.SupplierId} не найден");
             var goods = await db.Goods.Include(g => g.GoodPrices.Where(gp => gp.ShopId == shopId)).ToListAsync();
             foreach (var mGood in model.ArrivalGoods)
                 if (goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault() == null)
-                    return false;
+                    throw new Exception($"Товар uuid {mGood.GoodUuid} не найден");
 
 
             var arrival = new Arrival
@@ -48,12 +48,12 @@ namespace OnlineCash.Services
                     GoodId = good.Id,
                     Price = mGood.Price,
                     PriceSell = good.GoodPrices.FirstOrDefault().Price,
-                    Count = (double) mGood.Count
+                    Count = (double) mGood.Count,
+                    Nds =mGood.Nds
                 };
                 db.ArrivalGoods.Add(arrivalgood);
             }
             await db.SaveChangesAsync();
-            return true;
         }
     }
 }

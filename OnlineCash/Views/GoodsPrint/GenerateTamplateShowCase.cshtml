@@ -47,6 +47,7 @@
         @foreach (var goodWithBalance in Model)
             foreach (var price in goodWithBalance.Good.GoodPrices)
             {
+                decimal? pricePrint = ViewBag.NoPrice != true ? Math.Round(price.Price / 10, 2) : null;
         <div class="price">
             <h5 style="width:56mm; min-height: 15mm; overflow-x: hidden; text-overflow: ellipsis">
                 @goodWithBalance.Good.Name
@@ -56,7 +57,7 @@
             <barcode content="@goodWithBalance.Good.BarCodes.FirstOrDefault()?.Code" width="140" height="10" margin="2" barcodeformat="CODE_128" outputformat="PNG" />
     
             <div style="display: grid; grid-template-columns: repeat(2, 1fr);">
-                <h4>@price.Price <span style="font-size: 10px">р./@(goodWithBalance.Good.Unit.GetDescription())</span></h4>
+                <h4>@pricePrint <span style="font-size: 10px; float: right; padding-top: 1em; margin-right: 1em">р./@(goodWithBalance.Good.Unit.GetDescription())</span></h4>
                 <span org>@price.Shop?.OrgName <br />ИНН @price.Shop?.Inn<br>@DateTime.Now.ToString("dd.MM.yy")</span>
             </div>
         </div>

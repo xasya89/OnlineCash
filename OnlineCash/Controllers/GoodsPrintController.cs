@@ -28,7 +28,7 @@ namespace OnlineCash.Controllers
         /// Печать ценника для продавца
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> GenerateTamplateCashier()
+        public async Task<IActionResult> GenerateTamplateCashier([FromQuery] bool noPrice)
         {
             List<int> idShops = JsonSerializer.Deserialize<List<int>>(Request.Query["idShops"]);
             List<int> idGoods = JsonSerializer.Deserialize<List<int>>(Request.Query["idGoods"]);
@@ -40,14 +40,14 @@ namespace OnlineCash.Controllers
                 {
                     Good = good
                 });
-
+            ViewBag.NoPrice = noPrice;
             return View(goodBalances);
         }
 
         /// <summary>
         /// Печать ценника на витрине
         /// </summary>
-        public async Task<IActionResult> GenerateTamplateShowCase()
+        public async Task<IActionResult> GenerateTamplateShowCase([FromQuery] bool noPrice)
         {
             List<int> idShops = JsonSerializer.Deserialize<List<int>>(Request.Query["idShops"]);
             List<int> idGoods = JsonSerializer.Deserialize<List<int>>(Request.Query["idGoods"]);
@@ -58,14 +58,14 @@ namespace OnlineCash.Controllers
                 {
                     Good = good
                 });
-
+            ViewBag.NoPrice = noPrice;
             return View(goodBalances);
         }
 
         /// <summary>
         /// Печать ценника на витрине за 100г
         /// </summary>
-        public async Task<IActionResult> GenerateTamplateShowCase100()
+        public async Task<IActionResult> GenerateTamplateShowCase100([FromQuery] bool noPrice)
         {
             List<int> idShops = JsonSerializer.Deserialize<List<int>>(Request.Query["idShops"]);
             List<int> idGoods = JsonSerializer.Deserialize<List<int>>(Request.Query["idGoods"]);
@@ -76,7 +76,7 @@ namespace OnlineCash.Controllers
                 {
                     Good = good
                 });
-
+            ViewBag.NoPrice = noPrice;
             return View(goodBalances);
         }
     }

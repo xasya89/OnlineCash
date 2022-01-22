@@ -1,0 +1,536 @@
+2022-01-21T13:16:01.2168113+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:16:01.2273698+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:16:01.2307341+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:21:55.8512553+03:00 80000011-0003-ff00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-21T13:22:03.7131999+03:00 80000007-0001-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-21T13:22:05.0103890+03:00 8000000b-0001-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-21T13:23:17.9170570+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:23:17.9254944+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:23:17.9284987+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:36:19.8515484+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:36:19.8582953+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:36:19.8613650+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:41:51.6349750+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:41:51.6418477+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:41:51.6444439+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:43:04.1606621+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:43:04.1677936+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:43:04.1703638+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:45:02.8683710+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:45:02.8753225+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:45:02.8778110+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:58:17.7467359+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:58:17.7538542+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:58:17.7563666+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T13:59:24.5832773+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T13:59:24.5946113+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T13:59:24.6006560+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T14:03:46.9369286+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T14:03:46.9455964+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T14:03:46.9487496+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T14:06:51.3486760+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T14:06:51.3556694+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T14:06:51.3577967+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T14:30:33.6295211+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T14:30:33.6367855+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T14:30:33.6394514+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T14:35:57.7202963+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T14:35:57.7278284+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T14:35:57.7309572+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T14:41:26.4997655+03:00 80000006-0000-fb00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-21T14:41:27.8353414+03:00 80000013-0002-fd00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,00 ShopId - 1 
+ Queries performing 'LastOrDefault' operation must have a deterministic sort order. Rewrite the query to apply an 'OrderBy' clause on the sequence before calling 'LastOrDefault'. 
+    at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.TranslateLastOrDefault(ShapedQueryExpression source, LambdaExpression predicate, Type returnType, Boolean returnDefault)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass12_0`1.<ExecuteAsync>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (be726eef)
+2022-01-21T14:54:45.3194858+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T14:54:45.3270979+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T14:54:45.3295060+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T14:55:39.6158816+03:00 80000021-0002-ff00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Queries performing 'LastOrDefault' operation must have a deterministic sort order. Rewrite the query to apply an 'OrderBy' clause on the sequence before calling 'LastOrDefault'. 
+    at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.TranslateLastOrDefault(ShapedQueryExpression source, LambdaExpression predicate, Type returnType, Boolean returnDefault)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass12_0`1.<ExecuteAsync>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (119752fc)
+2022-01-21T14:57:40.9837931+03:00 80000019-0003-fe00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'shopContext'. 
+    at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_InternalServiceProvider()
+   at Microsoft.EntityFrameworkCore.DbContext.get_ChangeTracker()
+   at Microsoft.EntityFrameworkCore.Query.CompiledQueryCacheKeyGenerator.GenerateCacheKeyCore(Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.RelationalCompiledQueryCacheKeyGenerator.GenerateCacheKeyCore(Expression query, Boolean async)
+   at Pomelo.EntityFrameworkCore.MySql.Query.Internal.MySqlCompiledQueryCacheKeyGenerator.GenerateCacheKey(Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (dc6a480a)
+2022-01-21T15:35:36.9983113+03:00 8000003b-0003-fe00-b63f-84710c7967bb [ERR] Failed executing DbCommand ("154"ms) [Parameters=["@__shopId_0='?' (DbType = Int32)"], CommandType='Text', CommandTimeout='30']"
+""SELECT `m`.`Id`, `m`.`DateBalance`, `m`.`ShopId`, `m`.`SumEnd`, `m`.`SumIncome`, `m`.`SumOther`, `m`.`SumOutcome`, `m`.`SumReturn`, `m`.`SumSale`, `m`.`SumStart`
+FROM `MoneyBalanceHistories` AS `m`
+WHERE (`m`.`ShopId` = @__shopId_0) & ((`m`.`DateBalance` = CONVERT(CURRENT_TIMESTAMP(), date)) AND CONVERT(CURRENT_TIMESTAMP(), date) IS NOT NULL)
+LIMIT 1" (627a98df)
+2022-01-21T15:35:37.3517541+03:00 8000001a-0002-fd00-b63f-84710c7967bb [ERR] Failed executing DbCommand ("321"ms) [Parameters=["@__shopId_0='?' (DbType = Int32)"], CommandType='Text', CommandTimeout='30']"
+""SELECT `m`.`Id`, `m`.`DateBalance`, `m`.`ShopId`, `m`.`SumEnd`, `m`.`SumIncome`, `m`.`SumOther`, `m`.`SumOutcome`, `m`.`SumReturn`, `m`.`SumSale`, `m`.`SumStart`
+FROM `MoneyBalanceHistories` AS `m`
+WHERE (`m`.`ShopId` = @__shopId_0) & ((`m`.`DateBalance` = CONVERT(CURRENT_TIMESTAMP(), date)) AND CONVERT(CURRENT_TIMESTAMP(), date) IS NOT NULL)
+LIMIT 1" (627a98df)
+2022-01-21T15:35:37.6146488+03:00 8000003b-0003-fe00-b63f-84710c7967bb [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'MySqlConnection'.
+   at MySqlConnector.MySqlConnection.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlConnection.cs:line 928
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 690
+   at MySqlConnector.Core.ICancellableCommandExtensions.ResetCommandTimeout(ICancellableCommand command) in /_/src/MySqlConnector/Core/ICancellableCommand.cs:line 82
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'MySqlConnection'.
+   at MySqlConnector.MySqlConnection.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlConnection.cs:line 928
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 690
+   at MySqlConnector.Core.ICancellableCommandExtensions.ResetCommandTimeout(ICancellableCommand command) in /_/src/MySqlConnector/Core/ICancellableCommand.cs:line 82
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2022-01-21T15:35:37.6146370+03:00 8000001a-0002-fd00-b63f-84710c7967bb [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'MySqlConnection'.
+   at MySqlConnector.MySqlConnection.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlConnection.cs:line 928
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 690
+   at MySqlConnector.Core.ICancellableCommandExtensions.ResetCommandTimeout(ICancellableCommand command) in /_/src/MySqlConnector/Core/ICancellableCommand.cs:line 82
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.ObjectDisposedException: Cannot access a disposed object.
+Object name: 'MySqlConnection'.
+   at MySqlConnector.MySqlConnection.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlConnection.cs:line 928
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 690
+   at MySqlConnector.Core.ICancellableCommandExtensions.ResetCommandTimeout(ICancellableCommand command) in /_/src/MySqlConnector/Core/ICancellableCommand.cs:line 82
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2022-01-21T15:35:38.4145051+03:00 8000001a-0002-fd00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Cannot access a disposed object.
+Object name: 'MySqlConnection'. 
+    at MySqlConnector.MySqlConnection.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlConnection.cs:line 928
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 690
+   at MySqlConnector.Core.ICancellableCommandExtensions.ResetCommandTimeout(ICancellableCommand command) in /_/src/MySqlConnector/Core/ICancellableCommand.cs:line 82
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 26
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (c889a0d7)
+2022-01-21T15:35:38.4161024+03:00 8000003b-0003-fe00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Cannot access a disposed object.
+Object name: 'MySqlConnection'. 
+    at MySqlConnector.MySqlConnection.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlConnection.cs:line 928
+   at MySqlConnector.MySqlConnection.get_Session() in /_/src/MySqlConnector/MySqlConnection.cs:line 690
+   at MySqlConnector.Core.ICancellableCommandExtensions.ResetCommandTimeout(ICancellableCommand command) in /_/src/MySqlConnector/Core/ICancellableCommand.cs:line 82
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 26
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (c889a0d7)
+2022-01-21T15:44:51.5816185+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T15:44:51.5893989+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T15:44:51.5921071+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T15:45:59.3369676+03:00 8000001f-0000-fb00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Queries performing 'LastOrDefault' operation must have a deterministic sort order. Rewrite the query to apply an 'OrderBy' clause on the sequence before calling 'LastOrDefault'. 
+    at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.TranslateLastOrDefault(ShapedQueryExpression source, LambdaExpression predicate, Type returnType, Boolean returnDefault)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass12_0`1.<ExecuteAsync>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (119752fc)
+2022-01-21T15:46:03.2662330+03:00 80000020-0000-fb00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'shopContext'. 
+    at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_InternalServiceProvider()
+   at Microsoft.EntityFrameworkCore.DbContext.get_ChangeTracker()
+   at Microsoft.EntityFrameworkCore.Query.CompiledQueryCacheKeyGenerator.GenerateCacheKeyCore(Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.RelationalCompiledQueryCacheKeyGenerator.GenerateCacheKeyCore(Expression query, Boolean async)
+   at Pomelo.EntityFrameworkCore.MySql.Query.Internal.MySqlCompiledQueryCacheKeyGenerator.GenerateCacheKey(Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (dc6a480a)
+2022-01-21T15:46:06.3176916+03:00 80000021-0000-fb00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'shopContext'. 
+    at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_InternalServiceProvider()
+   at Microsoft.EntityFrameworkCore.DbContext.get_ChangeTracker()
+   at Microsoft.EntityFrameworkCore.Query.CompiledQueryCacheKeyGenerator.GenerateCacheKeyCore(Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.RelationalCompiledQueryCacheKeyGenerator.GenerateCacheKeyCore(Expression query, Boolean async)
+   at Pomelo.EntityFrameworkCore.MySql.Query.Internal.MySqlCompiledQueryCacheKeyGenerator.GenerateCacheKey(Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (dc6a480a)
+2022-01-21T15:52:05.1454982+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T15:52:05.1544542+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T15:52:05.1593963+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T15:53:01.0991149+03:00 8000002d-0000-fb00-b63f-84710c7967bb [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.ObjectDisposedException: Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'shopContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.InitializeStateManager(Boolean standAlone)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.ObjectDisposedException: Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'shopContext'.
+   at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.InitializeStateManager(Boolean standAlone)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2022-01-21T15:53:01.4227249+03:00 8000002d-0000-fb00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Cannot access a disposed context instance. A common cause of this error is disposing a context instance that was resolved from dependency injection and then later trying to use the same context instance elsewhere in your application. This may occur if you are calling 'Dispose' on the context instance, or wrapping it in a using statement. If you are using dependency injection, you should let the dependency injection container take care of disposing context instances.
+Object name: 'shopContext'. 
+    at Microsoft.EntityFrameworkCore.DbContext.CheckDisposed()
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Internal.IDbContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContextDependencies.get_StateManager()
+   at Microsoft.EntityFrameworkCore.Query.QueryContext.InitializeStateManager(Boolean standAlone)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleOrDefaultAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 31
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (eadcd322)
+2022-01-21T16:02:12.6717405+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T16:02:12.6794872+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T16:02:12.6820700+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T16:02:44.7338291+03:00 80000019-0001-fd00-b63f-84710c7967bb [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.InvalidOperationException: Can't call this method when MySqlDataReader is closed.
+   at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.GetResultSet() in /_/src/MySqlConnector/MySqlDataReader.cs:line 647
+   at MySqlConnector.MySqlDataReader.GetInt32(Int32 ordinal) in /_/src/MySqlConnector/MySqlDataReader.cs:line 242
+   at lambda_method718(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.InvalidOperationException: Can't call this method when MySqlDataReader is closed.
+   at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.GetResultSet() in /_/src/MySqlConnector/MySqlDataReader.cs:line 647
+   at MySqlConnector.MySqlDataReader.GetInt32(Int32 ordinal) in /_/src/MySqlConnector/MySqlDataReader.cs:line 242
+   at lambda_method718(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2022-01-21T16:02:45.2046873+03:00 80000019-0001-fd00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Can't call this method when MySqlDataReader is closed. 
+    at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.GetResultSet() in /_/src/MySqlConnector/MySqlDataReader.cs:line 647
+   at MySqlConnector.MySqlDataReader.GetInt32(Int32 ordinal) in /_/src/MySqlConnector/MySqlDataReader.cs:line 242
+   at lambda_method718(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 26
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (11532c45)
+2022-01-21T19:21:37.6251385+03:00 80000034-0000-fb00-b63f-84710c7967bb [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.InvalidOperationException: Can't call this method when MySqlDataReader is closed.
+   at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 43
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.InvalidOperationException: Can't call this method when MySqlDataReader is closed.
+   at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 43
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2022-01-21T19:21:37.8439370+03:00 80000034-0000-fb00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Can't call this method when MySqlDataReader is closed. 
+    at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.ReadAsync(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 43
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 26
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (f9afa433)
+2022-01-21T19:23:08.2122542+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T19:23:08.2193361+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T19:23:08.2218040+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T19:24:00.0696418+03:00 8000000f-0001-fe00-b63f-84710c7967bb [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.InvalidOperationException: Can't call this method when MySqlDataReader is closed.
+   at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.GetResultSet() in /_/src/MySqlConnector/MySqlDataReader.cs:line 647
+   at MySqlConnector.MySqlDataReader.GetInt32(Int32 ordinal) in /_/src/MySqlConnector/MySqlDataReader.cs:line 242
+   at lambda_method718(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.InvalidOperationException: Can't call this method when MySqlDataReader is closed.
+   at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.GetResultSet() in /_/src/MySqlConnector/MySqlDataReader.cs:line 647
+   at MySqlConnector.MySqlDataReader.GetInt32(Int32 ordinal) in /_/src/MySqlConnector/MySqlDataReader.cs:line 242
+   at lambda_method718(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2022-01-21T19:24:00.4554674+03:00 8000000f-0001-fe00-b63f-84710c7967bb [ERR] Ошибка добавления в MoneyBalance продажи на сумму $15,0 ShopId - 1 
+ Can't call this method when MySqlDataReader is closed. 
+    at MySqlConnector.MySqlDataReader.VerifyNotDisposed() in /_/src/MySqlConnector/MySqlDataReader.cs:line 640
+   at MySqlConnector.MySqlDataReader.GetResultSet() in /_/src/MySqlConnector/MySqlDataReader.cs:line 647
+   at MySqlConnector.MySqlDataReader.GetInt32(Int32 ordinal) in /_/src/MySqlConnector/MySqlDataReader.cs:line 242
+   at lambda_method718(Closure , QueryContext , DbDataReader , ResultContext , SingleQueryResultCoordinator )
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.GetToday(Int32 shopId) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 26
+   at OnlineCash.Services.MoneyBalanceService.AddSale(Int32 shopId, Decimal sum) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 48 (11532c45)
+2022-01-21T19:26:38.0382607+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T19:26:38.0460849+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T19:26:38.0485709+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T19:29:36.1873079+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T19:29:36.1958707+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T19:29:36.1983572+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T19:39:19.3743934+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T19:39:19.3823479+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T19:39:19.3908989+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T19:39:54.3314663+03:00 80000021-0002-fe00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-21T21:28:08.2499519+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:28:08.2566655+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:28:08.2591280+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T21:29:22.5697275+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:29:22.5765336+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:29:22.5791407+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T21:31:11.4820281+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:31:11.4902782+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:31:11.4928655+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T21:32:02.1547556+03:00 80000026-0002-fd00-b63f-84710c7967bb [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+System.InvalidOperationException: Queries performing 'LastOrDefault' operation must have a deterministic sort order. Rewrite the query to apply an 'OrderBy' clause on the sequence before calling 'LastOrDefault'.
+   at Microsoft.EntityFrameworkCore.Query.RelationalQueryableMethodTranslatingExpressionVisitor.TranslateLastOrDefault(ShapedQueryExpression source, LambdaExpression predicate, Type returnType, Boolean returnDefault)
+   at Microsoft.EntityFrameworkCore.Query.QueryableMethodTranslatingExpressionVisitor.VisitMethodCall(MethodCallExpression methodCallExpression)
+   at Microsoft.EntityFrameworkCore.Query.QueryCompilationContext.CreateQueryExecutor[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Storage.Database.CompileQuery[TResult](Expression query, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.CompileQueryCore[TResult](IDatabase database, Expression query, IModel model, Boolean async)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.<>c__DisplayClass12_0`1.<ExecuteAsync>b__0()
+   at Microsoft.EntityFrameworkCore.Query.Internal.CompiledQueryCache.GetOrAddQuery[TResult](Object cacheKey, Func`1 compiler)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteAsync[TResult](Expression query, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.ExecuteAsync[TResult](Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, Expression expression, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ExecuteAsync[TSource,TResult](MethodInfo operatorMethodInfo, IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.LastOrDefaultAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.MoneyBalanceService.Calculate(Int32 shopId, DateTime with) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\MoneyBalanceService.cs:line 49
+   at OnlineCash.Controllers.ReportsController.CalcMoneyBalanceHistory(Int32 shopId, String withStr) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\ReportsController.cs:line 60
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-01-21T21:34:40.5647246+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:34:40.5714610+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:34:40.5738634+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T21:37:34.1304692+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:37:34.1382984+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:37:34.1405865+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T21:39:10.7541970+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:39:10.7610205+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:39:10.7639844+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T21:41:13.4932157+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T21:41:13.4999431+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T21:41:13.5023829+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T22:07:34.1757940+03:00  [ERR] Failed executing DbCommand ("39,204"ms) [Parameters=["@__8__locals1_ShopId_0='?' (DbType = Int32), @__startStocktaking_1='?' (DbType = DateTime), @__8__locals2_curDate_2='?' (DbType = DateTime)"], CommandType='Text', CommandTimeout='30']"
+""SELECT `s`.`Id`, `s`.`CashierId`, `s`.`ShopId`, `s`.`Start`, `s`.`Stop`, `s`.`SumAll`, `s`.`SumCreditDelivery`, `s`.`SumCreditRepayment`, `s`.`SumElectron`, `s`.`SumIncome`, `s`.`SumNoElectron`, `s`.`SumOutcome`, `s`.`SumSell`, `s`.`SummReturn`, `s`.`Uuid`, `s0`.`Id`, `s0`.`Count`, `s0`.`GoodId`, `s0`.`Price`, `s0`.`ShiftId`
+FROM `Shifts` AS `s`
+LEFT JOIN `ShiftSales` AS `s0` ON `s`.`Id` = `s0`.`ShiftId`
+WHERE ((`s`.`ShopId` = @__8__locals1_ShopId_0) AND (`s`.`Start` >= @__startStocktaking_1)) AND (CONVERT(`s`.`Start`, date) = @__8__locals2_curDate_2)
+ORDER BY `s`.`Id`, `s0`.`Id`" (627a98df)
+2022-01-21T22:07:34.6711642+03:00  [ERR] An exception occurred while iterating over the results of a query for context type '"OnlineCash.shopContext"'."
+""System.InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseMySql' call.
+ ---> MySqlConnector.MySqlException (0x80004005): The Command Timeout expired before the operation completed.
+   at MySqlConnector.Protocol.Serialization.StreamByteHandler.<ReadBytesAsync>g__DoReadBytesAsync|6_2(Memory`1 buffer) in /_/src/MySqlConnector/Protocol/Serialization/StreamByteHandler.cs:line 89
+   at MySqlConnector.Protocol.Serialization.BufferedByteReader.ReadBytesAsync(IByteHandler byteHandler, ArraySegment`1 buffer, Int32 totalBytesToRead, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/BufferedByteReader.cs:line 36
+   at MySqlConnector.Protocol.Serialization.ProtocolUtility.<ReadPacketAsync>g__AddContinuation|1_0(ValueTask`1 headerBytes, BufferedByteReader bufferedByteReader, IByteHandler byteHandler, Func`1 getNextSequenceNumber, ProtocolErrorBehavior protocolErrorBehavior, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/ProtocolUtility.cs:line 412
+   at MySqlConnector.Protocol.Serialization.ProtocolUtility.<DoReadPayloadAsync>g__AddContinuation|5_0(ValueTask`1 readPacketTask, BufferedByteReader bufferedByteReader, IByteHandler byteHandler, Func`1 getNextSequenceNumber, ArraySegmentHolder`1 previousPayloads, ProtocolErrorBehavior protocolErrorBehavior, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/ProtocolUtility.cs:line 483
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 119
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()" (f5c7ac34)
+System.InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseMySql' call.
+ ---> MySqlConnector.MySqlException (0x80004005): The Command Timeout expired before the operation completed.
+   at MySqlConnector.Protocol.Serialization.StreamByteHandler.<ReadBytesAsync>g__DoReadBytesAsync|6_2(Memory`1 buffer) in /_/src/MySqlConnector/Protocol/Serialization/StreamByteHandler.cs:line 89
+   at MySqlConnector.Protocol.Serialization.BufferedByteReader.ReadBytesAsync(IByteHandler byteHandler, ArraySegment`1 buffer, Int32 totalBytesToRead, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/BufferedByteReader.cs:line 36
+   at MySqlConnector.Protocol.Serialization.ProtocolUtility.<ReadPacketAsync>g__AddContinuation|1_0(ValueTask`1 headerBytes, BufferedByteReader bufferedByteReader, IByteHandler byteHandler, Func`1 getNextSequenceNumber, ProtocolErrorBehavior protocolErrorBehavior, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/ProtocolUtility.cs:line 412
+   at MySqlConnector.Protocol.Serialization.ProtocolUtility.<DoReadPayloadAsync>g__AddContinuation|5_0(ValueTask`1 readPacketTask, BufferedByteReader bufferedByteReader, IByteHandler byteHandler, Func`1 getNextSequenceNumber, ArraySegmentHolder`1 previousPayloads, ProtocolErrorBehavior protocolErrorBehavior, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/ProtocolUtility.cs:line 483
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 119
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+2022-01-21T22:07:35.3454650+03:00  [WRN] Failed to process the job 'c18ad48f-19a1-4ab6-8057-0f786e9eeeca': an exception occurred. Retry attempt 1 of 10 will be performed in 00:00:27. (3b5ca34b)
+System.InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure()' to the 'UseMySql' call.
+ ---> MySqlConnector.MySqlException (0x80004005): The Command Timeout expired before the operation completed.
+   at MySqlConnector.Protocol.Serialization.StreamByteHandler.<ReadBytesAsync>g__DoReadBytesAsync|6_2(Memory`1 buffer) in /_/src/MySqlConnector/Protocol/Serialization/StreamByteHandler.cs:line 89
+   at MySqlConnector.Protocol.Serialization.BufferedByteReader.ReadBytesAsync(IByteHandler byteHandler, ArraySegment`1 buffer, Int32 totalBytesToRead, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/BufferedByteReader.cs:line 36
+   at MySqlConnector.Protocol.Serialization.ProtocolUtility.<ReadPacketAsync>g__AddContinuation|1_0(ValueTask`1 headerBytes, BufferedByteReader bufferedByteReader, IByteHandler byteHandler, Func`1 getNextSequenceNumber, ProtocolErrorBehavior protocolErrorBehavior, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/ProtocolUtility.cs:line 412
+   at MySqlConnector.Protocol.Serialization.ProtocolUtility.<DoReadPayloadAsync>g__AddContinuation|5_0(ValueTask`1 readPacketTask, BufferedByteReader bufferedByteReader, IByteHandler byteHandler, Func`1 getNextSequenceNumber, ArraySegmentHolder`1 previousPayloads, ProtocolErrorBehavior protocolErrorBehavior, IOBehavior ioBehavior) in /_/src/MySqlConnector/Protocol/Serialization/ProtocolUtility.cs:line 483
+   at MySqlConnector.Core.ServerSession.ReceiveReplyAsyncAwaited(ValueTask`1 task) in /_/src/MySqlConnector/Core/ServerSession.cs:line 877
+   at MySqlConnector.Core.ResultSet.ReadResultSetHeaderAsync(IOBehavior ioBehavior) in /_/src/MySqlConnector/Core/ResultSet.cs:line 50
+   at MySqlConnector.MySqlDataReader.ActivateResultSet(CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 119
+   at MySqlConnector.MySqlDataReader.CreateAsync(CommandListPosition commandListPosition, ICommandPayloadCreator payloadCreator, IDictionary`2 cachedProcedures, IMySqlCommand command, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlDataReader.cs:line 444
+   at MySqlConnector.Core.CommandExecutor.ExecuteReaderAsync(IReadOnlyList`1 commands, ICommandPayloadCreator payloadCreator, CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/CommandExecutor.cs:line 60
+   at MySqlConnector.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 315
+   at MySqlConnector.MySqlCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlCommand.cs:line 307
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at OnlineCash.Services.GoodBalanceService.CalcAsync(Int32 ShopId, DateTime date) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\GoodBalanceService.cs:line 65
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+2022-01-21T22:09:28.4225815+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T22:09:28.4293062+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T22:09:28.4322812+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T22:26:26.9180051+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T22:26:26.9259490+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T22:26:26.9283047+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T22:28:17.1127934+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-21T22:28:17.1200980+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-21T22:28:17.1244455+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-21T22:45:28.8128240+03:00  [ERR] An error occurred using the connection to database '""' on server '"localhost"'. (5fc3407c)
+2022-01-21T22:45:29.3750871+03:00  [FTL] Application startup exception (6c57a5ba)
+MySqlConnector.MySqlException (0x80004005): Access denied for user 'u1573046_u1573_046default'@'localhost' (using password: YES)
+   at MySqlConnector.Core.ServerSession.ConnectAsync(ConnectionSettings cs, Int32 startTickCount, ILoadBalancer loadBalancer, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ServerSession.cs:line 494
+   at MySqlConnector.Core.ConnectionPool.ConnectSessionAsync(String logMessage, Int32 startTickCount, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 368
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int32 startTickCount, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 107
+   at MySqlConnector.Core.ConnectionPool.GetSessionAsync(MySqlConnection connection, Int32 startTickCount, IOBehavior ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/Core/ConnectionPool.cs:line 137
+   at MySqlConnector.MySqlConnection.CreateSessionAsync(ConnectionPool pool, Int32 startTickCount, Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 863
+   at MySqlConnector.MySqlConnection.OpenAsync(Nullable`1 ioBehavior, CancellationToken cancellationToken) in /_/src/MySqlConnector/MySqlConnection.cs:line 414
+   at MySqlConnector.MySqlConnection.Open() in /_/src/MySqlConnector/MySqlConnection.cs:line 380
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenDbConnection(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternal(Boolean errorsExpected)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlRelationalConnection.Open(Boolean errorsExpected)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlDatabaseCreator.<>c__DisplayClass18_0.<Exists>b__0(DateTime giveUp)
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.<>c__DisplayClass12_0`2.<Execute>b__0(DbContext c, TState s)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.Execute[TState,TResult](IExecutionStrategy strategy, TState state, Func`2 operation, Func`2 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.ExecutionStrategyExtensions.Execute[TState,TResult](IExecutionStrategy strategy, TState state, Func`2 operation)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlDatabaseCreator.Exists(Boolean retryOnNotExists)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlDatabaseCreator.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.HistoryRepository.Exists()
+   at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
+   at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+   at OnlineCash.Startup.Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration, IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider, ILoggerFactory loggerFactory, shopContext db) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Startup.cs:line 115
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.Invoke(Object instance, IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.<>c__DisplayClass4_0.<Build>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostBuilder.<>c__DisplayClass15_0.<UseStartup>b__1(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Mvc.Filters.MiddlewareFilterBuilderStartupFilter.<>c__DisplayClass0_0.<Configure>g__MiddlewareFilterBuilder|0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Server.IIS.Core.IISServerSetupFilter.<>c__DisplayClass2_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2022-01-21T22:45:29.4490436+03:00  [INF] Server desktop-jn52ups:14108:68104205 caught stopping signal... (3b5ca34b)
+2022-01-21T22:45:29.6234470+03:00  [INF] Server desktop-jn52ups:14108:68104205 caught stopped signal... (3b5ca34b)
+2022-01-21T22:45:29.6980979+03:00  [INF] Server desktop-jn52ups:14108:68104205 All dispatchers stopped (3b5ca34b)
+2022-01-21T22:45:29.7267767+03:00  [INF] Server desktop-jn52ups:14108:68104205 successfully reported itself as stopped in 0,4162 ms (3b5ca34b)
+2022-01-21T22:45:29.7285921+03:00  [INF] Server desktop-jn52ups:14108:68104205 has been stopped in total 262,8187 ms (3b5ca34b)

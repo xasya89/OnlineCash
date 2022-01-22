@@ -14,11 +14,13 @@ namespace OnlineCash.Controllers
         shopContext db;
         IReportsService reportsService;
         IGoodBalanceService goodBalanceService;
-        public ReportsController(shopContext db, IReportsService reportsService, IGoodBalanceService goodBalanceService)
+        MoneyBalanceService _moneyBalanceService;
+        public ReportsController(shopContext db, IReportsService reportsService, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyBalanceService)
         {
             this.db = db;
             this.reportsService = reportsService;
             this.goodBalanceService = goodBalanceService;
+            _moneyBalanceService = moneyBalanceService;
         }
 
         [HttpGet]
@@ -48,5 +50,15 @@ namespace OnlineCash.Controllers
         [HttpGet]
         public async Task<IActionResult> MoneyBalanceHistory(int shopId)
             => View(await db.MoneyBalanceHistories.OrderByDescending(m => m.DateBalance).ToListAsync());
+
+        [HttpGet]
+        public async Task<IActionResult> CalcMoneyBalanceHistory(int shopId, string withStr)
+        {
+            DateTime with;
+            if (!DateTime.TryParse(withStr, out with))
+                return BadRequest();
+            await _moneyBalanceService.Calculate(shopId, with);
+            return View("MoneyBalanceHistory", await db.MoneyBalanceHistories.OrderByDescending(m => m.DateBalance).ToListAsync());
+        }
     }
 }

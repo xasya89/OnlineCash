@@ -6,15 +6,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using OnlineCash.Models;
 using OnlineCash.Services;
+using Serilog;
 
-namespace OnlineCash.Controllers.Api
+namespace OnlineCash.Controllers.Api.OnlineCash
 {
-    [Route("api/[controller]")]
+    [Route("api/onlinecash/[controller]")]
     [ApiController]
     public class ArrivalSynchController : ControllerBase
     {
         ArrivalService service;
-        public ArrivalSynchController(ArrivalService service)
+        //ILogger _logger;
+        public ArrivalSynchController(ArrivalService service/*, ILogger logger*/)
         {
             this.service = service;
         }
@@ -22,10 +24,16 @@ namespace OnlineCash.Controllers.Api
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Save(int shopId, [FromBody] ArrivalSynchModel model)
         {
-            if (await service.SaveSynchAsync(shopId, model))
+            try
+            {
+                await service.SaveSynchAsync(shopId, model);
                 return Ok();
-            else
+            }
+            catch(Exception ex)
+            {
+                //_logger.Error($"{ex.Message} \n {ex.StackTrace}");
                 return BadRequest();
+            }
         }
     }
 }

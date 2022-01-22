@@ -8,6 +8,12 @@
         }
     </div>
     <div class="col-auto">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="noPrice">
+            <label class="form-check-label" for="noPrice">Без цены</label>
+        </div>
+    </div>
+    <div class="col-auto">
         <span onclick="generateTamplateCashier()" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> кассир</span>
     </div>
     <div class="col-auto">
@@ -16,12 +22,14 @@
     <div class="col-auto">
         <span onclick="generateTamplateShowCase100()" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> витрина 100г</span>
     </div>
+    <!--
     <div class="col-auto">
         <span class="btn btn-sm btn-primary"><i class="fa fa-print"></i> прайс</span>
     </div>
     <div class="col-auto">
         <span class="btn btn-sm btn-primary"><i class="fa fa-print"></i> прайс остатки</span>
     </div>
+        -->
 </div>
 <div id="findGoodParent" class="mb-2"></div>
 <div class="row">
@@ -53,6 +61,7 @@
     new findGoodContainer(findGoodParent, (good) => { addGood(good.id); });
     const selectionGoodBtn = document.getElementById("selectionGoodBtn");
     const goodsTable = document.getElementById("goodsTable");
+    const checkNoPrice = document.getElementById("noPrice");
     const clearTable = document.getElementById("clearTable");
     clearTable.onclick = function () {
         goodsTable.querySelectorAll("tr").forEach(tr => tr.remove());
@@ -90,7 +99,7 @@
         goodsTable.querySelectorAll("tr").forEach(tr => idGoods.push(parseInt(tr.dataset.idgood)));
         shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
         if (idShops.length > 0 & idGoods.length > 0)
-            window.open("/GoodsPrint/GenerateTamplateCashier?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
+            window.open("/GoodsPrint/GenerateTamplateCashier?noPrice=" + checkNoPrice.checked + "&idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
     }
 
     function generateTamplateShowCase() {
@@ -99,7 +108,7 @@
         goodsTable.querySelectorAll("tr").forEach(tr => idGoods.push(parseInt(tr.dataset.idgood)));
         shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
         if (idShops.length > 0 & idGoods.length > 0)
-            window.open("/GoodsPrint/GenerateTamplateShowCase?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
+            window.open("/GoodsPrint/GenerateTamplateShowCase?noPrice=" + checkNoPrice.checked + "&idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
     }
 
     function generateTamplateShowCase100() {
@@ -108,6 +117,6 @@
         goodsTable.querySelectorAll("tr").forEach(tr => idGoods.push(parseInt(tr.dataset.idgood)));
         shopsContainer.querySelectorAll("span").forEach(span => { if (span.classList.contains("btn-primary")) idShops.push(parseInt(span.dataset.id)); })
         if (idShops.length > 0 & idGoods.length > 0)
-            window.open("/GoodsPrint/GenerateTamplateShowCase100?idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
+            window.open("/GoodsPrint/GenerateTamplateShowCase100?noPrice=" + checkNoPrice.checked + "&idShops=" + JSON.stringify(idShops) + "&idGoods=" + JSON.stringify(idGoods), "_blank");
     }
 </script>

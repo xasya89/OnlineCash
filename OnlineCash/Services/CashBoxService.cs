@@ -15,11 +15,13 @@ namespace OnlineCash.Services
         shopContext db;
         IGoodBalanceService goodBalanceService;
         CashMoneyService _moneyService;
-        public CashBoxService(shopContext db, IGoodBalanceService goodBalanceService, CashMoneyService moneyService)
+        MoneyBalanceService _moneyBalanceService;
+        public CashBoxService(shopContext db, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyBalanceService, CashMoneyService moneyService)
         {
             this.db = db;
             this.goodBalanceService = goodBalanceService;
             _moneyService = moneyService;
+            _moneyBalanceService = moneyBalanceService;
         }
         public async Task<bool> Buy(Guid uuid, List<CashBoxBuyReturnModel> buylist)
         {
@@ -83,6 +85,8 @@ namespace OnlineCash.Services
             shift.SumNoElectron += check.SumCash;
             shift.SumAll += check.SumCash + check.SumElectron - check.SumDiscount;
             await db.SaveChangesAsync();
+            if (check.SumCash > 0)
+                await _moneyBalanceService.AddSale(shift.ShopId, check.SumCash);
         }
 
         public async Task<bool> CloseShift(Guid uuid, DateTime stop)

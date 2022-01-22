@@ -29,7 +29,7 @@ namespace OnlineCash.Controllers.Api
         [HttpGet]
         public async Task<IEnumerable<GoodGroup>> Get() => 
             await db.GoodGroups
-                .Include(g=>g.Goods)
+                .Include(g=>g.Goods.Where(g=>g.IsDeleted==false))
                 .ThenInclude(g=>g.Supplier)
                 .OrderBy(g=>g.Name)
                 .ToListAsync();
@@ -37,7 +37,7 @@ namespace OnlineCash.Controllers.Api
         [HttpGet("tree")]
         public async Task<IActionResult> GetTree()
         {
-            var groups = await db.GoodGroups.Include(gr=>gr.Goods).ThenInclude(g=>g.Supplier).OrderBy(gr => gr.Name).ToListAsync();
+            var groups = await db.GoodGroups.Include(gr=>gr.Goods.Where(g=>g.IsDeleted==false)).ThenInclude(g=>g.Supplier).OrderBy(gr => gr.Name).ToListAsync();
             List<Models.GroupTreeModel> model = new List<Models.GroupTreeModel>();
             foreach(var group in groups)
             {
@@ -90,6 +90,7 @@ namespace OnlineCash.Controllers.Api
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            return BadRequest();
             if (await db.Goods.CountAsync(g => g.GoodGroupId == id) != 0)
                 return BadRequest();
             var goodgroup = await db.GoodGroups.Where(gg => gg.Id == id).FirstOrDefaultAsync();

@@ -192,13 +192,17 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> PaymentsList()
         {
             ViewBag.Banks = await db.BankAccounts.ToListAsync();
+            var with = DateTime.Now.AddDays(-30).Date;
+            var by = DateTime.Now.Date;
+            ViewBag.With = with;
+            ViewBag.By = by;
             return View(await db.Arrivals
                 .Include(a => a.Shop)
                 .Include(a => a.Supplier)
                 .Include(a => a.ArrivalPayments)
-                .Where(a => a.isSuccess == true & a.SumArrivals - a.SumPayments > 0 & a.SumArrivals - a.SumPayments > 0)
-                .OrderBy(a => a.DateArrival)
-                .OrderBy(a => a.DateArrival)
+                //.Where(a => a.isSuccess == true & a.SumArrivals - a.SumPayments > 0 & a.SumArrivals - a.SumPayments > 0)
+                .Where(a => DateTime.Compare(with,a.DateArrival)==-1 & DateTime.Compare(a.DateArrival,by)==-1)
+                .OrderByDescending(a => a.DateArrival)
                 .ToListAsync());
         }
 
@@ -209,26 +213,26 @@ namespace OnlineCash.Controllers
             if(!string.IsNullOrEmpty(with) & string.IsNullOrEmpty(by))
             {
                 var withDate = Convert.ToDateTime(with).Date;
+                ViewBag.With = withDate;
                 return View(await db.Arrivals
                     .Include(a => a.Shop)
                     .Include(a => a.Supplier)
                     .Include(a => a.ArrivalPayments)
                     .Where(a => DateTime.Compare(a.DateArrival, withDate) >= 0)
-                    .OrderBy(a => a.DateArrival)
-                    .OrderBy(a => a.DateArrival)
+                    .OrderByDescending(a => a.DateArrival)
                     .ToListAsync());
             };
                 
             if (!string.IsNullOrEmpty(by) & string.IsNullOrEmpty(with))
             {
                 DateTime byDate = Convert.ToDateTime(by).Date;
+                ViewBag.By = byDate;
                 return View(await db.Arrivals
                     .Include(a => a.Shop)
                     .Include(a => a.Supplier)
                     .Include(a => a.ArrivalPayments)
                     .Where(a => a.isSuccess & DateTime.Compare(a.DateArrival, byDate) <= 0)
-                    .OrderBy(a => a.DateArrival)
-                    .OrderBy(a => a.DateArrival)
+                    .OrderByDescending(a => a.DateArrival)
                     .ToListAsync());
             }
 
@@ -236,23 +240,26 @@ namespace OnlineCash.Controllers
             {
                 DateTime withDate = Convert.ToDateTime(with).Date;
                 DateTime byDate = Convert.ToDateTime(by).Date;
+                ViewBag.With = withDate;
+                ViewBag.By = byDate;
                 return View(await db.Arrivals
                     .Include(a => a.Shop)
                     .Include(a => a.Supplier)
                     .Include(a => a.ArrivalPayments)
                     .Where(a => a.isSuccess == true & DateTime.Compare(a.DateArrival, Convert.ToDateTime(with)) >= 0 & DateTime.Compare(a.DateArrival, Convert.ToDateTime(by)) <= 0)
-                    .OrderBy(a => a.DateArrival)
-                    .OrderBy(a => a.DateArrival)
+                    .OrderByDescending(a => a.DateArrival)
                     .ToListAsync());
             }
-                
+            var withDt = DateTime.Now.AddDays(-30).Date;
+            var byDt = DateTime.Now.Date;
+            ViewBag.With = withDt;
+            ViewBag.By = byDt;
             return View(await db.Arrivals
                 .Include(a => a.Shop)
                 .Include(a=>a.Supplier)
                 .Include(a=>a.ArrivalPayments)
-                .Where(a => a.isSuccess==true & a.SumArrivals - a.SumPayments > 0 & a.SumArrivals - a.SumPayments > 0)
-                .OrderBy(a => a.DateArrival)
-                .OrderBy(a => a.DateArrival)
+                .Where(a => DateTime.Compare(withDt, a.DateArrival) == -1 & DateTime.Compare(a.DateArrival, byDt) == -1)
+                .OrderByDescending(a => a.DateArrival)
                 .ToListAsync());
         }
 
