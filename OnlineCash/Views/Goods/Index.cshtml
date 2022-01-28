@@ -94,7 +94,7 @@
                 <td><i class="@barcodeIcon"></i></td>
                 <td>@g.GoodGroup?.Name</td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Name</a></td>
-                <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit</a></td>
+                <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Unit.GetDescription()</a></td>
                 <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@g.Id">@g.Price</a></td>
                 <td>
                     @if((ViewBag.Shops as List<Shop>).Count==g.GoodPrices.Count(gp => gp.BuySuccess))

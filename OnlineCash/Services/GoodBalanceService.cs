@@ -68,7 +68,12 @@ namespace OnlineCash.Services
                     .ToListAsync();
                 foreach (var shift in shifts)
                     foreach (var sale in shift.ShiftSales)
-                        BalanceGoodMinus(balanceDict, sale.GoodId, sale.Count);
+                    {
+                        if (sale.Count > 0)
+                            BalanceGoodMinus(balanceDict, sale.GoodId, sale.Count);
+                        if (sale.CountReturn > 0)
+                            BalanceGoodPlus(balanceDict, sale.GoodId, (double)sale.CountReturn);
+                    }
 
                 foreach (var balance in balanceDict)
                     db.GoodBalanceHistories.Add(new GoodBalanceHistory
@@ -161,7 +166,30 @@ namespace OnlineCash.Services
 
         public async Task PlusAsync(int ShopId, int GoodId, double Count)
         {
+            var balanceHistory = await db.GoodBalanceHistories
+                .Where(b => b.ShopId == ShopId & b.GoodId == GoodId & b.CurDate == DateTime.Now.Date).FirstOrDefaultAsync();
+            if (balanceHistory != null)
+                balanceHistory.CountLast += Count;
+            else
+                db.GoodBalanceHistories.Add(new GoodBalanceHistory
+                {
+                    ShopId = ShopId,
+                    GoodId = GoodId,
+                    CurDate = DateTime.Now,
+                    CountLast = Count
+                });
 
+            var balance = await db.GoodBalances.Where(b => b.ShopId == ShopId & b.GoodId == GoodId).FirstOrDefaultAsync();
+            if (balance == null)
+                db.GoodBalances.Add(new GoodBalance
+                {
+                    GoodId = GoodId,
+                    ShopId = ShopId,
+                    Count =  Count
+                });
+            else
+                balance.Count += Count;
+            await db.SaveChangesAsync();
         }
 
         public async Task PlusAsync(List<GoodBalanceModel> model)

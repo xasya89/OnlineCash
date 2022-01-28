@@ -23,6 +23,7 @@ namespace OnlineCash.Services
             _moneyService = moneyService;
             _moneyBalanceService = moneyBalanceService;
         }
+        //TODO: Возможно данный метод не нужен
         public async Task<bool> Buy(Guid uuid, List<CashBoxBuyReturnModel> buylist)
         {
             var shift = await db.Shifts.Where(s => s.Uuid == uuid & s.Stop == null).FirstOrDefaultAsync();
@@ -68,25 +69,53 @@ namespace OnlineCash.Services
             {
                 var good = goods.Where(g => g.Uuid == checkGood.Uuid).FirstOrDefault();
                 var sale = await db.ShiftSales.Where(s => s.ShiftId == shift.Id & s.GoodId == good.Id & s.Price == checkGood.Price).FirstOrDefaultAsync();
-                if (sale != null)
-                    sale.Count += (double)checkGood.Count;
-                else
-                    db.ShiftSales.Add(new ShiftSale
-                    {
-                        Shift = shift,
-                        Good = good,
-                        Price = checkGood.Price,
-                        Count = (double)checkGood.Count
-                    });
-                await goodBalanceService.MinusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
+                if (check.IsReturn == false)
+                {
+                    if (sale != null)
+                        sale.Count += (double)checkGood.Count;
+                    else
+                        db.ShiftSales.Add(new ShiftSale
+                        {
+                            Shift = shift,
+                            Good = good,
+                            Price = checkGood.Price,
+                            Count = (double)checkGood.Count
+                        });
+                    await goodBalanceService.MinusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
+                }
+                if (check.IsReturn == true)
+                {
+                    if (sale != null)
+                        sale.CountReturn += checkGood.Count;
+                    else
+                        db.ShiftSales.Add(new ShiftSale
+                        {
+                            Shift = shift,
+                            Good = good,
+                            PriceReturn = checkGood.Price,
+                            CountReturn = checkGood.Count
+                        });
+                    await goodBalanceService.PlusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
+                }
             }
-            shift.SumSell += check.SumCash+check.SumElectron-check.SumDiscount;
-            shift.SumElectron += check.SumElectron;
-            shift.SumNoElectron += check.SumCash;
-            shift.SumAll += check.SumCash + check.SumElectron - check.SumDiscount;
+            if (check.IsReturn == false)
+            {
+                shift.SumSell += check.SumCash + check.SumElectron - check.SumDiscount;
+                shift.SumElectron += check.SumElectron;
+                shift.SumNoElectron += check.SumCash;
+                shift.SumAll += check.SumCash + check.SumElectron - check.SumDiscount;
+            }
+            if (check.IsReturn == true)
+            {
+                shift.SumReturnElectron += check.SumElectron;
+                shift.SumReturnCash += check.SumCash;
+                shift.SumAll -= check.SumCash + check.SumElectron;
+            }
             await db.SaveChangesAsync();
-            if (check.SumCash > 0)
+            if (check.SumCash > 0 && check.IsReturn==false)
                 await _moneyBalanceService.AddSale(shift.ShopId, check.SumCash);
+            if (check.SumCash > 0 && check.IsReturn == true)
+                await _moneyBalanceService.AddReturn(shift.ShopId, check.SumCash);
         }
 
         public async Task<bool> CloseShift(Guid uuid, DateTime stop)
@@ -103,13 +132,13 @@ namespace OnlineCash.Services
                 Sum = shift.SumNoElectron,
                 Note = $"Смена № {shift.Id} от {shift.Start.ToString("dd.MM.yy")}"
             });
-            if(shift.SummReturn>0)
+            if(shift.SumReturnCash>0)
                 await _moneyService.Add(shift.ShopId, new CashMoney
                 {
                     Create = stop,
                     TypeOperation = CashMoneyTypeOperations.Return,
-                    Sum = shift.SummReturn,
-                    Note = $"Смена № {shift.Id} от {shift.Start.ToString("dd.MM.yy")}"
+                    Sum = shift.SumReturnCash,
+                    Note = $"Смена возврат № {shift.Id} от {shift.Start.ToString("dd.MM.yy")}"
                 });
             return true;
         }

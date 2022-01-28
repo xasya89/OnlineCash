@@ -13,6 +13,7 @@ using OnlineCash.Services;
 
 namespace OnlineCash.Controllers.Api
 {
+    //TODO: Возможно старый контроллер, который получал из кассы отчет за смену в конце смены. Нужно разобраться и удалить
     [Route("api/[controller]")]
     [ApiController]
     public class Shifts : ControllerBase
@@ -58,7 +59,7 @@ namespace OnlineCash.Controllers.Api
                         Start = shift.Start,
                         Stop = shift.Stop,
                         SumIncome = shift.SumIncome,
-                        SummReturn = shift.SummReturn,
+                        //SummReturn = shift.SummReturn,
                         SumOutcome = shift.SumOutcome,
                         SumSell = shift.SumSell,
                         SumAll = shift.SumAll
@@ -161,7 +162,7 @@ namespace OnlineCash.Controllers.Api
                     Start = shift.Start,
                     Stop = shift.Stop,
                     SumIncome = shift.SumIncome,
-                    SummReturn = shift.SummReturn,
+                    //SummReturn = shift.SummReturn,
                     SumOutcome = shift.SumOutcome,
                     SumNoElectron = shift.SumNoElectron,
                     SumElectron = shift.SumElectron,

@@ -10,8 +10,8 @@ namespace OnlineCash.Models
     {
         public Good Good { get; set; }
         public double CountSell { get; set; }
-        public double CountReturn { get; set; }
-        public double CountAll { get; set; }
+        public decimal CountReturn { get; set; }
+        public decimal CountAll { get; set; }
         public decimal SumAll { get; set; }
     }
 }

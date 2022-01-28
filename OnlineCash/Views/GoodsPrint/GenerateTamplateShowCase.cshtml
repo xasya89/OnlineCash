@@ -47,7 +47,7 @@
         @foreach (var goodWithBalance in Model)
             foreach (var price in goodWithBalance.Good.GoodPrices)
             {
-                decimal? pricePrint = ViewBag.NoPrice != true ? Math.Round(price.Price / 10, 2) : null;
+                decimal? pricePrint = ViewBag.NoPrice != true ? Math.Round(price.Price, 2) : null;
         <div class="price">
             <h5 style="width:56mm; min-height: 15mm; overflow-x: hidden; text-overflow: ellipsis">
                 @goodWithBalance.Good.Name

@@ -20,7 +20,7 @@ namespace OnlineCash.DataBaseModels
         public CashMoneyTypeOperations TypeOperation { get; set; }
         [Required]
         public decimal Sum { get; set; }
-        [Required]
+        
         public string Note { get; set; }
     }
 
@@ -32,7 +32,7 @@ namespace OnlineCash.DataBaseModels
         Outcome = 1,
         [Description("Продажи")]
         Sale=2,
-        [Description("Возврат покупателем")]
+        [Description("Возврат")]
         Return=3
     }
 }

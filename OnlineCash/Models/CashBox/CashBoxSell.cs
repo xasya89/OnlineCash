@@ -15,6 +15,7 @@ namespace OnlineCash.Models.CashBox
 
     public class CashBoxCheckSellModel
     {
+        public bool IsReturn { get; set; }
         public DateTime Create { get; set; }
         public decimal SumCash { get; set; }
         public decimal SumElectron { get; set; }

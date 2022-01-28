@@ -10,11 +10,11 @@ namespace OnlineCash.Services
     public class CashMoneyService
     {
         shopContext _db;
-        MoneyBalanceService _moneyService;
-        public CashMoneyService(shopContext db, MoneyBalanceService moneyService)
+        MoneyBalanceService _moneyBalanceService;
+        public CashMoneyService(shopContext db, MoneyBalanceService moneyBalanceService)
         {
             _db = db;
-            _moneyService = moneyService;
+            _moneyBalanceService = moneyBalanceService;
         }
 
         public async Task<List<CashMoney>> Get() => await _db.CashMoneys.Include(c=>c.Shop).OrderByDescending(c => c.Id).Take(100).ToListAsync();
@@ -46,22 +46,27 @@ namespace OnlineCash.Services
 
         public async Task Add(int shopId, CashMoney model)
         {
+            if (DateTime.Compare(DateTime.Now.Date, model.Create.Date) == -1)
+                throw new Exception("В докуменете поступления денег дата болше текущей");
             var shop = _db.Shops.Where(s => s.Id == shopId).FirstOrDefault();
             if (shop == null)
                 throw new Exception($"Магазин c id - {shopId} не найден");
             var cashMoney = await _db.CashMoneys.Where(c => c.Uuid == model.Uuid).FirstOrDefaultAsync();
             if (cashMoney != null)
                 throw new Exception($"Операция {model.TypeOperation.GetDescription()} с uuid - {model.Uuid} уже существует");
-            _db.CashMoneys.Add(new CashMoney { Shop=shop, Uuid = model.Uuid, Create = model.Create, TypeOperation = model.TypeOperation, Sum = model.Sum, Note = model.Note });
+            _db.CashMoneys.Add(new CashMoney { Shop = shop, Uuid = model.Uuid, Create = model.Create, TypeOperation = model.TypeOperation, Sum = model.Sum, Note = model.Note });
             await _db.SaveChangesAsync();
-            if (model.TypeOperation == CashMoneyTypeOperations.Sale)
-                await _moneyService.AddSale(shopId, model.Sum);
-            if (model.TypeOperation == CashMoneyTypeOperations.Return)
-                await _moneyService.AddReturn(shopId, model.Sum);
-            if (model.TypeOperation == CashMoneyTypeOperations.Income)
-                await _moneyService.AddIncome(shopId, model.Sum);
-            if (model.TypeOperation == CashMoneyTypeOperations.Outcome)
-                await _moneyService.AddOutcome(shopId, model.Sum);
+            if (DateTime.Compare(model.Create.Date, DateTime.Now.Date) == -1)
+                await _moneyBalanceService.Calculate(shopId, model.Create.Date);
+            else
+            {
+                if (model.TypeOperation == CashMoneyTypeOperations.Sale)
+                    await _moneyBalanceService.AddSale(shopId, model.Sum);
+                if (model.TypeOperation == CashMoneyTypeOperations.Income)
+                    await _moneyBalanceService.AddIncome(shopId, model.Sum);
+                if (model.TypeOperation == CashMoneyTypeOperations.Outcome)
+                    await _moneyBalanceService.AddOutcome(shopId, model.Sum);
+            }
         }
     }
 }

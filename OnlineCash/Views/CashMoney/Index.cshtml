@@ -22,36 +22,38 @@
     <button type="submit" class="btn btn-primary col-auto">Выбрать</button>
 </form>
 
-<table class="table table-sm table-bordered table-hover table-striped">
-    <thead>
-        <tr>
-            <th>Дата</th>
-            <th>Магазин</th>
-            <th>Внесение <br />Продажи</th>
-            <th>Изъятие <br />Возвраты</th>
-            <th>Примечание</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var cashMoney in Model)
-        {
-            var sumPlus = cashMoney.TypeOperation == CashMoneyTypeOperations.Income || cashMoney.TypeOperation== CashMoneyTypeOperations.Sale ? cashMoney.Sum : 0;
-            var sumMinus = cashMoney.TypeOperation == CashMoneyTypeOperations.Outcome || cashMoney.TypeOperation == CashMoneyTypeOperations.Return ? cashMoney.Sum : 0;
+<div class="table-responsive table-responsive-sm">
+    <table class="table table-sm table-bordered table-hover table-striped">
+        <thead>
             <tr>
-                <td>@cashMoney.Create.ToString("dd.MM.yy HH:mm")</td>
-                <td>@cashMoney.Shop?.Name</td>
-                <td>@sumPlus</td>
-                <td>@sumMinus</td>
-                <td>@cashMoney.Note</td>
+                <th>Дата</th>
+                <th>Магазин</th>
+                <th>Внесение <br />Продажи</th>
+                <th>Изъятие <br />Возвраты</th>
+                <th>Примечание</th>
             </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <th colspan="2">Итого</th>
-            <th>@Model.Where(c => c.TypeOperation == CashMoneyTypeOperations.Income).Sum(c => c.Sum)</th>
-            <th>@Model.Where(c => c.TypeOperation == CashMoneyTypeOperations.Outcome).Sum(c => c.Sum)</th>
-            <th></th>
-        </tr>
-    </tfoot>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var cashMoney in Model)
+            {
+                var sumPlus = cashMoney.TypeOperation == CashMoneyTypeOperations.Income || cashMoney.TypeOperation == CashMoneyTypeOperations.Sale ? cashMoney.Sum : 0;
+                var sumMinus = cashMoney.TypeOperation == CashMoneyTypeOperations.Outcome || cashMoney.TypeOperation == CashMoneyTypeOperations.Return ? cashMoney.Sum : 0;
+                <tr>
+                    <td>@cashMoney.Create.ToString("dd.MM.yy HH:mm")</td>
+                    <td>@cashMoney.Shop?.Name</td>
+                    <td>@sumPlus</td>
+                    <td>@sumMinus</td>
+                    <td>@cashMoney.Note</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2">Итого</th>
+                <th>@Model.Where(c => c.TypeOperation == CashMoneyTypeOperations.Income).Sum(c => c.Sum)</th>
+                <th>@Model.Where(c => c.TypeOperation == CashMoneyTypeOperations.Outcome).Sum(c => c.Sum)</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

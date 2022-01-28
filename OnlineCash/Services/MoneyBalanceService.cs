@@ -67,7 +67,7 @@ namespace OnlineCash.Services
                 foreach(var shift in await _db.Shifts.Where(s=>s.Start.Date== curDay).ToListAsync())
                 {
                     curBalanceNew.SumSale += shift.SumNoElectron;
-                    curBalanceNew.SumReturn += shift.SummReturn;
+                    curBalanceNew.SumReturn += shift.SumReturnCash;
                 }
                 curBalanceNew.SumEnd = sumStart + curBalanceNew.SumSale + curBalanceNew.SumIncome - curBalanceNew.SumReturn - curBalanceNew.SumOutcome + curBalanceNew.SumOther;
                 _db.MoneyBalanceHistories.Add(curBalanceNew);

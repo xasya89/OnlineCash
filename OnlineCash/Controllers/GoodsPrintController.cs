@@ -59,7 +59,7 @@ namespace OnlineCash.Controllers
                     Good = good
                 });
             ViewBag.NoPrice = noPrice;
-            return View(goodBalances);
+            return View("GenerateTamplateShowCase",goodBalances);
         }
 
         /// <summary>

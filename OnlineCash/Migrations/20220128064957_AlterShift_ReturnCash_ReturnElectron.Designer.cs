@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220128064957_AlterShift_ReturnCash_ReturnElectron")]
+    partial class AlterShift_ReturnCash_ReturnElectron
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -689,6 +691,9 @@ namespace OnlineCash.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("SumSell")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("SummReturn")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<Guid>("Uuid")

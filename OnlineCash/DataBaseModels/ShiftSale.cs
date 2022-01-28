@@ -15,5 +15,8 @@ namespace OnlineCash.DataBaseModels
         public double Count { get; set; }
         public decimal Price { get; set; }
         public decimal Sum { get => (decimal)Count * Price; }
+        public decimal CountReturn { get; set; }
+        public decimal PriceReturn { get; set; }
+        public decimal SumReturn { get => CountReturn * PriceReturn; }
     }
 }

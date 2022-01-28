@@ -1,0 +1,345 @@
+2022-01-25T10:14:24.4561109+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T10:14:24.4633629+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T10:14:24.4663924+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T10:14:30.8406813+03:00 80000078-0000-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:15:02.2895200+03:00 80000046-0002-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:15:04.8871688+03:00 80000048-0002-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:16:10.8738064+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T10:16:10.8808301+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T10:16:10.8837681+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T10:16:20.9334572+03:00 80000042-0000-fc00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:16:32.9410723+03:00 80000081-0002-ff00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:16:35.5399346+03:00 80000073-0003-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:18:28.2527579+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T10:18:28.2594890+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T10:18:28.2621530+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T10:18:35.6331657+03:00 80000075-0003-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:18:49.6453363+03:00 80000079-0003-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:18:51.8963757+03:00 8000007f-0000-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:19:48.5751269+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T10:19:48.5818967+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T10:19:48.5844356+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T10:19:52.1649285+03:00 80000084-0002-ff00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:20:08.7109721+03:00 8000008a-0002-ff00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:20:12.3198506+03:00 80000083-0000-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:22:41.9827931+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T10:22:41.9900186+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T10:22:41.9928878+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T10:22:47.2883767+03:00 8000004a-0000-fc00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:23:04.1240759+03:00 8000013a-0001-fd00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T10:23:05.7409078+03:00 8000004e-0000-fc00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T11:57:33.3693023+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T11:57:33.3773975+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T11:57:33.3796047+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T12:51:52.9596816+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T12:51:52.9945800+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T12:51:53.0055272+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T12:51:58.5244946+03:00 8000008a-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:52:59.1864029+03:00 8000008b-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:53:59.6057430+03:00 8000008c-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:55:00.1655006+03:00 8000008d-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:56:00.6143757+03:00 8000008e-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:57:01.1447303+03:00 8000008f-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:58:01.5251856+03:00 80000090-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T12:59:01.9568993+03:00 80000091-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:00:02.4779239+03:00 80000092-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:01:02.8848059+03:00 80000093-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:02:03.3545034+03:00 80000094-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:02:29.9353239+03:00 80000096-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:03:30.5023213+03:00 80000097-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:04:31.0156464+03:00 80000098-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:05:31.4424889+03:00 80000099-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:06:31.9081099+03:00 8000009a-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:07:32.3948690+03:00 8000009b-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:08:32.8439631+03:00 8000009c-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:09:33.2225017+03:00 8000009d-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:10:33.6882153+03:00 8000009e-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:11:34.0766675+03:00 8000009f-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:12:34.4788375+03:00 800000a0-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:13:34.9013758+03:00 800000a1-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:14:35.2927318+03:00 800000a2-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:15:35.6835876+03:00 800000a3-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:16:36.1415366+03:00 800000a4-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:17:36.6281609+03:00 800000a5-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:18:37.0601591+03:00 800000a6-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:19:37.4403074+03:00 800000a7-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:20:37.8756550+03:00 800000a8-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:21:38.2965035+03:00 800000a9-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:22:38.7449339+03:00 800000aa-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:23:39.1840727+03:00 800000ab-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:24:39.5764626+03:00 800000ac-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:25:39.9419550+03:00 800000ad-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:26:40.3316570+03:00 800000ae-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:27:40.7782874+03:00 800000af-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:28:41.2867989+03:00 800000b0-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:29:41.6674558+03:00 800000b1-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:30:42.0988607+03:00 800000b2-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:31:42.4875313+03:00 800000b3-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:32:42.8879126+03:00 800000b4-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:33:43.2670941+03:00 800000b5-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:34:43.6995203+03:00 800000b6-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:35:44.1041947+03:00 800000b7-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:36:44.4716020+03:00 800000b8-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:37:44.8490524+03:00 800000b9-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:38:45.1797049+03:00 800000ba-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:39:45.5917964+03:00 800000bb-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:40:45.9146799+03:00 800000bc-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:41:46.3332907+03:00 800000bd-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:42:46.7109750+03:00 800000be-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:43:47.0602287+03:00 800000bf-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:44:47.4530632+03:00 800000c0-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:45:47.8764752+03:00 800000c1-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:46:48.2215873+03:00 800000c2-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:47:48.5804003+03:00 800000c3-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:48:49.0090000+03:00 800000c4-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:49:49.3943787+03:00 800000c5-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:50:49.7987697+03:00 800000c6-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:51:50.1854558+03:00 800000c7-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:52:50.5642170+03:00 800000c8-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:53:51.0096074+03:00 800000c9-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T13:56:44.2120389+03:00 80000091-0002-ff00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T14:01:12.3273188+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:01:12.3338285+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:01:12.3366158+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:02:12.9485486+03:00 8000003d-0001-fe00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T14:03:19.3673271+03:00 80000060-0003-ff00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T14:04:22.7554104+03:00 800000cb-0000-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T14:05:06.3214290+03:00 80000140-0001-fd00-b63f-84710c7967bb [ERR] Операция Изъятие с uuid - 08edee9f-6d9a-4ed1-af7a-8c83f766c2e4 уже существует
+   at OnlineCash.Services.CashMoneyService.Add(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashMoneyService.cs:line 54
+   at OnlineCash.Controllers.Api.OnlineCash.CashMoneysController.Recive(Int32 shopId, CashMoney model) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\OnlineCash\CashMoneysController.cs:line 33 (042b9d80)
+2022-01-25T14:06:26.8825601+03:00 80000052-0000-fc00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T14:18:57.8618152+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:18:57.8690473+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:18:57.8715447+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:22:05.9475021+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:22:05.9538382+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:22:05.9564217+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:23:07.2599195+03:00 8000001c-0000-fa00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T14:28:04.9962141+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:28:05.0037604+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:28:05.0062713+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:28:09.7392276+03:00 800000d5-0000-fd00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T14:47:32.8602423+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:47:32.8670048+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:47:32.8697092+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:50:58.0619288+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:50:58.0683998+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:50:58.0706634+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:57:53.5238388+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T14:57:53.5323722+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T14:57:53.5356050+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T14:58:27.0033806+03:00 800000d8-0000-fd00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T15:00:03.1651743+03:00 8000005f-0002-fe00-b63f-84710c7967bb [ERR] An unhandled exception has occurred while executing the request. (48a46595)
+Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException: Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ThrowAggregateUpdateConcurrencyException(Int32 commandIndex, Int32 expectedRowsAffected, Int32 rowsAffected)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithoutPropagationAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(DbContext _, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Pomelo.EntityFrameworkCore.MySql.Storage.Internal.MySqlExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at OnlineCash.Services.GoodBalanceService.CalcAsync(Int32 ShopId, DateTime date) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\GoodBalanceService.cs:line 91
+   at OnlineCash.Services.CashBoxService.CloseShift(Guid uuid, DateTime stop) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Services\CashBoxService.cs:line 125
+   at OnlineCash.Controllers.Api.CashboxController.CloseShift(Guid uuid, String stop) in C:\Users\xasya\source\repos\OnlineCash\OnlineCash\Controllers\Api\CashboxController.cs:line 49
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|24_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|19_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-01-25T15:02:01.2393772+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:02:01.2502686+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:02:01.2531603+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:04:08.9807645+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:04:08.9893293+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:04:08.9921786+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:05:03.5856680+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:05:03.5935105+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:05:03.5957142+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:08:14.5318266+03:00 80000058-0002-fd00-b63f-84710c7967bb [WRN] The query uses a row limiting operator ('Skip'/'Take') without an 'OrderBy' operator. This may lead to unpredictable results. (96eb03fe)
+2022-01-25T15:16:03.8779169+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:16:03.8854887+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:16:03.8885425+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:26:24.8804509+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:26:24.8882913+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:26:24.8904690+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:28:48.4661971+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:28:48.4739545+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:28:48.4768917+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:30:17.6911949+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:30:17.6975871+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:30:17.6996824+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:30:24.6491863+03:00 80000089-0003-ff00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T15:42:42.5502081+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:42:42.5569394+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:42:42.5591392+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:45:05.3075915+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:45:05.3166632+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:45:05.3212851+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:46:34.4493180+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:46:34.4571377+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:46:34.4599266+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:47:03.7492932+03:00 80000167-0001-fd00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T15:56:12.9181035+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T15:56:12.9246376+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T15:56:12.9270991+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T15:56:23.2336532+03:00 80000095-0003-ff00-b63f-84710c7967bb [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results. (f43d926b)
+2022-01-25T15:58:07.9188957+03:00 800000b0-0003-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T15:58:08.9463237+03:00 800000b2-0003-fe00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T20:55:29.3768754+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2022-01-25T20:55:29.3844731+03:00  [INF] Hosting environment: "Development" (c3307c92)
+2022-01-25T20:55:29.3875693+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)
+2022-01-25T20:55:35.7753509+03:00 8000009b-0003-ff00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T20:55:52.3375018+03:00 80000075-0000-fc00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)
+2022-01-25T20:55:53.8569116+03:00 800000a1-0003-ff00-b63f-84710c7967bb [WRN] Compiling a query which loads related collections for more than one collection navigation either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured. By default Entity Framework will use 'QuerySplittingBehavior.SingleQuery' which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))' (74d62de4)

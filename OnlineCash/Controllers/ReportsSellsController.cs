@@ -37,16 +37,16 @@ namespace OnlineCash.Controllers
             var reportSell = new ReportSellModel { 
                 Shop = shift.Shop, 
                 Start = shift.Start,
-                SumSell=shift.SumSell
+                SumSell=shift.SumSell,
             };
             foreach (var sell in shift.ShiftSales)
                 reportSell.ReportGoods.Add(new ReportSellGoodModel
                 {
                     Good = sell.Good,
                     CountSell = sell.Count,
-                    CountReturn = 0,
-                    CountAll = sell.Count,
-                    SumAll = sell.Price*(decimal)sell.Count
+                    CountReturn = sell.CountReturn,
+                    CountAll = (decimal)sell.Count - sell.CountReturn,
+                    SumAll = sell.Sum - sell.SumReturn
                 });
             return View("Details", reportSell);
         }
