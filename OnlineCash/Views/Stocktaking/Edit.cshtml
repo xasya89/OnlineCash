@@ -142,7 +142,7 @@
                         });
                         let inpCountFact = tr.querySelector("input");
                         if (good.unit == "PCE" || good.unit == "796") {
-                            inpCountFact.value = parseFloat(inpCountFact.value) + 1;
+                            //inpCountFact.value = parseFloat(inpCountFact.value) + 1;
                             changeCountFact(inpCountFact);
                         }
                         flagaded = true;
@@ -153,15 +153,15 @@
                     tr.dataset.idGood = good.id;
                     tr.dataset.id = -1;
                     tr.dataset.price = good.price;
-                    let countFact = good.unit == "PCE" || good.unit == "796" ? 1 : 0;
+                    //let countFact = good.unit == "PCE" || good.unit == "796" ? 1 : 0;
                     tr.innerHTML = `
                     <td>${good.name}</td>
                     <td>${good.unit}</td>
                     <td>${good.price}</td>
                     <td countdb>0</td>
-                    <td><input oninput="changeCountFact(this)" class="form-control form-control-sm" value="${countFact}"></td>
-                    <td countDiff>${countFact}</td>
-                    <td sumDiff>${(parseFloat(good.price) * countFact)}</td>
+                    <td><input oninput="changeCountFact(this)" class="form-control form-control-sm" value=""></td>
+                    <td countDiff></td>
+                    <td sumDiff></td>
 `;
                     tableGoods.prepend(tr);
                 };

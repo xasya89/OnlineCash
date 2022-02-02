@@ -1,66 +1,80 @@
 ﻿@using OnlineCash.DataBaseModels
 @model IEnumerable<OnlineCash.DataBaseModels.Stocktaking>
-
-    <form asp-controller="Stocktaking" asp-action="Create" method="get">
-        <div>
-            <h4>Выберите магазин</h4>
-            <div style="display: inline-block; width:100px">
-                <select name="idShop" class="form-select form-select-sm ">
-                    @foreach(var shop in (List<Shop>)ViewBag.Shops)
-            {
-                <option value="@shop.Id">@shop.Name</option>
-            }
-                </select>
-            </div>
-            <input type="submit" class="btn btn-sm btn-primary " value="создать"/>
+    <div class="row mt-2">
+        <div class="col-12">
+            <h4>Инверторизация</h4>
         </div>
-    </form>
+    </div>
+    <div class="row mt-1">
+        <div class="col-auto">
+            <label>Магазин: </label>
+        </div>
+        <div class="col-auto" style="width:100px">
+            <select id="idShop" class="form-select form-select-sm ">
+                @foreach (var shop in (List<Shop>)ViewBag.Shops)
+                {
+                    <option value="@shop.Id">@shop.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-auto">
+            <input id="btnCreate" type="button" class="btn btn-sm btn-primary " value="создать" />
+        </div>
+        <div class="col-auto">
+            <input id="btnCreateSupplier" type="button" class="btn btn-sm btn-primary " value="создать по поставшикам" />
+        </div>
+    </div>
 
-<table class="table table-hover table-bordered table-sm ">
-    <thead>
-        <tr>
-            <th>Статус</th>
-            <th>Дата</th>
-            <th>Номер</th>
-            <th>Магазин</th>
-            <th>Было в магазине р.</th>
-            <th>Стало в магазине р.</th>
-            <th>Рассхождение р.</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var stocktaking in Model)
-        {
-            string status = "";
-            if (stocktaking.Status == DocumentStatus.Confirm)
-                status = "Подтверждена";
-            if (stocktaking.Status == DocumentStatus.Remove)
-                status = "Отменена";
-            string className = "";
-            className = stocktaking.Status == DocumentStatus.Confirm ? "bg-success" : className;
-            className = stocktaking.Status == DocumentStatus.Remove ? "bg-secondary" : className;
-            string classNameLink = stocktaking.Status==DocumentStatus.Confirm || stocktaking.Status==DocumentStatus.Remove? "link-light" : "link-dark";
-        <tr class="">
-            <td onclick="openStocktaking(@stocktaking.Id)">@status</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Create.ToString("dd.MM")</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Num</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.Shop.Name</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.SumDb</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.SumFact</td>
-            <td onclick="openStocktaking(@stocktaking.Id)">@(stocktaking.SumFact - stocktaking.SumDb)</td>
-            <td>
-                <a href="/stocktaking/summary/@stocktaking.Id" class="btn btn-sm btn-light ">Обобщенно</a>
-                <!--
-                <span onclick="cancelStocktaking(@stocktaking.Id)" class="btn btn-sm btn-light" style="margin-right: 10px"><i class="fa fa-trash"></i> Отменить</span>
-                <a asp-controller="stocktaking" asp-action="Print" asp-route-id="@stocktaking.Id" class="btn btn-sm btn-light "><i class="fa fa-print"></i>Печать</a>
-            -->
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive table-responsive-sm mt-2">
+        <table class="table table-hover table-bordered table-sm ">
+            <thead>
+                <tr>
+                    <th>Статус</th>
+                    <th>Дата</th>
+                    <th>Номер</th>
+                    <th>Магазин</th>
+                    <th>Было в магазине р.</th>
+                    <th>Стало в магазине р.</th>
+                    <th>Рассхождение р.</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stocktaking in Model)
+                {
+                    string status = "";
+                    if (stocktaking.Status == DocumentStatus.Confirm)
+                        status = "Подтверждена";
+                    if (stocktaking.Status == DocumentStatus.Remove)
+                        status = "Отменена";
+                    string className = "";
+                    className = stocktaking.Status == DocumentStatus.Confirm ? "bg-success" : className;
+                    className = stocktaking.Status == DocumentStatus.Remove ? "bg-secondary" : className;
+                    string classNameLink = stocktaking.Status == DocumentStatus.Confirm || stocktaking.Status == DocumentStatus.Remove ? "link-light" : "link-dark";
+                    <tr class="">
+                        <td onclick="openStocktaking(@stocktaking.Id)">@status</td>
+                        <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Create.ToString("dd.MM")</td>
+                        <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking.Num</td>
+                        <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.Shop.Name</td>
+                        <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.SumDb</td>
+                        <td onclick="openStocktaking(@stocktaking.Id)">@stocktaking?.SumFact</td>
+                        <td onclick="openStocktaking(@stocktaking.Id)">@(stocktaking.SumFact - stocktaking.SumDb)</td>
+                        <td>
+                            @if (stocktaking.Status == DocumentStatus.Confirm)
+                            {
+                                <a href="/stocktaking/summary/@stocktaking.Id" class="btn btn-sm btn-light ">Обобщенно</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 <script>
+    const shopId = document.getElementById("idShop");
+    const btnCreate = document.getElementById("btnCreate");
+    const btnCreateSupplier = document.getElementById("btnCreateSupplier");
+
     function openStocktaking(id) {
         window.location.href = "/stocktaking/Edit/" + id;
     }
@@ -68,4 +82,11 @@
         if (confirm("Отменить инверторизацию?"))
             window.location.href = "/stocktaking/Cancel/" + id;
     }
+
+    btnCreate.addEventListener("click", () => {
+        window.location.href = "/stocktaking/create?idShop=" + shopId.value;
+    });
+    btnCreateSupplier.addEventListener("click", () => {
+        window.location.href = "/stocktaking/CreateFromSuppliers?idShop=" + shopId.value;
+    });
 </script>

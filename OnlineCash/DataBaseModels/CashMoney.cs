@@ -30,6 +30,7 @@ namespace OnlineCash.DataBaseModels
         Income = 0,
         [Description("Изъятие")]
         Outcome = 1,
+        //TODO: Возможно стоит переменовать в ShiftReport, т.к. это больше для докумена закрытия смены
         [Description("Продажи")]
         Sale=2,
         [Description("Возврат")]

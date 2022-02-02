@@ -86,8 +86,6 @@ namespace OnlineCash.Services
                 isSuccess = true
             };
             db.Stocktakings.Add(stocktaking);
-            List<StocktakingSummaryGood> summaryes = new List<StocktakingSummaryGood>();
-            var balances = await db.GoodBalances.ToListAsync();
             foreach (var group in model.Groups)
             {
                 var groupDb = new StockTakingGroup { Stocktaking = stocktaking, Name = group.Name };
@@ -97,19 +95,86 @@ namespace OnlineCash.Services
                     var gooddb = goods.Where(g => g.Uuid == good.Uuid).FirstOrDefault();
                     var pricedb = gooddb.GoodPrices.Where(p => p.ShopId == shopId).FirstOrDefault().Price;
                     db.StocktakingGoods.Add(new StocktakingGood { StockTakingGroup = groupDb, GoodId = gooddb.Id, Price = pricedb, CountFact = good.CountFact });
-                    var summary = summaryes.Where(s => s.GoodId == gooddb.Id).FirstOrDefault();
+                }
+            }
+            
+            await db.SaveChangesAsync();
+            await SuccessCalc(stocktaking.Id);
+        }
+
+        public async Task Save(StockTakingSaveModel model)
+        {
+            Stocktaking stocktaking = await db.Stocktakings.Include(s => s.StockTakingGroups).ThenInclude(gr => gr.StocktakingGoods).Where(s => s.Id == model.id).FirstOrDefaultAsync();
+            bool isSuccessOld = stocktaking.isSuccess;
+            stocktaking.isSuccess = model.isSuccess;
+            stocktaking.Status = model.isSuccess ? DocumentStatus.Confirm : stocktaking.Status;
+            foreach (var sgr in model.Groups)
+            {
+                StockTakingGroup group = null;
+                if (sgr.Id == -1)
+                {
+                    group = new StockTakingGroup
+                    {
+                        Name = sgr.Name,
+                        Stocktaking = stocktaking
+                    };
+                    db.StockTakingGroups.Add(group);
+                }
+                else
+                {
+                    group = await db.StockTakingGroups.Where(gr => gr.Id == sgr.Id).FirstOrDefaultAsync();
+                    if (group == null)
+                        throw new Exception("Не найден идентификатор группы");
+                    group.Name = sgr.Name;
+                };
+                //Добавим новые товары
+                foreach (var sg in sgr.Goods.Where(g => g.id == -1).ToList())
+                {
+                    var good = await db.Goods.Include(g => g.GoodPrices).Where(g => g.Id == sg.idGood).FirstOrDefaultAsync();
+                    StocktakingGood stocktakingGood = new StocktakingGood
+                    {
+                        StockTakingGroup = group,
+                        Good = good,
+                        Count = 0,
+                        CountDB = 0,
+                        CountFact = sg.CountFact,
+                        Price = good.GoodPrices.Where(p => p.ShopId == stocktaking.ShopId).FirstOrDefault().Price
+                    };
+                    db.StocktakingGoods.Add(stocktakingGood);
+                }
+                //Изменим количество
+                foreach (var sg in sgr.Goods.Where(g => g.id != -1).ToList())
+                {
+                    StocktakingGood stocktakingGood = await db.StocktakingGoods.Where(g => g.Id == sg.id).FirstOrDefaultAsync();
+                    stocktakingGood.CountFact = sg.CountFact;
+                }
+            }
+            await db.SaveChangesAsync();
+            if (model.isSuccess & !isSuccessOld)
+                await SuccessCalc(stocktaking.Id);
+        }
+
+        private async Task SuccessCalc(int stocktakingId)
+        {
+            var stocktaking = await db.Stocktakings.Include(s=>s.StockTakingGroups).ThenInclude(gr=>gr.StocktakingGoods).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
+            List<StocktakingSummaryGood> summaryes = new List<StocktakingSummaryGood>();
+            var balances = await db.GoodBalances.ToListAsync();
+            foreach (var group in stocktaking.StockTakingGroups)
+                foreach (var good in group.StocktakingGoods)
+                {
+                    var summary = summaryes.Where(s => s.GoodId == good.GoodId).FirstOrDefault();
                     decimal countDb = 0;
-                    var goodBalance = balances.Where(b => b.GoodId == gooddb.Id).FirstOrDefault();
+                    var goodBalance = balances.Where(b => b.GoodId == good.GoodId).FirstOrDefault();
                     if (goodBalance != null)
                         countDb = (decimal)goodBalance.Count;
                     if (summary == null)
                         summaryes.Add(new StocktakingSummaryGood
                         {
                             Stocktaking = stocktaking,
-                            GoodId = gooddb.Id,
+                            GoodId = good.GoodId,
                             CountFact = (decimal)good.CountFact,
                             CountDb = countDb,
-                            Price = pricedb
+                            Price = good.Price
                         });
                     else
                     {
@@ -117,26 +182,28 @@ namespace OnlineCash.Services
                         summary.CountFact += (decimal)good.CountFact;
                     }
                 }
-            }
             //Найдем не указанные в инверторизации товары и добавим их в нераспределенные
+            var goodNotAdded = new List<StocktakingGood>();
+
+            
+            var goods = await db.Goods.Include(g=>g.GoodPrices.Where(s=>s.ShopId==stocktaking.ShopId)).Where(g => g.IsDeleted == false).ToListAsync();
             var groupNoFind = new StockTakingGroup { Stocktaking = stocktaking, Name = "Не указан в инверторизации" };
-            db.StockTakingGroups.Add(groupNoFind);
             foreach (var balance in balances)
                 if (balance.Count != 0)
                 {
                     var find = false;
-                    var good = goods.Where(g => g.Id == balance.GoodId & g.IsDeleted == false).FirstOrDefault();
-                    var pricedb = good?.GoodPrices.Where(p => p.ShopId == shopId).FirstOrDefault().Price;
+                    var good = goods.Where(g => g.Id == balance.GoodId).FirstOrDefault();
+                    var pricedb = good?.GoodPrices.FirstOrDefault().Price;
                     if (good != null)
                     {
-                        foreach (var stGroup in model.Groups)
-                            foreach (var stGood in stGroup.Goods)
-                                if (stGood.Uuid == balance.Good.Uuid)
+                        foreach (var stGroup in stocktaking.StockTakingGroups)
+                            foreach (var stGood in stGroup.StocktakingGoods)
+                                if (stGood.GoodId == balance.Good.Id)
                                     find = true;
                         if (!find)
                         {
-                            db.StocktakingGoods.Add(new StocktakingGood { StockTakingGroup = groupNoFind, GoodId = good.Id, CountDB = balance.Count, CountFact = 0 });
-                            db.StocktakingSummaryGoods.Add(new StocktakingSummaryGood
+                            goodNotAdded.Add(new StocktakingGood { StockTakingGroup = groupNoFind, GoodId = good.Id, CountDB = balance.Count, CountFact = 0 });
+                            summaryes.Add(new StocktakingSummaryGood
                             {
                                 Stocktaking = stocktaking,
                                 GoodId = good.Id,
@@ -147,15 +214,19 @@ namespace OnlineCash.Services
                         }
                     }
                 };
-
-            //запишем итоги
+            if(goodNotAdded.Count>0)
+            {
+                db.StockTakingGroups.Add(groupNoFind);
+                db.StocktakingGoods.AddRange(goodNotAdded);
+            };
             db.StocktakingSummaryGoods.AddRange(summaryes);
 
+            //запишем итоги
             stocktaking.SumDb = summaryes.Sum(s => s.Price * s.CountDb);
             stocktaking.SumFact = summaryes.Sum(s => s.Price * s.CountFact);
-            
+
             await db.SaveChangesAsync();
-            await _goodBalanceService.CalcAsync(shopId, stocktaking.Start);
+            await _goodBalanceService.CalcAsync(stocktaking.ShopId, stocktaking.Start);
         }
     }
 

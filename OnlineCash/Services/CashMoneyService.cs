@@ -60,8 +60,6 @@ namespace OnlineCash.Services
                 await _moneyBalanceService.Calculate(shopId, model.Create.Date);
             else
             {
-                if (model.TypeOperation == CashMoneyTypeOperations.Sale)
-                    await _moneyBalanceService.AddSale(shopId, model.Sum);
                 if (model.TypeOperation == CashMoneyTypeOperations.Income)
                     await _moneyBalanceService.AddIncome(shopId, model.Sum);
                 if (model.TypeOperation == CashMoneyTypeOperations.Outcome)
