@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Hangfire;
 using OnlineCash.Services;
 using Hangfire.MemoryStorage;
+using System.IO;
 
 namespace OnlineCash
 {
@@ -81,7 +82,7 @@ namespace OnlineCash
         {
             int shopIdDefault = Convert.ToInt32(configuration.GetSection("ShopIdDefault").Value);
 
-            loggerFactory.AddFile("log-{Date}.txt");
+            loggerFactory.AddFile(Path.Combine("logs","log-{Date}.txt"));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

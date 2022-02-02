@@ -1,3 +1,0 @@
-2022-01-14T10:06:57.2799349+03:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
-2022-01-14T10:06:57.3121169+03:00  [INF] Hosting environment: "Development" (c3307c92)
-2022-01-14T10:06:57.3147973+03:00  [INF] Content root path: "C:\Users\Xasya\source\repos\OnlineCash\OnlineCash" (b5d60022)

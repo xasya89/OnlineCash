@@ -79,13 +79,15 @@
                             <tbody id="tableGoods">
                                 @foreach (var stgood in group?.StocktakingGoods)
                                 {
-
+                                    string countFact = stgood.CountFact == 0 ? "" : stgood.CountFact.ToString().Replace(",", ".");
+                                    if (Model.Status == DocumentStatus.Confirm)
+                                        countFact = countFact == "" ? "0" : countFact;
                                     <tr data-id="@stgood.Id" data-price="@stgood.Good.Price" data-id-good="@stgood.GoodId">
                                         <td>@stgood.Good.Name</td>
                                         <td>@stgood.Good.Unit</td>
                                         <td>@stgood.Price.ToString().Replace(",", ".")</td>
                                         <td countdb>@stgood.CountDB.ToString().Replace(",", ".")</td>
-                                        <td><input oninput="changeCountFact(this)" class="form-control form-control-sm" value="@stgood.CountFact.ToString().Replace(",",".")"></td>
+                                        <td><input oninput="changeCountFact(this)" class="form-control form-control-sm" value="@countFact"></td>
                                         <td countDiff>@(Math.Round((stgood.CountFact - stgood.CountDB),3).ToString().Replace(",","."))</td>
                                         <td sumDiff>@((stgood.Price* (decimal)(stgood.CountFact - stgood.CountDB)).ToString().Replace(",","."))</td>
                                     </tr>
@@ -206,7 +208,7 @@
                 let idGood = tr.dataset.idGood;
                 let price = tr.dataset.price;
                 let tdCountDb = parseFloat(tr.querySelector("td[countDb]").textContent);
-                let tdCount = parseFloat(tr.querySelector("input").value.replace(",", "."));
+                let tdCount = tr.querySelector("input").value=="" ? 0 : parseFloat(tr.querySelector("input").value.replace(",", "."));
                 goods.push({
                     id: id,
                     idGood: idGood,
