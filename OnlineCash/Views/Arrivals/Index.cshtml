@@ -16,7 +16,8 @@
             <th>Дата</th>
             <th>Поставщик</th>
             <th>Магазин</th>
-            <th>Сумма</th>
+            <th>Зкупка</th>
+            <th>Продажа</th>
             <th>Оплата</th>
         </tr>
     </thead>
@@ -27,14 +28,14 @@
             string className = arrvial.isSuccess ? "bg-success" : "";
             string classTrName = arrvial.isSuccess ? "link-light" : "link-dark";
             string paymentstatus = "";
-            string paymentstatusClass = arrvial.SumPayments - arrvial.SumArrivals >=0 ? "" : "link-danger";
-            if (arrvial.SumPayments - arrvial.SumArrivals == 0)
+            string paymentstatusClass = arrvial.SumPayments - arrvial.SumArrival >=0 ? "" : "link-danger";
+            if (arrvial.SumPayments - arrvial.SumArrival == 0)
                 paymentstatus = $"Оплачен {arrvial.SumPayments}";
             else
-                if (arrvial.SumPayments - arrvial.SumArrivals > 0)
-                paymentstatus = $"Переплата {arrvial.SumPayments - arrvial.SumArrivals}";
+                if (arrvial.SumPayments - arrvial.SumArrival > 0)
+                paymentstatus = $"Переплата {arrvial.SumPayments - arrvial.SumArrival}";
             else
-                paymentstatus = $"Долг {arrvial.SumArrivals - arrvial.SumPayments}";
+                paymentstatus = $"Долг {arrvial.SumArrival - arrvial.SumPayments}";
 
         <tr>
             <td>@isSuccess</td>
@@ -42,7 +43,8 @@
             <td class=""><a class="link-dark" asp-action="Edit" asp-route-ArrivalId="@arrvial.Id">@arrvial.DateArrival.ToString("dd.MM")</a></td>
             <td class="">@arrvial.Supplier?.Name</td>
             <td class="">@arrvial.Shop?.Name</td>
-            <td class="">@arrvial.SumArrivals.ToString()</td>
+            <td class="">@arrvial.SumArrival</td>
+            <td class="">@arrvial.SumSell</td>
             <td class="@paymentstatusClass">@paymentstatus</td>
         </tr>
         }

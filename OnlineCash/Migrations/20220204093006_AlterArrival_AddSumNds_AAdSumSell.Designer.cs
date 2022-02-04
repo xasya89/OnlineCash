@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220204093006_AlterArrival_AddSumNds_AAdSumSell")]
+    partial class AlterArrival_AddSumNds_AAdSumSell
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,16 +27,22 @@ namespace OnlineCash.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<double>("CountAll")
+                        .HasColumnType("double");
+
                     b.Property<DateTime>("DateArrival")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Num")
                         .HasColumnType("longtext");
 
+                    b.Property<decimal>("PriceAll")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<int>("ShopId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("SumArrival")
+                    b.Property<decimal>("SumArrivals")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("SumNds")

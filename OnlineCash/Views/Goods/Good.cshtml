@@ -76,7 +76,7 @@
             <label asp-for="Price">Цена</label>
             <div class="row">
                 <div class="col-4">
-                    <input shoppricemain type="text" asp-for="Price" class="form-control form-control-sm" />
+                    <input oninput="document.querySelectorAll('input[shopprice]').forEach(inp => inp.value = document.querySelector('[shoppricemain]').value)" shoppricemain type="text" asp-for="Price" class="form-control form-control-sm" />
                 </div>
                 <div class="col-auto">
                     <button onclick="document.querySelectorAll('input[shopprice]').forEach(inp => inp.value = document.querySelector('[shoppricemain]').value)" type="button" class="btn btn-sm btn-light">=</button>

@@ -39,92 +39,27 @@
     <label class="col-sm-8 col-form-label col-form-label-sm"></label>
 </div>
 <div class="row mb-2">
-    <label class="col-sm-2 col-form-label ">Оплата: </label>
+    <label class="col-sm-2 col-form-label ">К оплате: </label>
     <div class="col-auto">
-        @{
-            string summary = "";
-            if (Model.SumPayments - Model.SumArrivals == 0)
-                summary = "оплачен " + Model.SumPayments;
-            else
-                if (Model.SumPayments - Model.SumArrivals > 0)
-                summary = "переплата " + (Model.SumPayments - Model.SumArrivals);
-            else
-                summary = "долг " + (Model.SumArrivals - Model.SumPayments);
-
-        }
-        <input id="paymentSummary" value="@summary" class="form-control form-control-sm " readonly style="background: white" />
+        <span id="sumPaymentAll">@Model.SumArrival</span>
     </div>
-    <div class="col-auto">
-        <span id="paymentMore" class="btn btn-sm btn-secondary"><i class="fa fa-arrow-down"></i></span>
-    </div>
-    <!--
-    <div class="col-auto">
-        <span class="btn btn-sm btn-secondary"><i class="fa fa-info"></i></span>
-        <button id="button" aria-describedby="tooltip">I'm a button</button>
-        <div id="tooltip" role="tooltip">I'm a tooltip</div>
-        <script>
-            const button = document.querySelector('#button');
-            const tooltip = document.querySelector('#tooltip');
-
-            // Pass the button, the tooltip, and some options, and Popper will do the
-            // magic positioning for you:
-            Popper.createPopper(button, tooltip, {
-                placement: 'right',
-            });
-        </script>
-    </div>
-    -->
 </div>
-<div id="addPayment" style="display: none">
-    <div class="row mb-2">
-        <label class="col-sm-2 col-form-label"></label>
-        <div class="col-auto">
-            <select id="addPaymentBankAccount" asp-items="@(new SelectList(ViewBag.BankAccounts, "Id","Alias"))" class="form-select form-select-sm "></select>
-        </div>
-        <div class="col-auto">
-            <span class="form-label"> Сумма: </span>
-        </div>
-        <div class="col-auto">
-            <input id="addPaymentSum" class="form-control form-control-sm " />
-        </div>
-        <div class="col-auto">
-            <span class="form-label"> дата платежа: </span>
-        </div>
-        <div class="col-auto">
-            <input id="addPaymentDate" type="date" class="form-control form-control-sm " />
-        </div>
-        <div class="col-auto">
-            <span id="addPaymentBtn" class="btn btn-sm btn-secondary"><i class="fa fa-plus"></i></span>
-        </div>
-    </div>
-    <div class="row md-2">
-        <label class="col-sm-2">Предыдущие оплаты</label>
-        <div class="col-10">
-            <table class="table table-sm table-bordered">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Дата</th>
-                        <th>Счет</th>
-                        <th>Сумма</th>
-                    </tr>
-                </thead>
-                <tbody id="payments">
-                    @if(Model.ArrivalPayments!=null)
-                    @foreach(var payment in Model.ArrivalPayments)
+<div class="row mb-2">
+    <label class="col-sm-2 col-form-label ">Оплачено: </label>
+    <div class="col-auto">
+        <span>
+            @if (Model.ArrivalPayments != null)
             {
-                <tr data-id="@payment.Id">
-                    <td><i onclick="this.parentElement.remove()" class="fa fa-trash"></i></td>
-                    <td><input date value="@payment.DatePayment.ToString("yyyy-MM-dd")" type="date" class="form-control form-control-sm " /></td>
-                    <td><select asp-for="@payment.BankAccountId" asp-items="@(new SelectList(ViewBag.BankAccounts, "Id","Alias"))" class="form-select form-select-sm "></select></td>
-                    <td><input sum value="@payment.Sum" class="form-control form-control-sm " /></td>
-                </tr>
+                <span style="margin-right: 5px;">@Model.SumPayments : </span>
+                foreach (var payment in Model.ArrivalPayments)
+                {
+                    <span> @payment.Sum от @payment.DatePayment.ToString("dd.MM") , </span>
+                }
             }
-                </tbody>
-            </table>
-        </div>
+        </span>
     </div>
 </div>
+<hr />
 <div class="row">
     <div class="col-auto">
         <span id="btnGoodSelected" class="btn btn-sm btn-secondary m-1">Открыть подбор</span>
@@ -143,47 +78,68 @@
     </div>
 </div>
 
-<table class="table table-sm table-hover table-bordered">
-    <thead class="bg-light">
-        <tr>
-            <th></th>
-            <th>Товар</th>
-            <th>Ед</th>
-            <th>Цена</th>
-            <th>Цена продажи</th>
-            <th>Наценка %</th>
-            <th>Кол-во</th>
-            <th>Стоимость</th>
-        </tr>
-    </thead>
-    <tbody id="ArrivalTable">
-        @if (Model.ArrivalGoods != null)
-            @foreach (var arrivalGood in Model.ArrivalGoods)
-            {
-                decimal sellpercent = 0;
-                if (arrivalGood.Price != 0)
-                    sellpercent = Math.Round((arrivalGood.PriceSell / arrivalGood.Price - 1) * 100);
-                double sum = (double)arrivalGood.Price * arrivalGood.Count;
-                <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
-                    <td><span onclick="deleteGood( @arrivalGood.Good.Id )" class="fa fa-trash"></span></td>
-                    <td>@arrivalGood.Good?.Name</td>
-                    <td>@arrivalGood.Good?.Unit</td>
-                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Price value="@arrivalGood.Price" class="form-control form-control-sm "/></td>
-                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" PriceSell value="@arrivalGood.PriceSell" class="form-control form-control-sm "/></td>
-                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" SellPercent value="@sellpercent" class="form-control form-control-sm "/></td>
-                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
-                    <td><input oninput="this.value = this.value.replace(',', '.'); editGood(@arrivalGood.Good.Id)" Sum value="@arrivalGood.Sum" class="form-control form-control-sm " /></td>
-                </tr>
-            }
-    </tbody>
-    <tfoot class="bg-light">
-        <tr>
-            <th colspan="6"></th>
-            <th id="ArrivalTableSummaryCount">@Model.CountAll</th>
-            <th id="ArrivalTableSummarySum">@Model.SumArrivals</th>
-        </tr>
-    </tfoot>
-</table>
+<div class="table-responsive">
+    <table class="table table-sm table-hover table-bordered">
+        <thead class="bg-light">
+            <tr>
+                <th></th>
+                <th>Товар</th>
+                <th>Ед</th>
+                <th>Цена</th>
+                <th>Цена продажи</th>
+                <th>Наценка %</th>
+                <th>Кол-во</th>
+                <th>% НДС</th>
+                <th>НДС</th>
+                <th>Закупка</th>
+                <th>Продажа</th>
+                <th>Срок годности</th>
+            </tr>
+        </thead>
+        <tbody id="ArrivalTable">
+            @{ var ndsList = new List<string>() { "Без ндс", "20%", "10%", "0%" }; }
+            @if (Model.ArrivalGoods != null)
+                @foreach (var arrivalGood in Model.ArrivalGoods)
+                {
+                    decimal sellpercent = 0;
+                    if (arrivalGood.Price != 0)
+                        sellpercent = Math.Round((arrivalGood.PriceSell / arrivalGood.Price - 1) * 100);
+                    double sum = (double)arrivalGood.Price * arrivalGood.Count;
+                    <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
+                        <td><span onclick="deleteGood(this.parentElement.parentElement)" class="fa fa-trash"></span></td>
+                        <td>@arrivalGood.Good?.Name</td>
+                        <td>@arrivalGood.Good?.Unit.GetDescription()</td>
+                        <td><input oninput="editGood(this.parentElement.parentElement)" Price value="@arrivalGood.Price" class="form-control form-control-sm " /></td>
+                        <td><input oninput="editGood(this.parentElement.parentElement)" PriceSell value="@arrivalGood.PriceSell" class="form-control form-control-sm " /></td>
+                        <td><input oninput="editGood(this.parentElement.parentElement)" SellPercent value="@sellpercent" class="form-control form-control-sm " /></td>
+                        <td><input oninput="editGood(this.parentElement.parentElement)" Count value="@arrivalGood.Count" class="form-control form-control-sm " /></td>
+                        <td>
+                            <select Nds asp-items="new SelectList(ndsList)" asp-for="@arrivalGood.Nds" onchange="editGood(this.parentElement.parentElement)" class="form-select form-select-sm">
+                            </select>
+                        </td>
+                        <td>
+                            <input SumNds value="@arrivalGood.SumNds" class="form-control form-control-sm" readonly />
+                        </td>
+                        <td><input Sum value="@arrivalGood.Sum" class="form-control form-control-sm " readonly /></td>
+                        <td>
+                            <input SumSell value="@arrivalGood.SumSell" class="form-control form-control-sm" readonly />
+                        </td>
+                        <td>
+                            <input ExpiresDate type="date" value="@arrivalGood.ExpiresDate?.ToString("yyyy-MM-dd")" class="form-control form-control-sm" />
+                        </td>
+                    </tr>
+                }
+        </tbody>
+        <tfoot class="bg-light">
+            <tr>
+                <th colspan="8"></th>
+                <th id="ArrivalTableSummarySumNds">@Model.SumNds</th>
+                <th id="ArrivalTableSummarySumArrival">@Model.SumArrival</th>
+                <th id="ArrivalTableSummarySumSell">@Model.SumSell</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 
 
 
@@ -257,8 +213,13 @@
     const goodSearchBtnAdd = document.getElementById("GoodSearchBtnAdd");
     const goodSearchList = document.getElementById("GoodSearchList");
     const arrivalTable = document.getElementById("ArrivalTable");
-    const arrivalTableSummaryCount = document.getElementById("ArrivalTableSummaryCount");
-    const arrivalTableSummarySum = document.getElementById("ArrivalTableSummarySum");
+    const arrivalTableSummarySumArrival = document.getElementById("ArrivalTableSummarySumArrival");
+    const arrivalTableSummarySumNds = document.getElementById("ArrivalTableSummarySumNds");
+    const arrivalTableSummarySumSell = document.getElementById("ArrivalTableSummarySumSell");
+
+    const spanSumPaymentAll = document.getElementById("sumPaymentAll");
+    const spanPayments = document.getElementById("payments");
+    const spanSumPaymentRemain = document.getElementById("sumPaymentRemain");
     //Подбор товара
     let selectionGood = new SelectionGood();
     btnGoodSelected.addEventListener("click", () => selectionGood.OpenDialog());
@@ -284,68 +245,87 @@
     }
     function goodAdd(good) {
         let g = good;
-        let flag = false;
-        if (!flag) {
-            let tr = document.createElement("tr");
-            tr.dataset.id = -1;
-            tr.dataset.idGood = g.id;
-            let priceSell = 0;
-            g.goodPrices.forEach(price => {
-                if (price.shopId == shopselect.value)
-                    priceSell = price.price;
-            });
-            tr.innerHTML = `
-<td><i Remove class="fa fa-trash" aria-hidden="true"></i></td>
+        let tr = document.createElement("tr");
+        tr.dataset.id = -1;
+        tr.dataset.idGood = g.id;
+        let priceSell = 0;
+        g.goodPrices.forEach(price => {
+            if (price.shopId == shopselect.value)
+                priceSell = price.price;
+        });
+        tr.innerHTML = `
+<td><span onclick="deleteGood(this.parentElement.parentElement)" Remove class="fa fa-trash" aria-hidden="true"></span></td>
 <td>${g.name}</td>
 <td>${g.unit}</td >
-<td><input Price value='' class='form-control form-control-sm'></td>
-<td><input PriceSell value='${priceSell}' class='form-control form-control-sm'></td>
-<td><input SellPercent value='0' class='form-control form-control-sm'></td>
-<td><input Count value='' class='form-control form-control-sm'></td>
-<td><input Sum value='0' class='form-control form-control-sm'></td>
+<td><input oninput="editGood(this.parentElement.parentElement)" Price value="" class="form-control form-control-sm " /></td>
+<td><input oninput="editGood(this.parentElement.parentElement)" PriceSell value="${priceSell}" class="form-control form-control-sm " /></td>
+<td><input oninput="editGood(this.parentElement.parentElement)" SellPercent value="" class="form-control form-control-sm " /></td>
+<td><input oninput="editGood(this.parentElement.parentElement)" Count value="" class="form-control form-control-sm " /></td>
+<td>
+    <select Nds onchange="editGood(this.parentElement.parentElement)" class="form-select form-select-sm">
+        <option value="Без ндс">Без ндс</option>
+        <option value="20%">20%</option>
+        <option value="10%">10%</option>
+        <option value="0%">0%</option>
+    </select>
+</td>
+<td>
+        <input SumNds value="0" class="form-control form-control-sm" readonly />
+</td>
+<td><input Sum value="0" class="form-control form-control-sm " readonly /></td>
+<td><input SumSell value="0" class="form-control form-control-sm" readonly /></td>
+<td><input ExpiresDate type="date" value="" class="form-control form-control-sm" /></td>
 `;
-            let btnDelete = tr.querySelector("i[Remove]");
-            btnDelete.addEventListener("click", () => {
-                deleteGood(g.id);
-            })
-            let tdPrice = tr.querySelector("input[Price]");
-            let tdPriceSell = tr.querySelector("input[PriceSell]");
-            let tdSellPercent = tr.querySelector("input[SellPercent]");
-            let tdCount = tr.querySelector("input[Count]");
-            let tdSum = tr.querySelector("input[Sum]");
-            [tdPrice, tdCount, tdPriceSell, tdSum].forEach(td => {
-                td.addEventListener("input", (el) => {
-                    el.target.value = el.target.value.replace(",", ".");
-                    editGood(g.id);
-                });
-            });
-            arrivalTable.prepend(tr);
-        }
+        arrivalTable.prepend(tr);
 
         calcSummary();
-        calcPaymentSumary();
     }
-    function editGood(idGood) {
-        arrivalTable.querySelectorAll("tr").forEach(tr => {
-            if (tr.dataset.idGood == idGood) {
-                let tdPrice = tr.querySelector("input[Price]");
-                let tdPriceSell=tr.querySelector("input[PriceSell]");
-                let tdSellPercent=tr.querySelector("input[SellPercent]");
-                let tdCount = tr.querySelector("input[Count]");
-                let tdSum = tr.querySelector("input[Sum]");
+    function editGood(tr) {
 
-                let price = parseFloat(tdPrice.value.replace(",", "."));
-                let priceSell = parseFloat(tdPriceSell.value.replace(",","."));
-                tdSellPercent.value = Math.round((priceSell / price - 1) * 100);
-                let count = parseFloat(tdCount.value.replace(",","."));
-                if (isNaN(price) || isNaN(count))
-                    tdSum.value = "0";
-                else
-                    tdSum.value = (price * count).toFixed(2);
-                calcSummary();
-                calcPaymentSumary();
+        let tdPrice = tr.querySelector("input[Price]");
+        let tdPriceSell = tr.querySelector("input[PriceSell]");
+        let tdSellPercent = tr.querySelector("input[SellPercent]");
+        let tdCount = tr.querySelector("input[Count]");
+        let tdNds = tr.querySelector("select[Nds]");
+        let tdSumNds = tr.querySelector("input[SumNds]");
+        let tdSum = tr.querySelector("input[Sum]");
+        let tdSumSell = tr.querySelector("input[SumSell]");
+        let tdExpiresDate = tr.querySelector("input[ExpiresDate]");
+        tdPrice.value = tdPrice.value.replace(",", ".");
+        tdPriceSell.value = tdPriceSell.value.replace(",", ".");
+        tdCount.value = tdCount.value.replace(",", ".");
+
+        let price = parseFloat(tdPrice.value);
+        let priceSell = parseFloat(tdPriceSell.value);
+        tdSellPercent.value = Math.round((priceSell / price - 1) * 100);
+        let count = parseFloat(tdCount.value);
+        if (isNaN(price) || isNaN(count)) {
+            tdSum.value = "0";
+            tdSumNds.value = "0";
+        }
+        else {
+            let sum = price * count;
+            switch (tdNds.value) {
+                case "20%":
+                    tdSum.value = (sum + sum * 0.2).toFixed(2);
+                    tdSumNds.value = (sum * 0.2).toFixed(2);
+                    break;
+                case "10%":
+                    tdSum.value = (sum + sum * 0.1).toFixed(2);
+                    tdSumNds.value = (sum * 0.1).toFixed(2);
+                    break;
+                default:
+                    tdSum.value = sum.toFixed(2);
+                    tdSumNds.value = "0";
+                    break;
             }
-        })
+        }
+        if (isNaN(priceSell) || isNaN(count))
+            tdSumSell.value = "0";
+        else
+            tdSumSell.value = (priceSell * count).toFixed(2);
+
+        calcSummary();
     }
     function fractional_multiplication(a, b) {
         var arr = [];
@@ -353,24 +333,27 @@
         if (Number.isInteger(a) == true) { arr.length = a; arr.fill(b); return sum(arr) }
         else { arr.length = b; arr.fill(a); return sum(arr) }
     }
-    function deleteGood(idGood) {
+    function deleteGood(tr) {
         if (confirm("Удалить?"))
-            arrivalTable.querySelectorAll("tr").forEach(tr => {
-                if (tr.dataset.idGood == idGood)
-                    tr.remove();
-            })
+            tr.remove();
     }
     function calcSummary() {
-        let countAll = 0;
         let sumAll = 0;
+        let sumNdsAll = 0;
+        let sumSellAll = 0;
         arrivalTable.querySelectorAll("tr").forEach(tr => {
-            let count = parseFloat(tr.querySelector("input[Count]").value);
+            console.log(tr);
             let sum = parseFloat(tr.querySelector("input[Sum]").value);
-            countAll += isNaN(count) ? 0 : count;
+            let sumNds = parseFloat(tr.querySelector("input[SumNds]").value);
+            let sumSell = parseFloat(tr.querySelector("input[SumSell]").value);
             sumAll += isNaN(sum) ? 0 : sum;
+            sumNdsAll += isNaN(sumNds) ? 0 : sumNds;
+            sumSellAll += isNaN(sumSell) ? 0 : sumSell;
         });
-        arrivalTableSummaryCount.textContent = countAll.toFixed(2);
-        arrivalTableSummarySum.textContent = sumAll.toFixed(2);
+        arrivalTableSummarySumNds.textContent = sumNdsAll.toFixed(2);
+        arrivalTableSummarySumArrival.textContent = sumAll.toFixed(2);
+        arrivalTableSummarySumSell.textContent = sumSellAll.toFixed(2);
+        spanSumPaymentAll.textContent = sumAll.toFixed(2);
     }
     const shopselect = document.getElementById("ShopSelect");
     shopselect.addEventListener("change", () => {
@@ -472,58 +455,6 @@
         })
     })
 
-    //---- Платежи --------
-    const paymentSummary = document.getElementById("paymentSummary");
-    const paymentMore = document.getElementById("paymentMore");
-    const payments = document.getElementById("payments");
-    const addPayment = document.getElementById("addPayment");
-    const addPaymentBankAccount = document.getElementById("addPaymentBankAccount");
-    const addPaymentSum = document.getElementById("addPaymentSum");
-    const addPaymentDate = document.getElementById("addPaymentDate");
-    const addPaymentBtn = document.getElementById("addPaymentBtn");
-    var bankAccounts = JSON.parse('@Html.Raw(JsonSerializer.Serialize(ViewBag.BankAccounts))');
-    paymentMore.addEventListener("click", () => {
-        addPayment.style.display = addPayment.style.display == "none" ? "block" : "none";
-    })
-    addPaymentBtn.addEventListener("click", () => {
-        if (!isNaN(parseFloat(addPaymentSum.value)) & addPaymentDate.value != "") {
-            let tr = document.createElement("tr");
-            tr.dataset.id = 0;
-            let addAccount = bankAccounts.filter(account => account.id == addPaymentBankAccount.value)[0];
-            let accountSelectstr = "";
-            bankAccounts.forEach(account => {
-                if (account.id == addPaymentBankAccount.value)
-                    accountSelectstr = accountSelectstr + `<option value="${account.id}" selected>${account.alias}</option>`;
-                else
-                    accountSelectstr = accountSelectstr + `<option value="${account.id}">${account.alias}</option>`;
-            });
-            accountSelectstr = "<select class='form-select form-select-sm'>" + accountSelectstr + "</select>";
-            console.log(addPaymentDate);
-            tr.innerHTML = `<td><i class="fa fa-trash"></i></td>
-<td><input date value='${addPaymentDate.value}' type='date' class='form-control form-control-sm' /></td>
-<td>${accountSelectstr}</td>
-<td><input sum value="${addPaymentSum.value}" class="form-control form-control-sm"/></td>`;
-            tr.querySelector("i").addEventListener("click", () => {
-                tr.remove();
-            });
-            payments.prepend(tr);
-            calcPaymentSumary();
-        }
-    })
-    function calcPaymentSumary() {
-        calcSummary();
-        let sum = 0;
-        payments.querySelectorAll("tr").forEach(tr => sum += parseFloat(tr.querySelector("input[sum]").value));
-        let arrivalSum = parseFloat(arrivalTableSummarySum.textContent);
-        if (sum - arrivalSum == 0)
-            paymentSummary.value = "оплачено " + (sum);
-        else
-            if (sum - arrivalSum < 0)
-                paymentSummary.value = "долг " + (arrivalSum - sum);
-            else
-                paymentSummary.value = "переплата " + (sum - arrivalSum);
-    }
-
     function arrivalSave(isSuccess) {
         let num = ttnNum.value;
         let date = ttnDate.value;
@@ -536,17 +467,10 @@
                 goodId: toInteger(tr.dataset.idGood),
                 count: parseFloat(tr.querySelector("input[Count]").value.replace(",",".")),
                 price: parseFloat(tr.querySelector("input[Price]").value.replace(",", ".")),
-                priceSell: parseFloat(tr.querySelector("input[PriceSell]").value.replace(",", "."))
+                priceSell: parseFloat(tr.querySelector("input[PriceSell]").value.replace(",", ".")),
+                nds: tr.querySelector("select[Nds]").value,
+                expiresDate: tr.querySelector("input[ExpiresDate]").value == "" ? null : tr.querySelector("input[ExpiresDate]").value
             });
-        });
-        let arrivalPayments = [];
-        payments.querySelectorAll("tr").forEach(tr => {
-            arrivalPayments.push({
-                id: parseInt(tr.dataset.id),
-                datePayment: tr.querySelector("input[date]").value,
-                bankAccountId: parseInt(tr.querySelector("select").value),
-                sum: toFloat(tr.querySelector("input[sum]").value)
-            })
         });
         fetch("create", {
             method: "POST",
@@ -561,8 +485,7 @@
                 num: num,
                 dateArrival: date,
                 isSuccess: isSuccess,
-                arrivalGoods: arrivalGoods,
-                arrivalPayments: arrivalPayments
+                arrivalGoods: arrivalGoods
             })
         })
             .then(r => {

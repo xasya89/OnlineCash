@@ -34,9 +34,7 @@ namespace OnlineCash.Services
                 DateArrival = model.DateArrival,
                 ShopId = shopId,
                 SupplierId = model.SupplierId,
-                CountAll = (double)model.ArrivalGoods.Sum(a => a.Count),
-                PriceAll = model.ArrivalGoods.Sum(a => a.Count * a.Price),
-                SumArrivals= model.ArrivalGoods.Sum(a => a.Count * a.Price)
+                SumSell=0
             };
             db.Arrivals.Add(arrival);
             foreach(var mGood in model.ArrivalGoods)
@@ -49,10 +47,14 @@ namespace OnlineCash.Services
                     Price = mGood.Price,
                     PriceSell = good.GoodPrices.FirstOrDefault().Price,
                     Count = (double) mGood.Count,
-                    Nds =mGood.Nds
+                    Nds =mGood.Nds,
+                    ExpiresDate=mGood.ExpiresDate
                 };
                 db.ArrivalGoods.Add(arrivalgood);
             }
+            arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
+            arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
+            arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
             await db.SaveChangesAsync();
         }
     }

@@ -42,8 +42,8 @@
                 <td ttnDate>@arrival.DateArrival.ToString("dd.MM")</td>
                 <td supplier>@arrival.Supplier?.Name</td>
                 <td shop>@arrival.Shop.Name</td>
-                <td sumArrivals>@arrival.SumArrivals</td>
-                <td sumDiff>@(arrival.SumArrivals - arrival.SumPayments)</td>
+                <td sumArrivals>@arrival.SumArrival</td>
+                <td sumDiff>@(arrival.SumArrival - arrival.SumPayments)</td>
                 <td sumPayments>
                     @foreach(var pay in arrival.ArrivalPayments)
                     { 
@@ -51,7 +51,7 @@
                     }
                 </td>
                 <td>
-                    @if (arrival.SumArrivals - arrival.SumPayments != 0)
+                    @if (arrival.SumArrival - arrival.SumPayments != 0)
                     {
                         <button onclick="paymentAction(@arrival.Id)" class="btn btn-sm btn-secondary"><i class="fa fa-ruble-sign"></i> Оплатить</button>
                     }

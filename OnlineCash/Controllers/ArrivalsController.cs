@@ -72,8 +72,7 @@ namespace OnlineCash.Controllers
                     DateArrival = model.DateArrival,
                     Shop = shop,
                     Supplier = supplier,
-                    PriceAll = priceAll,
-                    CountAll = countAll,
+                    //TODO: Дописать расчет CSumSellountSell, SumArrival, SumNds
                     isSuccess = model.isSuccess
                 };
                 db.Arrivals.Add(arrival);
@@ -87,8 +86,7 @@ namespace OnlineCash.Controllers
                 arrival.DateArrival = model.DateArrival;
                 arrival.Shop = shop;
                 arrival.Supplier = supplier;
-                arrival.PriceAll = priceAll;
-                arrival.CountAll = countAll;
+                //TODO: Дописать расчет CSumSellountSell, SumArrival, SumNds
                 arrival.isSuccess = model.isSuccess;
                 //Найдем удаленные товары
                 foreach (var arrivalgood in await db.ArrivalGoods.Where(a => a.ArrivalId == model.Id).ToListAsync())
@@ -108,7 +106,9 @@ namespace OnlineCash.Controllers
                         Good = good,
                         Price = modelGood.Price,
                         PriceSell=modelGood.PriceSell,
-                        Count = modelGood.Count
+                        Count = modelGood.Count,
+                        Nds=modelGood.Nds,
+                        ExpiresDate=modelGood.ExpiresDate
                     };
                     db.ArrivalGoods.Add(arrivalGood);
                 }
@@ -120,6 +120,8 @@ namespace OnlineCash.Controllers
                     arrivalGood.Price = modelGood.Price;
                     arrivalGood.PriceSell = modelGood.PriceSell;
                     arrivalGood.Count = modelGood.Count;
+                    arrivalGood.Nds = modelGood.Nds;
+                    arrivalGood.ExpiresDate = modelGood.ExpiresDate;
                 };
             if (model.isSuccess)
                 foreach(ArrivalGood modelGood in arrival.ArrivalGoods)
@@ -141,30 +143,10 @@ namespace OnlineCash.Controllers
                     var goodPrice = await db.GoodPrices.Where(p => p.ShopId == arrival.ShopId & p.GoodId == modelGood.GoodId).FirstOrDefaultAsync();
                     goodPrice.Price = modelGood.PriceSell;
                 }
-            //Платежи
-            var bankaccouns = await db.BankAccounts.ToListAsync();
-            foreach(var modelpayment in model.ArrivalPayments)
-                if(modelpayment.Id==0)
-                {
-                    var payment = new ArrivalPayment
-                    {
-                        Arrival = arrival,
-                        BankAccount = bankaccouns.Where(b => b.Id == modelpayment.BankAccountId).FirstOrDefault(),
-                        DatePayment=modelpayment.DatePayment,
-                        Sum=modelpayment.Sum
-                    };
-                    db.ArrivalPayments.Add(payment);
-                }
-            else
-                {
-                    var payment = await db.ArrivalPayments.Where(p => p.Id == modelpayment.Id).FirstOrDefaultAsync();
-                    payment.BankAccountId = modelpayment.BankAccountId;
-                    payment.DatePayment = modelpayment.DatePayment;
-                    payment.Sum = modelpayment.Sum;
-                }
             //Подсчет итогов
-            arrival.SumArrivals = model.ArrivalGoods.Sum(a => (decimal) a.Count * a.Price);
-            arrival.SumPayments = model.ArrivalPayments.Sum(p => p.Sum);
+            arrival.SumArrival = model.ArrivalGoods.Sum(a => a.Sum);
+            arrival.SumNds = model.ArrivalGoods.Sum(a =>  a.SumNds);
+            arrival.SumSell = model.ArrivalGoods.Sum(a => a.SumSell);
             await db.SaveChangesAsync();
             if (model.isSuccess)
                 await goodBalanceService.CalcAsync(shop.Id, model.DateArrival);
@@ -176,8 +158,7 @@ namespace OnlineCash.Controllers
         {
             List<Models.ArrivalReport> result = new List<Models.ArrivalReport>();
             var suppliers = await db.Suppliers.ToListAsync();
-            //var supplierGroups = db.Arrivals.Include(a=>a.Supplier).GroupBy(a => a.SupplierId);
-            var supplierGroups =await db.Arrivals.GroupBy(a => a.SupplierId).Select(a => new { SupplierId = a.Key, SumArrival = a.Sum(a => a.SumArrivals), SumPayments = a.Sum(a => a.SumPayments) }).ToListAsync();
+            var supplierGroups =await db.Arrivals.GroupBy(a => a.SupplierId).Select(a => new { SupplierId = a.Key, SumArrival = a.Sum(a => a.SumArrival), SumPayments = a.Sum(a => a.SumPayments) }).ToListAsync();
             foreach (var supplier in supplierGroups)
                 result.Add(new Models.ArrivalReport
                 {
@@ -200,7 +181,6 @@ namespace OnlineCash.Controllers
                 .Include(a => a.Shop)
                 .Include(a => a.Supplier)
                 .Include(a => a.ArrivalPayments)
-                //.Where(a => a.isSuccess == true & a.SumArrivals - a.SumPayments > 0 & a.SumArrivals - a.SumPayments > 0)
                 .Where(a => DateTime.Compare(with,a.DateArrival)==-1 & DateTime.Compare(a.DateArrival,by)==-1)
                 .OrderByDescending(a => a.DateArrival)
                 .ToListAsync());

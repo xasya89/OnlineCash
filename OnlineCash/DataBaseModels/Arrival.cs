@@ -16,10 +16,9 @@ namespace OnlineCash.DataBaseModels
         public int ShopId { get; set; }
         public Shop Shop { get; set; }
         public List<ArrivalGood> ArrivalGoods { get; set; }
-        public double CountAll { get; set; }
-        public decimal PriceAll { get; set; }
-        public double SumAll { get => CountAll * (double)PriceAll; }
-        public decimal SumArrivals { get; set; }
+        public decimal SumArrival { get; set; }
+        public decimal SumNds { get; set; }
+        public decimal SumSell { get; set; }
         public List<ArrivalPayment> ArrivalPayments { get; set; } = new List<ArrivalPayment>();
         public decimal SumPayments { get; set; }
         public bool isSuccess { get; set; } = false;
