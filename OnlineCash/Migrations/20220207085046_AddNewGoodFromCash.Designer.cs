@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220207085046_AddNewGoodFromCash")]
+    partial class AddNewGoodFromCash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -620,9 +622,6 @@ namespace OnlineCash.Migrations
 
                     b.Property<int>("GoodId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsNewGood")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("Processed")
                         .HasColumnType("tinyint(1)");

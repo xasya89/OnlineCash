@@ -1,0 +1,31 @@
+﻿@model List<OnlineCash.DataBaseModels.NewGoodFromCash>
+
+<div class="row">
+    <div class="col-12 table-responsive">
+        <table class="table table-sm table-hover table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Наименование</th>
+                    <th>Ед</th>
+                    <th>Цена</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var n in Model)
+                {
+                    var good = n.Good;
+                    string newGoodStr = n.IsNewGood ? "новый" : "";
+                <tr>
+                    <td>@newGoodStr</td>
+                    <td><a asp-action="open" asp-route-id="@n.Id">@n.Good.Name</a></td>
+                    <td><a asp-action="open" asp-route-id="@n.Id">@n.Good.Unit.GetDescription()</a></td>
+                    <td><a asp-action="open" asp-route-id="@n.Id">@n.Good.Price</a></td>
+                    <td></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
