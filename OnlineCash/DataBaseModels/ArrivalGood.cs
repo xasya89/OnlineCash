@@ -28,10 +28,10 @@ namespace OnlineCash.DataBaseModels
                         return Math.Round(sum + sum * 0.1M, 2);
                         break;
                     case "0%":
-                        return 0;
+                        return Math.Round(sum,2);
                         break;
                     default:
-                        return 0;
+                        return Math.Round(sum, 2);
                         break;
                 }
             }

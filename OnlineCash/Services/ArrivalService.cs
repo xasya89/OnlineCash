@@ -16,7 +16,7 @@ namespace OnlineCash.Services
             this.db = db;
         }
 
-        public async Task SaveSynchAsync(int shopId, ArrivalSynchModel model)
+        public async Task<Arrival> SaveSynchAsync(int shopId, ArrivalSynchModel model)
         {
             if (db.Shops.Where(s => s.Id == shopId) == null)
                 throw new Exception($"Магазин shopId - {shopId} не найден");
@@ -56,6 +56,7 @@ namespace OnlineCash.Services
             arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
             arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
             await db.SaveChangesAsync();
+            return arrival;
         }
     }
 }
