@@ -118,11 +118,11 @@ namespace OnlineCash.Services
                 await _moneyBalanceService.AddReturn(shift.ShopId, check.SumCash);
         }
 
-        public async Task<bool> CloseShift(Guid uuid, DateTime stop)
+        public async Task<Shift> CloseShift(Guid uuid, DateTime stop)
         {
             var shift = await db.Shifts.Where(s => s.Uuid==uuid & s.Stop == null).FirstOrDefaultAsync();
             if (shift == null)
-                return false;
+                throw new Exception($"Смена uuid - {uuid} не найдена или закрыта");
             shift.Stop = stop;
             await goodBalanceService.CalcAsync(shift.ShopId, shift.Start);
             await db.SaveChangesAsync();
@@ -140,7 +140,7 @@ namespace OnlineCash.Services
                     Sum = shift.SumReturnCash,
                     Note = $"Смена возврат № {shift.Id} от {shift.Start.ToString("dd.MM.yy")}"
                 });
-            return true;
+            return shift;
         }
 
         public async Task<bool> OpenShift(int idShop, Guid uuid, DateTime start)

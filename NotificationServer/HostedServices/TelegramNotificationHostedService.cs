@@ -52,6 +52,7 @@ namespace NotificationServer.HostedServices
         {
             using var scope = _scopeFactory.CreateScope();
             var _db = scope.ServiceProvider.GetRequiredService<shop_registrationContext>();
+            var shop = await _db.Shops.Where(s => s.ServerUrl == owner).FirstOrDefaultAsync();
             var organization = await (from o in _db.Organizations
                                join s in _db.Shops on o.Id equals s.OrganizationId
                                where s.ServerUrl == owner
@@ -64,7 +65,7 @@ namespace NotificationServer.HostedServices
                                  select c).ToListAsync();
             foreach(var client in clients)
             {
-                string html = $"<b>Организация {organization.OrgName}</b>\n{message}\n<a href='{url}'>посмотреть</a>";
+                string html = $"<b>{shop?.Name}</b>\n{message}\n<a href='{url}'>посмотреть</a>";
                 try
                 {
                     await botClient.SendTextMessageAsync(chatId: client.ChatId,

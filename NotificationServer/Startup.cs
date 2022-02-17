@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using NotificationServer.DatabaseModels;
 
 namespace NotificationServer
 {
@@ -41,7 +42,7 @@ namespace NotificationServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, shop_registrationContext db)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +61,7 @@ namespace NotificationServer
             {
                 endpoints.MapControllers();
             });
+            db.Database.Migrate();
         }
     }
 }

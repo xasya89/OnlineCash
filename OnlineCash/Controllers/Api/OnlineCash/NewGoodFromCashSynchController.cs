@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Models;
+using OnlineCash.Services;
 
 namespace OnlineCash.Controllers.Api.OnlineCash
 {
@@ -15,9 +16,11 @@ namespace OnlineCash.Controllers.Api.OnlineCash
     public class NewGoodFromCashSynch : ControllerBase
     {
         shopContext _db;
-        public NewGoodFromCashSynch(shopContext db)
+        NotificationOfEventInSystemService _notification;
+        public NewGoodFromCashSynch(shopContext db, NotificationOfEventInSystemService notification)
         {
             _db = db;
+            _notification = notification;
         }
 
         [HttpPost("{shopId}")]
@@ -32,9 +35,12 @@ namespace OnlineCash.Controllers.Api.OnlineCash
             {
                 goodOldDb.Price = model.Price;
                 var price = await _db.GoodPrices.Where(p => p.GoodId == goodOldDb.Id & p.ShopId == shopId).FirstOrDefaultAsync();
+                decimal oldPrice = price.Price;
                 price.Price = model.Price;
-                _db.NewGoodFromCashes.Add(new NewGoodFromCash { Good = goodOldDb, IsNewGood = false });
+                var newGoodFromCash = new NewGoodFromCash { Good = goodOldDb, IsNewGood = false };
+                _db.NewGoodFromCashes.Add(newGoodFromCash);
                 await _db.SaveChangesAsync();
+                await _notification.Send($"Изменен товар {goodOldDb.Name}. Изменилась цена с {oldPrice} на {model.Price}", "NewGoodsFromCash/open/"+newGoodFromCash.Id);
                 return Ok();
             }
             List<string> barcodes = new List<string>();
@@ -68,8 +74,12 @@ namespace OnlineCash.Controllers.Api.OnlineCash
             }
             foreach (var barcode in model.Barcodes)
                 _db.BarCodes.Add(new BarCode { Good = good, Code = barcode });
-            _db.NewGoodFromCashes.Add(new NewGoodFromCash { Good = good, IsNewGood=true });
+            var newGoodFromCashNew = new NewGoodFromCash { Good = good, IsNewGood = true };
+            _db.NewGoodFromCashes.Add(newGoodFromCashNew);
             await _db.SaveChangesAsync();
+            await _notification.Send(@$"Новый товар {good.Name}
+Цена {good.Price}
+Ед измерения {good.Unit.GetDescription()}", "NewGoodsFromCash/open/" + newGoodFromCashNew.Id);
             return Ok();
         }
     }

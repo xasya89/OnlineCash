@@ -17,10 +17,12 @@ namespace OnlineCash.Controllers.Api.OnlineCash
 
         CashMoneyService _moneyService;
         ILogger<CashMoneysController> _logger;
-        public CashMoneysController(CashMoneyService moneyService, ILogger<CashMoneysController> logger)
+        NotificationOfEventInSystemService _notification;
+        public CashMoneysController(CashMoneyService moneyService, ILogger<CashMoneysController> logger, NotificationOfEventInSystemService notification)
         {
             _moneyService = moneyService;
             _logger = logger;
+            _notification = notification;
         }
 
         [HttpPost("{shopId}")]
@@ -30,7 +32,8 @@ namespace OnlineCash.Controllers.Api.OnlineCash
             {
                 if (!ModelState.IsValid)
                     throw new Exception("Ошибка валидации");
-                await _moneyService.Add(shopId, model);
+                var cashMoney=await _moneyService.Add(shopId, model);
+                await _notification.Send($"{cashMoney.TypeOperation.GetDescription()} на сумму {cashMoney.Sum}. Примечание {cashMoney.Note}", "CashMoney");
                 return Ok();
             }
             catch(Exception ex)

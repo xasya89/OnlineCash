@@ -44,7 +44,7 @@ namespace OnlineCash.Services
             return await Get();
         }
 
-        public async Task Add(int shopId, CashMoney model)
+        public async Task<CashMoney> Add(int shopId, CashMoney model)
         {
             if (DateTime.Compare(DateTime.Now.Date, model.Create.Date) == -1)
                 throw new Exception("В докуменете поступления денег дата болше текущей");
@@ -54,7 +54,8 @@ namespace OnlineCash.Services
             var cashMoney = await _db.CashMoneys.Where(c => c.Uuid == model.Uuid).FirstOrDefaultAsync();
             if (cashMoney != null)
                 throw new Exception($"Операция {model.TypeOperation.GetDescription()} с uuid - {model.Uuid} уже существует");
-            _db.CashMoneys.Add(new CashMoney { Shop = shop, Uuid = model.Uuid, Create = model.Create, TypeOperation = model.TypeOperation, Sum = model.Sum, Note = model.Note });
+            var cashMoneyNew = new CashMoney { Shop = shop, Uuid = model.Uuid, Create = model.Create, TypeOperation = model.TypeOperation, Sum = model.Sum, Note = model.Note };
+            _db.CashMoneys.Add(cashMoneyNew);
             await _db.SaveChangesAsync();
             if (DateTime.Compare(model.Create.Date, DateTime.Now.Date) == -1)
                 await _moneyBalanceService.Calculate(shopId, model.Create.Date);
@@ -65,6 +66,7 @@ namespace OnlineCash.Services
                 if (model.TypeOperation == CashMoneyTypeOperations.Outcome)
                     await _moneyBalanceService.AddOutcome(shopId, model.Sum);
             }
+            return cashMoneyNew;
         }
     }
 }

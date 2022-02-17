@@ -15,9 +15,11 @@ namespace OnlineCash.Controllers.Api
     public class CashboxController : ControllerBase
     {
         ICashBoxService service;
-        public CashboxController(ICashBoxService service)
+        NotificationOfEventInSystemService _notification;
+        public CashboxController(ICashBoxService service, NotificationOfEventInSystemService notification)
         {
             this.service = service;
+            _notification = notification;
         }
 
         [HttpPost("openshift/{idShop}/{uuid}/{start}")]
@@ -46,8 +48,15 @@ namespace OnlineCash.Controllers.Api
         [HttpPost("closeshift/{uuid}/{stop}")]
         public async Task<IActionResult> CloseShift(Guid uuid, string stop)
         {
-            if (!await service.CloseShift(uuid, Convert.ToDateTime(stop)))
+            var shift = await service.CloseShift(uuid, Convert.ToDateTime(stop));
+            if (shift==null)
                 return BadRequest();
+            await _notification.Send(@$"Закрыта смена 
+Наличные: {shift.SumNoElectron}
+Безналичные: {shift.SumElectron}
+Возвраты наличные: {shift.SumReturnCash}
+Возвраты безналичные: {shift.SumReturnElectron}
+", "ReportsSells/Details/"+shift.Id);
             return Ok();
         }
     }
