@@ -33,7 +33,7 @@ namespace OnlineCash.Services
 
                 var historyLastDay = await db.GoodBalanceHistories.Where(h => h.ShopId == ShopId & DateTime.Compare(h.CurDate, curDate.AddDays(-1)) == 0).ToListAsync();
                 foreach (var history in historyLastDay)
-                    BalanceGoodPlus(balanceDict, history.GoodId, history.CountLast);
+                    BalanceGoodPlus(balanceDict, history.GoodId, (double) history.CountLast);
 
                 var stocktaking = await db.Stocktakings
                     .Include(s=>s.StocktakingSummaryGoods)
@@ -81,7 +81,7 @@ namespace OnlineCash.Services
                         Shop = shop,
                         CurDate = curDate.Date,
                         GoodId = balance.Key,
-                        CountLast = balance.Value
+                        CountLast = (decimal)balance.Value
                     });
 
                 if (date == curDate)
@@ -120,14 +120,14 @@ namespace OnlineCash.Services
             var balanceHistory = await db.GoodBalanceHistories
                 .Where(b => b.ShopId == ShopId & b.GoodId == GoodId & b.CurDate == DateTime.Now.Date).FirstOrDefaultAsync();
             if (balanceHistory != null)
-                balanceHistory.CountLast -= Count;
+                balanceHistory.CountLast -= (decimal)Count;
             else
                 db.GoodBalanceHistories.Add(new GoodBalanceHistory
                 {
                     ShopId = ShopId,
                     GoodId = GoodId,
                     CurDate = DateTime.Now,
-                    CountLast = -1 * Count
+                    CountLast = -1 * (decimal)Count
                 });
 
             var balance = await db.GoodBalances.Where(b => b.ShopId == ShopId & b.GoodId == GoodId).FirstOrDefaultAsync();
@@ -169,14 +169,14 @@ namespace OnlineCash.Services
             var balanceHistory = await db.GoodBalanceHistories
                 .Where(b => b.ShopId == ShopId & b.GoodId == GoodId & b.CurDate == DateTime.Now.Date).FirstOrDefaultAsync();
             if (balanceHistory != null)
-                balanceHistory.CountLast += Count;
+                balanceHistory.CountLast += (decimal)Count;
             else
                 db.GoodBalanceHistories.Add(new GoodBalanceHistory
                 {
                     ShopId = ShopId,
                     GoodId = GoodId,
                     CurDate = DateTime.Now,
-                    CountLast = Count
+                    CountLast = (decimal)Count
                 });
 
             var balance = await db.GoodBalances.Where(b => b.ShopId == ShopId & b.GoodId == GoodId).FirstOrDefaultAsync();

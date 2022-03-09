@@ -10,7 +10,7 @@ using OnlineCash.Models;
 
 namespace OnlineCash.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/onlinecash/[controller]")]
     [ApiController]
     public class WriteofSynchController : ControllerBase
     {

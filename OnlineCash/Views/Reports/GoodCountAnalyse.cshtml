@@ -1,0 +1,37 @@
+﻿@model List<GoodCountAnalyse>
+<div class="table-responsive">
+    <table class="table table-sm table-striped table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>Наименование</th>
+                @for (var day = (DateTime)ViewBag.Start; DateTime.Compare(day, (DateTime)ViewBag.Stop) <= 0; day = day.AddDays(1).Date)
+                {
+                    <th colspan="3">@day.ToString("dd.MM")</th>
+                }
+            </tr>
+            <tr>
+                <th></th>
+                @for (var day = (DateTime)ViewBag.Start; DateTime.Compare(day, (DateTime)ViewBag.Stop) <= 0; day = day.AddDays(1).Date)
+                {
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var countOfGood in Model)
+            {
+            <tr>
+                <td>@countOfGood.GoodName</td>
+                @foreach (KeyValuePair<DateTime, GoodCountAnalyseDay> valuePair in countOfGood.CountOfDays)
+                {
+                    <td>+@valuePair.Value.CountPlus</td>
+                    <td>-@valuePair.Value.CountMinus</td>
+                    <td>@valuePair.Value.CountEnd</td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

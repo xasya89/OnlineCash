@@ -111,6 +111,46 @@ namespace OnlineCash.Services
                 shift.SumReturnCash += check.SumCash;
                 shift.SumAll -= check.SumCash + check.SumElectron;
             }
+            //Добавим чек
+            Buyer buyer = null;
+            if (check.Buyer != null)
+            {
+                buyer = await db.Buyers.Where(b => b.Uuid == check.Buyer.Uuid).FirstOrDefaultAsync();
+                if (buyer == null)
+                {
+                    buyer = new Buyer
+                    {
+                        Uuid = check.Buyer.Uuid,
+                        Phone = check.Buyer.Phone,
+                        SumBuy = check.IsReturn ? 0 : check.SumCash + check.SumElectron
+                    };
+                    db.Buyers.Add(buyer);
+                }
+            }
+            var checksell = new CheckSell { 
+                DateCreate=check.Create,
+                TypeSell = check.IsReturn ? TypeSell.Return : TypeSell.Sell,
+                Shift=shift,
+                Buyer =buyer,
+                SumCash=check.SumCash,
+                SumElectron=check.SumElectron,
+                Sum=check.SumCash + check.SumElectron,
+                SumDiscont=check.SumDiscount,
+                SumAll= check.SumCash + check.SumElectron - check.SumDiscount
+            };
+            db.CheckSells.Add(checksell);
+            foreach(var checkGood in check.Goods)
+            {
+                var good = goods.Where(g => g.Uuid == checkGood.Uuid).FirstOrDefault();
+                db.CheckGoods.Add(new CheckGood
+                {
+                    CheckSell = checksell,
+                    Good = good,
+                    Count = checkGood.Count,
+                    Price = checkGood.Price
+                });
+            }
+
             await db.SaveChangesAsync();
             if (check.SumCash > 0 && check.IsReturn==false)
                 await _moneyBalanceService.AddSale(shift.ShopId, check.SumCash);

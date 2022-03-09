@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220306081609_Alter_CheckPayment")]
+    partial class Alter_CheckPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -297,6 +299,28 @@ namespace OnlineCash.Migrations
                     b.ToTable("CheckGoods");
                 });
 
+            modelBuilder.Entity("OnlineCash.DataBaseModels.CheckPayment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CheckSellId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("TypePayment")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CheckSellId");
+
+                    b.ToTable("CheckPayments");
+                });
+
             modelBuilder.Entity("OnlineCash.DataBaseModels.CheckSell", b =>
                 {
                     b.Property<int>("Id")
@@ -321,13 +345,7 @@ namespace OnlineCash.Migrations
                     b.Property<decimal>("SumAll")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("SumCash")
-                        .HasColumnType("decimal(65,30)");
-
                     b.Property<decimal>("SumDiscont")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("SumElectron")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("TypeSell")
@@ -453,8 +471,8 @@ namespace OnlineCash.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("CountLast")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("CountLast")
+                        .HasColumnType("double");
 
                     b.Property<DateTime>("CurDate")
                         .HasColumnType("datetime(6)");
@@ -1171,6 +1189,17 @@ namespace OnlineCash.Migrations
                     b.Navigation("Good");
                 });
 
+            modelBuilder.Entity("OnlineCash.DataBaseModels.CheckPayment", b =>
+                {
+                    b.HasOne("OnlineCash.DataBaseModels.CheckSell", "CheckSell")
+                        .WithMany("CheckPayments")
+                        .HasForeignKey("CheckSellId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CheckSell");
+                });
+
             modelBuilder.Entity("OnlineCash.DataBaseModels.CheckSell", b =>
                 {
                     b.HasOne("OnlineCash.DataBaseModels.Buyer", "Buyer")
@@ -1510,6 +1539,8 @@ namespace OnlineCash.Migrations
             modelBuilder.Entity("OnlineCash.DataBaseModels.CheckSell", b =>
                 {
                     b.Navigation("CheckGoods");
+
+                    b.Navigation("CheckPayments");
                 });
 
             modelBuilder.Entity("OnlineCash.DataBaseModels.DiscountCard", b =>

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.Models;
+using OnlineCash.DataBaseModels;
 
 namespace OnlineCash.Controllers
 {
@@ -27,13 +28,14 @@ namespace OnlineCash.Controllers
             View(await db.Shifts.Include(s => s.Shop).OrderByDescending(s => s.Start).ToListAsync());
 
         // GET: ReportsSellsController/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int shiftId)
         {
+            ViewBag.ShiftId = shiftId;
             var shift = await db.Shifts
                 .Include(s => s.Shop)
                 .Include(s => s.ShiftSales)
                 .ThenInclude(c => c.Good)
-                .Where(s => s.Id == id).FirstOrDefaultAsync();
+                .Where(s => s.Id == shiftId).FirstOrDefaultAsync();
             var reportSell = new ReportSellModel { 
                 Shop = shift.Shop, 
                 Start = shift.Start,
@@ -50,6 +52,15 @@ namespace OnlineCash.Controllers
                 });
             return View("Details", reportSell);
         }
+
+        public async Task<IActionResult> Checks(int shiftId)
+        {
+            ViewBag.ShiftId = shiftId;
+            return View(await db.CheckSells.Include(c => c.CheckGoods).ThenInclude(c => c.Good).Where(c => c.ShiftId == shiftId).ToListAsync());
+        }
+
+        public async Task<CheckSell> CheckDetail(int id)
+            => await db.CheckSells.Include(c => c.CheckGoods).ThenInclude(c => c.Good).Where(c => c.Id == id).FirstOrDefaultAsync();
 
         // GET: ReportsSellsController/Create
         public ActionResult Create()

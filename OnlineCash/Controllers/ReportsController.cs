@@ -15,12 +15,14 @@ namespace OnlineCash.Controllers
         IReportsService reportsService;
         IGoodBalanceService goodBalanceService;
         MoneyBalanceService _moneyBalanceService;
-        public ReportsController(shopContext db, IReportsService reportsService, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyBalanceService)
+        GoodCountAnalyseService _analyseService;
+        public ReportsController(shopContext db, IReportsService reportsService, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyBalanceService, GoodCountAnalyseService analyseService)
         {
             this.db = db;
             this.reportsService = reportsService;
             this.goodBalanceService = goodBalanceService;
             _moneyBalanceService = moneyBalanceService;
+            _analyseService = analyseService;
         }
 
         [HttpGet]
@@ -59,6 +61,16 @@ namespace OnlineCash.Controllers
                 return BadRequest();
             await _moneyBalanceService.Calculate(shopId, with);
             return View("MoneyBalanceHistory", await db.MoneyBalanceHistories.OrderByDescending(m => m.DateBalance).ToListAsync());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GoodCountAnalyse(int shopId, string start, string stop)
+        {
+            DateTime startDay = DateTime.Parse(start);
+            DateTime stopDay = DateTime.Parse(stop);
+            ViewBag.Start = startDay;
+            ViewBag.Stop = stopDay;
+            return View(await _analyseService.GetAnalyse(shopId, startDay, stopDay));
         }
     }
 }

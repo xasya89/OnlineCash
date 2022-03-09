@@ -10,9 +10,13 @@ namespace OnlineCash.DataBaseModels
     {
         public int Id { get; set; }
         public DateTime DateCreate { get; set; } = DateTime.Now;
+        public string DateCreateStr { get => DateCreate.ToString("dd.MM.yy HH:mm"); }
+        public TypeSell TypeSell { get; set; } = TypeSell.Sell;
         public int? BuyerId { get; set; }
         public Buyer Buyer { get; set; }
         public bool IsElectron { get; set; }
+        public decimal SumCash { get; set; }
+        public decimal SumElectron { get; set; }
         public decimal Sum { get; set; }
         public decimal SumDiscont { get; set; } = 0;
         public decimal SumAll { get; set; }

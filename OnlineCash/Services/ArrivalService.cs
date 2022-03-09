@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Models;
 
@@ -11,9 +12,13 @@ namespace OnlineCash.Services
     public class ArrivalService
     {
         shopContext db;
-        public ArrivalService(shopContext db)
+        IConfiguration _configuration;
+        IGoodBalanceService _goodBalanceService;
+        public ArrivalService(shopContext db, IConfiguration configuration, IGoodBalanceService goodBalanceService)
         {
             this.db = db;
+            _configuration = configuration;
+            _goodBalanceService = goodBalanceService;
         }
 
         public async Task<Arrival> SaveSynchAsync(int shopId, ArrivalSynchModel model)
@@ -27,14 +32,15 @@ namespace OnlineCash.Services
                 if (goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault() == null)
                     throw new Exception($"Товар uuid {mGood.GoodUuid} не найден");
 
-
+            bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
             var arrival = new Arrival
             {
                 Num = model.Num,
                 DateArrival = model.DateArrival,
                 ShopId = shopId,
                 SupplierId = model.SupplierId,
-                SumSell=0
+                SumSell=0,
+                isSuccess=autoSuccess
             };
             db.Arrivals.Add(arrival);
             foreach(var mGood in model.ArrivalGoods)
@@ -55,7 +61,11 @@ namespace OnlineCash.Services
             arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
             arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
             arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
+
             await db.SaveChangesAsync();
+            if(autoSuccess)
+                await _goodBalanceService.CalcAsync(shopId, model.DateArrival);
+
             return arrival;
         }
     }

@@ -13,6 +13,6 @@ namespace OnlineCash.DataBaseModels
         public int GoodId { get; set; }
         public Good Good { get; set; }
         public DateTime CurDate { get; set; }
-        public double CountLast { get; set; }
+        public decimal CountLast { get; set; }
     }
 }

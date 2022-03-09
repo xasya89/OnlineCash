@@ -84,8 +84,8 @@ namespace OnlineCash.Controllers.Api
                             {
                                 CheckSell = checkdb,
                                 Good = good,
-                                Cost = checkGood.Cost,
-                                Count = checkGood.Count
+                                Price = checkGood.Cost,
+                                Count =(decimal) checkGood.Count
                             };
                             db.CheckGoods.Add(checgooddb);
                             var goodBalance = await db.GoodBalances.Where(b => b.ShopId == shop.Id & b.GoodId == good.Id).FirstOrDefaultAsync();

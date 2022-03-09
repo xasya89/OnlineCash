@@ -40,7 +40,7 @@ namespace OnlineCash.Services
                         balances.Add(new ReportGoodBalanceGoodModel
                         {
                             GoodName = balance.Good?.Name,
-                            Count = Math.Round(balance.CountLast,3),
+                            Count = (double)Math.Round(balance.CountLast,3),
                             Price = balance.Good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault().Price
                         });
             return new ReportGoodBalanceModel

@@ -1,0 +1,158 @@
+﻿@model List<OnlineCash.DataBaseModels.CheckSell>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+            <div class="p-3 bg-white rounded">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="billed"><span class="font-weight-bold text-uppercase">Магазин: </span><span class="ml-1">@ViewBag.ShopName</span></div>
+                        <div class="billed"><span class="font-weight-bold text-uppercase">Дата: </span><span class="ml-1">@ViewBag.StartStr</span></div>
+                    </div>
+                </div>
+                <div class="row mt-3 mb-2">
+                    <div class="col-md-6">
+                        <ul class="nav nav-pills">
+                            <li class="nav-item">
+                                <a class="nav-link " asp-action="details" asp-route-shiftId="@ViewBag.shiftId">Проданные товар</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" asp-action="checks">Чеки</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Время</th>
+                                <th>Признак расчета</th>
+                                <th>Оплата</th>
+                                <th>Сумма</th>
+                                <th>Скидка</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int i = 1; } 
+                            @foreach (var checkSell in Model)
+                            {
+                                int numPp = i++;
+                                string typeSellStr = checkSell.TypeSell == OnlineCash.DataBaseModels.TypeSell.Sell ? "Приход" : "Возврат";
+                                string sumDiscountStr = checkSell.SumDiscont > 0 ? checkSell.SumDiscont.ToString() : "";
+                                <tr onclick="viewChack(@checkSell.Id)">
+                                    <td>@numPp</td>
+                                    <td>@checkSell.DateCreate.ToString("HH:mm")</td>
+                                    <td>@typeSellStr</td>
+                                    <td>
+                                        @if (checkSell.SumCash > 0)
+                                        {
+                                            <img src="~/images/cash-money.svg" style="width: 20px" />
+                                        }
+                                        @if (checkSell.SumElectron > 0)
+                                        {
+                                            <img src="~/images/bank-card.svg" style="width: 20px" />
+                                        }
+                                    </td>
+                                    <td>@checkSell.SumAll</td>
+                                    <td>@sumDiscountStr</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="checkModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="checkHeader">Чек прихода №120 от 05.10 11:45</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="checkGoodsTable" class="mb-2" style="display: grid; grid-template-columns: 2fr 1fr 1fr">
+                    <div>Товар 1</div>
+                    <div>0.232 кг</div>
+                    <div>1232 р</div>
+                    <div>Товар 1</div>
+                    <div>0.232 кг</div>
+                    <div>1232 р</div>
+                </div>
+
+                <svg xmlns="http://www.w3.org/2000/svg" height="17" viewBox="0 0 508 17" style="margin-top: -7px; display:block; width:100%">
+                    <path fill="#f0f3f5" fill-rule="evenodd" d="M0 0l13.368 5.593L26.737 0l13.368 5.593L53.474 0l13.368 5.593L80.211 0l13.368 5.593L106.947 0l13.369 5.593L133.684 0l13.369 5.593L160.42 0l13.368 5.593L187.158 0l13.368 5.593L213.895 0l13.368 5.593L240.632 0 254 5.593 267.368 0l13.369 5.593L294.105 0l13.369 5.593L320.842 0l13.369 5.593L347.579 0l13.368 5.593L374.316 0l13.368 5.593L401.053 0l13.368 5.593L427.79 0l13.369 5.593L454.526 0l13.369 5.593L481.263 0l13.369 5.593L508 0v17.688H0z"></path>
+                </svg>
+                <strong>
+                    <div id="checkPaymentsTable" class="text-primary pb-2" style="display: grid; grid-template-columns: 2fr 1fr; background-color: #f0f3f5">
+                        <div>Наличные</div>
+                        <div>10 000 р</div>
+                        <div>Бехналичные</div>
+                        <div>10 000 р</div>
+                    </div>
+                </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var checkModal = new bootstrap.Modal(document.getElementById('checkModal'), {});
+    const checkHeader = document.getElementById("checkHeader");
+    const checkGoodsTable = document.getElementById("checkGoodsTable");
+    const checkPaymentsTable = document.getElementById("checkPaymentsTable");
+    var units = { 796: "шт" };
+    function viewChack(id) {
+        console.log("dfdf");
+        checkModal.show();
+        fetch("/ReportsSells/checkdetail?id=" + id)
+            .then(resp => resp.json())
+            .then(check => {
+                checkGoodsTable.querySelectorAll("div").forEach(div => div.remove());
+                checkPaymentsTable.querySelectorAll("div").forEach(div => div.remove());
+                checkHeader.innerText = `Чек прихода от ${check.dateCreateStr}`;
+                check.checkGoods.forEach(checkGood => {
+                    let divGoodName = document.createElement("div");
+                    divGoodName.innerText = checkGood.good.name;
+                    let divCount = document.createElement("div");
+                    divCount.innerText = checkGood.count + " " + checkGood.good.unitStr;
+                    let divPSum = document.createElement("div");
+                    divPSum.innerText = checkGood.sum + "р";
+                    checkGoodsTable.append(divGoodName);
+                    checkGoodsTable.append(divCount);
+                    checkGoodsTable.append(divPSum);
+                });
+                if (check.sumCash > 0) {
+                    let divPayName = document.createElement("div");
+                    divPayName.innerText = "Наличные";
+                    let divPaySum = document.createElement("div");
+                    divPaySum.innerText = check.sumCash + " р";
+                    checkPaymentsTable.append(divPayName);
+                    checkPaymentsTable.append(divPaySum);
+                };
+                if (check.sumElectron > 0) {
+                    let divPayName = document.createElement("div");
+                    divPayName.innerText = "Безналичные";
+                    let divPaySum = document.createElement("div");
+                    divPaySum.innerText = check.sumElectron + " р";
+                    checkPaymentsTable.append(divPayName);
+                    checkPaymentsTable.append(divPaySum);
+                };
+                if (check.sumDiscont > 0) {
+                    let divPayName = document.createElement("div");
+                    divPayName.innerText = "Скидка";
+                    let divPaySum = document.createElement("div");
+                    divPaySum.innerText = check.sumDiscont + " р";
+                    checkPaymentsTable.append(divPayName);
+                    checkPaymentsTable.append(divPaySum);
+                };
+            })
+    }
+</script>

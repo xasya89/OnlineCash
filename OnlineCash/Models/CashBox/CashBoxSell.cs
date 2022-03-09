@@ -13,10 +13,17 @@ namespace OnlineCash.Models.CashBox
         public decimal Price { get; set; }
     }
 
+    public class CashBoxCheckSellBuyerModel
+    {
+        public Guid Uuid { get; set; }
+        public string Phone { get; set; }
+    }
+
     public class CashBoxCheckSellModel
     {
         public bool IsReturn { get; set; }
         public DateTime Create { get; set; }
+        public CashBoxCheckSellBuyerModel Buyer { get; set; }
         public decimal SumCash { get; set; }
         public decimal SumElectron { get; set; }
         public decimal SumDiscount { get; set; }

@@ -63,6 +63,7 @@ namespace OnlineCash
             services.AddTransient<CashMoneyService>();
             services.AddTransient<MoneyBalanceService>();
             services.AddSingleton<NotificationOfEventInSystemService>();
+            services.AddTransient<GoodCountAnalyseService>();
             //services.AddScoped<IEvotorService, EvotorService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));

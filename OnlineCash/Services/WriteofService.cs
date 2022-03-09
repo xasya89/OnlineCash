@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
+using Microsoft.Extensions.Configuration;
 
 namespace OnlineCash.Services
 {
@@ -14,18 +15,22 @@ namespace OnlineCash.Services
         shopContext db;
         ILogger<WriteofService> logger;
         IGoodBalanceService goodBalance;
-        public WriteofService(shopContext db, ILogger<WriteofService> logger, IGoodBalanceService goodBalance)
+        IConfiguration _configuration;
+        public WriteofService(shopContext db, ILogger<WriteofService> logger, IConfiguration configuration, IGoodBalanceService goodBalance)
         {
             this.db = db;
             this.logger = logger;
             this.goodBalance = goodBalance;
+            _configuration = configuration;
         }
 
         public async Task<bool> SaveSynch(int shopId, WriteofSynchModel model)
         {
+            bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
             var old = await db.Writeofs.Where(w => w.Uuid == model.Uuid & w.ShopId==shopId).FirstOrDefaultAsync();
             if (old != null) return true;
             Writeof writeofDb = new Writeof { 
+                IsSuccess=autoSuccess,
                 Uuid = model.Uuid, 
                 ShopId=shopId, 
                 Status=DocumentStatus.New, 
@@ -47,7 +52,8 @@ namespace OnlineCash.Services
                 });
             };
             await db.SaveChangesAsync();
-            //await goodBalance.CalcAsync(shopId, writeofDb.DateWriteof);
+            if(autoSuccess)
+                await goodBalance.CalcAsync(shopId, model.DateCreate);
             return true;
         }
     }
