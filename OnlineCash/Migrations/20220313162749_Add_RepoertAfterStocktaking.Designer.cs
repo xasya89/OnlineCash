@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220313162749_Add_RepoertAfterStocktaking")]
+    partial class Add_RepoertAfterStocktaking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -704,9 +706,6 @@ namespace OnlineCash.Migrations
                     b.Property<decimal>("StocktakingFactSum")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int>("StocktakingId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("StocktakingPrependSum")
                         .HasColumnType("decimal(65,30)");
 
@@ -717,8 +716,6 @@ namespace OnlineCash.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StocktakingId");
 
                     b.ToTable("ReportsAfterStocktaking");
                 });
@@ -1390,17 +1387,6 @@ namespace OnlineCash.Migrations
                     b.Navigation("Buyer");
                 });
 
-            modelBuilder.Entity("OnlineCash.DataBaseModels.ReportAfterStocktaking", b =>
-                {
-                    b.HasOne("OnlineCash.DataBaseModels.Stocktaking", "Stocktaking")
-                        .WithMany("ReportsAfterStocktaking")
-                        .HasForeignKey("StocktakingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Stocktaking");
-                });
-
             modelBuilder.Entity("OnlineCash.DataBaseModels.Shift", b =>
                 {
                     b.HasOne("OnlineCash.DataBaseModels.Cashier", "Cashier")
@@ -1652,8 +1638,6 @@ namespace OnlineCash.Migrations
 
             modelBuilder.Entity("OnlineCash.DataBaseModels.Stocktaking", b =>
                 {
-                    b.Navigation("ReportsAfterStocktaking");
-
                     b.Navigation("StockTakingGroups");
 
                     b.Navigation("StocktakingSummaryGoods");

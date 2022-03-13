@@ -24,11 +24,11 @@ namespace OnlineCash.Services
             _configuration = configuration;
         }
 
-        public async Task<bool> SaveSynch(int shopId, WriteofSynchModel model)
+        public async Task<Writeof> SaveSynch(int shopId, WriteofSynchModel model)
         {
             bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
             var old = await db.Writeofs.Where(w => w.Uuid == model.Uuid & w.ShopId==shopId).FirstOrDefaultAsync();
-            if (old != null) return true;
+            if (old != null) return null;
             Writeof writeofDb = new Writeof { 
                 IsSuccess=autoSuccess,
                 Uuid = model.Uuid, 
@@ -42,7 +42,7 @@ namespace OnlineCash.Services
             foreach(var wgood in model.Goods)
             {
                 Good good = await db.Goods.Where(g => g.Uuid == wgood.Uuid).FirstOrDefaultAsync();
-                if (good == null) return false;
+                if (good == null) return null;
                 db.WriteofGoods.Add(new WriteofGood
                 {
                     Writeof=writeofDb,
@@ -54,7 +54,7 @@ namespace OnlineCash.Services
             await db.SaveChangesAsync();
             if(autoSuccess)
                 await goodBalance.CalcAsync(shopId, model.DateCreate);
-            return true;
+            return writeofDb;
         }
     }
 }

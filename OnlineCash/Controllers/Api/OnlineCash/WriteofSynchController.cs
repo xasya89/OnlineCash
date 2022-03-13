@@ -15,18 +15,19 @@ namespace OnlineCash.Controllers.Api
     public class WriteofSynchController : ControllerBase
     {
         IWriteofService writeofService;
-        public WriteofSynchController(IWriteofService writeofService)
+        NotificationOfEventInSystemService _notificationService;
+        public WriteofSynchController(IWriteofService writeofService, NotificationOfEventInSystemService notificationService)
         {
             this.writeofService = writeofService;
+            _notificationService = notificationService;
         }
 
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Post(int shopId, [FromBody] WriteofSynchModel model)
         {
-            if (await writeofService.SaveSynch(shopId, model))
-                return Ok();
-            else
-                return BadRequest();
+            var writeOf= await writeofService.SaveSynch(shopId, model);
+            await _notificationService.Send($"Списание на сумму {writeOf.SumAll} Примечание {writeOf.Note}", "Writeof/edit/" + writeOf.Id);
+            return Ok();
         }
     }
 }

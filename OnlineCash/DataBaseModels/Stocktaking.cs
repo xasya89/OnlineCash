@@ -24,5 +24,6 @@ namespace OnlineCash.DataBaseModels
         public DocumentStatus Status { get; set; } = DocumentStatus.New;
         public List<StockTakingGroup> StockTakingGroups { get; set; } = new List<StockTakingGroup>();
         public List<StocktakingSummaryGood> StocktakingSummaryGoods { get; set; } = new List<StocktakingSummaryGood>();
+        public List<ReportAfterStocktaking> ReportsAfterStocktaking { get; set; }
     }
 }

@@ -14,10 +14,14 @@ namespace OnlineCash.Services
     {
         shopContext db;
         IGoodBalanceService _goodBalanceService;
-        public StockTackingService(shopContext db, IGoodBalanceService goodBalanceService)
+        CashMoneyService _moneyService;
+        NotificationOfEventInSystemService _notificationService;
+        public StockTackingService(shopContext db, IGoodBalanceService goodBalanceService, CashMoneyService moneyService, NotificationOfEventInSystemService notificationService)
         {
             this.db = db;
             _goodBalanceService = goodBalanceService;
+            _moneyService = moneyService;
+            _notificationService = notificationService;
         }
 
         public async Task<StockTackingGruppingModel> GetDetailsGroups(int idStocktaking)
@@ -100,6 +104,7 @@ namespace OnlineCash.Services
             
             await db.SaveChangesAsync();
             await SuccessCalc(stocktaking.Id);
+            await CreateReportAfterSave(stocktaking.Id);
         }
 
         public async Task Save(StockTakingSaveModel model)
@@ -227,6 +232,73 @@ namespace OnlineCash.Services
 
             await db.SaveChangesAsync();
             await _goodBalanceService.CalcAsync(stocktaking.ShopId, stocktaking.Start);
+        }
+
+        public async Task CreateReportAfterSave(int stocktakingId)
+        {
+            var stocktaking = await db.Stocktakings.Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
+            int stocktackingOldId = stocktakingId - 1;
+            Stocktaking stocktakingOld = null;
+            while (stocktackingOldId > 0 & stocktakingOld == null)
+                stocktakingOld = await db.Stocktakings.Where(s => s.Id == stocktackingOldId).Include(s=>s.ReportsAfterStocktaking).FirstOrDefaultAsync();
+            decimal stocktakingOldSum = stocktakingOld==null ? 0 : stocktakingOld.SumFact;
+            DateTime startDate = stocktakingOld==null ? DateTime.Now.AddDays(-7).Date : stocktakingOld.Start.Date;
+            DateTime stopDate = stocktaking.Start.AddDays(-1).Date;
+            decimal cashMoneyOld = 0;
+            if (stocktakingOld != null && stocktakingOld.ReportsAfterStocktaking.FirstOrDefault() != null)
+                cashMoneyOld = stocktakingOld.ReportsAfterStocktaking.FirstOrDefault().CashStartSum;
+            //Приходы
+            decimal sumArrival = 0;
+            var arrivals = await db.Arrivals.Where(a => a.isSuccess==true & a.DateArrival.Date >= startDate & a.DateArrival.Date <= stopDate).ToListAsync();
+            foreach (var arrival in arrivals)
+                sumArrival += arrival.SumArrival;
+            //Выплаты
+            decimal sumIncome = 0;
+            var incomes = await db.CashMoneys.Where(c => c.TypeOperation == CashMoneyTypeOperations.Income & c.Create.Date >= startDate & c.Create.Date <= stopDate).ToListAsync();
+            foreach (var income in incomes)
+                sumIncome += income.Sum;
+            //Терминал
+            decimal sumElectron = 0;
+            var shifts = await db.Shifts.Where(s => s.Start.Date >= startDate & s.Start.Date <= stopDate).ToListAsync();
+            foreach (var shift in shifts)
+                sumElectron += shift.SumElectron;
+            //Списания
+            decimal sumWritof = 0;
+            var writeofs = await db.Writeofs.Where(w => w.IsSuccess == true & w.DateWriteof.Date >= startDate & w.DateWriteof.Date <= stopDate).ToListAsync();
+            foreach (var writeof in writeofs)
+                sumWritof += writeof.SumAll;
+            //Остаток денег в кассе
+            var cashMoneyBalance = await db.MoneyBalanceHistories.Where(m => m.DateBalance.Date == stopDate).FirstOrDefaultAsync();
+            decimal cashMoneyEnd = cashMoneyBalance == null ? 0 : cashMoneyBalance.SumEnd;
+            ReportAfterStocktaking reportAfterStocktaking = new ReportAfterStocktaking
+            {
+                Stocktaking=stocktaking,
+                StartDate = startDate,
+                StopDate = stopDate,
+                StocktakingPrependSum=stocktakingOldSum,
+                CashStartSum=cashMoneyOld,
+                ArrivalSum=sumArrival,
+                IncomeSum=sumIncome,
+                ElectronSum=sumElectron,
+                WriteOfSum=sumWritof,
+                CashEndSum= cashMoneyEnd,
+                StocktakingFactSum=stocktaking.SumFact
+            };
+            db.ReportsAfterStocktaking.Add(reportAfterStocktaking);
+            await db.SaveChangesAsync();
+            await _notificationService.Send($@"Итоги инверторизации за период {startDate.ToString("dd.MM")} - {stopDate.ToString("dd.MM")}:
+Иверторизация было - {stocktakingOldSum}
+Было денег в кассе - {cashMoneyOld}
+Приход - {sumArrival}
+Выплаты - {sumIncome}
+Терминал - {sumElectron}
+Списание - {sumWritof}
+
+Должны быть остатки по документам - {reportAfterStocktaking.StopSum}
+
+Факт. инверторизация - {stocktaking.SumFact}
+Денег в кассе - {cashMoneyEnd}
+");
         }
     }
 

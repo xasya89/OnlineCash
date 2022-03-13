@@ -6,16 +6,17 @@
                 <th>Наименование</th>
                 @for (var day = (DateTime)ViewBag.Start; DateTime.Compare(day, (DateTime)ViewBag.Stop) <= 0; day = day.AddDays(1).Date)
                 {
-                    <th colspan="3">@day.ToString("dd.MM")</th>
+                    <th colspan="4">@day.ToString("dd.MM")</th>
                 }
             </tr>
             <tr>
                 <th></th>
                 @for (var day = (DateTime)ViewBag.Start; DateTime.Compare(day, (DateTime)ViewBag.Stop) <= 0; day = day.AddDays(1).Date)
                 {
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th>И</th>
+                    <th>Р</th>
+                    <th>П</th>
+                    <th>О</th>
                 }
             </tr>
         </thead>
@@ -26,9 +27,10 @@
                 <td>@countOfGood.GoodName</td>
                 @foreach (KeyValuePair<DateTime, GoodCountAnalyseDay> valuePair in countOfGood.CountOfDays)
                 {
-                    <td>+@valuePair.Value.CountPlus</td>
-                    <td>-@valuePair.Value.CountMinus</td>
-                    <td>@valuePair.Value.CountEnd</td>
+                    <td>@valuePair.Value.CountStocktaking.Normalize()</td>
+                    <td>@valuePair.Value.CountMinus.Normalize()</td>
+                    <td>@valuePair.Value.CountPlus.Normalize()</td>
+                    <td>@valuePair.Value.CountGoodBalance.Normalize()</td>
                 }
             </tr>
             }

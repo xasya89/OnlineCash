@@ -42,10 +42,11 @@ namespace OnlineCash.Services
                     var countOfDay = countAnalyses.Where(c => c.GoodId == aGood.GoodId).FirstOrDefault();
                     if (countOfDay != null)
                         countOfDay.CountOfDays[arrival.DateArrival].CountPlus += (decimal)aGood.Count;
+                    
                 }
             var shifts = await _db.Shifts
                     .Include(s => s.ShiftSales)
-                    .Where(s => s.ShopId == shopId && DateTime.Compare(s.Start.Date, start) >= 0 && DateTime.Compare(s.Start.Date, stop) == 0)
+                    .Where(s => s.ShopId == shopId && DateTime.Compare(s.Start.Date, start) >= 0 && DateTime.Compare(s.Start.Date, stop) <= 0)
                     .ToListAsync();
             foreach(var shift in shifts)
                 foreach(var sGood in shift.ShiftSales)
@@ -53,6 +54,14 @@ namespace OnlineCash.Services
                     var countOfDay = countAnalyses.Where(c => c.GoodId == sGood.GoodId).FirstOrDefault();
                     if (countOfDay != null)
                         countOfDay.CountOfDays[shift.Start.Date].CountMinus += (decimal)sGood.Count;
+                }
+            var writeofs = await _db.Writeofs.Include(w => w.WriteofGoods).Where(w => w.IsSuccess & w.ShopId == shopId & DateTime.Compare(w.DateWriteof.Date, start) >= 0 && DateTime.Compare(w.DateWriteof.Date, stop) <= 0).ToListAsync();
+            foreach (var writeof in writeofs)
+                foreach (var wgood in writeof.WriteofGoods)
+                {
+                    var countOfDay = countAnalyses.Where(c => c.GoodId == wgood.GoodId).FirstOrDefault();
+                    if (countOfDay != null)
+                        countOfDay.CountOfDays[writeof.DateWriteof.Date].CountMinus += (decimal)wgood.Count;
                 }
             return countAnalyses;
         }

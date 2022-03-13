@@ -31,7 +31,9 @@ namespace OnlineCash.Services
                 var shop = await db.Shops.Where(s => s.Id == ShopId).FirstOrDefaultAsync();
                 Dictionary<int, double> balanceDict = new Dictionary<int, double>();
 
-                var historyLastDay = await db.GoodBalanceHistories.Where(h => h.ShopId == ShopId & DateTime.Compare(h.CurDate, curDate.AddDays(-1)) == 0).ToListAsync();
+                var historyLastDay = await db.GoodBalanceHistories
+                    .Where(h => h.ShopId == ShopId & DateTime.Compare(h.CurDate, curDate.AddDays(-1)) == 0)
+                    .ToListAsync();
                 foreach (var history in historyLastDay)
                     BalanceGoodPlus(balanceDict, history.GoodId, (double) history.CountLast);
 
@@ -52,12 +54,15 @@ namespace OnlineCash.Services
                 }
 
                 var arrivalLastDay = await db.Arrivals.Include(a => a.ArrivalGoods)
-                    .Where(a => a.ShopId == ShopId & DateTime.Compare(a.DateArrival, curDate) == 0)
+                    .Where(a => a.ShopId == ShopId & a.isSuccess & DateTime.Compare(a.DateArrival, curDate) == 0)
                     .ToListAsync();
                 foreach (var arrival in arrivalLastDay)
                     foreach (var arrivalgood in arrival.ArrivalGoods)
                         BalanceGoodPlus(balanceDict, arrivalgood.GoodId, arrivalgood.Count);
-                var writeofs = await db.Writeofs.Include(w => w.WriteofGoods).Where(w => w.ShopId == ShopId & DateTime.Compare(w.DateWriteof, curDate) == 0).ToListAsync();
+
+                var writeofs = await db.Writeofs.Include(w => w.WriteofGoods)
+                    .Where(w => w.ShopId == ShopId & w.IsSuccess & DateTime.Compare(w.DateWriteof, curDate) == 0)
+                    .ToListAsync();
                 foreach (var writeof in writeofs)
                     foreach (var wgood in writeof.WriteofGoods)
                         BalanceGoodMinus(balanceDict, wgood.GoodId, wgood.Count);
