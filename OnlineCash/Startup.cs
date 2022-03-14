@@ -110,11 +110,16 @@ namespace OnlineCash
             app.UseHangfireDashboard();
             backgroundJobClient.Enqueue(() => Console.WriteLine("Hello Hanfire job!"));
             recurringJobManager.AddOrUpdate(
-                "Run every minute",
+                "Run calc good balance",
                 () => serviceProvider.GetService<IGoodBalanceService>().CalcAsync(shopIdDefault, DateTime.Now),
                 configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
                 );
 
+            recurringJobManager.AddOrUpdate(
+                "Run calc money balance",
+                () => serviceProvider.GetService<MoneyBalanceService>().Calculate(shopIdDefault, DateTime.Now),
+                configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
+                );
             db.Database.Migrate();
         }
     }
