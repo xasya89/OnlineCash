@@ -5,11 +5,11 @@
         <h4>Инверторизация @Model.Num от @Model.Create.ToString("dd.MM.yy")</h4>
         <h5 class="mb-1">Сумма товара в магазине до инверторизации @Model.SumDb</h5>
         <h5 class="mb-1">Сумма товара в магазине по инверторизации @Model.SumFact</h5>
-        @if(Model.SumFact-Model.SumDb>0)
+        @if (Model.SumFact - Model.SumDb > 0)
         {
             <h5>Пересорт @(Model.SumFact - Model.SumDb) руб.</h5>
         }
-        @if(Model.SumFact-Model.SumDb < 0)
+        @if (Model.SumFact - Model.SumDb < 0)
         {
             <h5>Недостача @(Model.SumDb - Model.SumFact) руб.</h5>
         }
@@ -41,7 +41,7 @@
                     background = "bg-info";
                 if (summary.CountFact - summary.CountDb < 0)
                     background = "bg-warning";
-                <tr class="@background">
+                <tr class="@background" onclick="openDocDetail(@summary.GoodId, '@summary.Good.Name')">
                     <td>@summary.Good?.Name</td>
                     <td>@summary.Good?.Unit.GetDescription()</td>
                     <td>@summary.CountDb</td>
@@ -62,3 +62,61 @@
         </thead>
     </table>
 </div>
+
+<div class="modal fade" id="docDetailModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="docDetailGoodName"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Документ</th>
+                            <th>Номер</th>
+                            <th>Кол-во</th>
+                        </tr>
+                    </thead>
+                    <tbody id="docDetailList"></tbody>
+                    <tbody>
+                        <tr>
+                            <th colspan="2"></th>
+                            <th id="docDetailCountSummary"></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var idAct =@Model.Id ;
+
+    const docDetailModal = new bootstrap.Modal(document.getElementById('docDetailModal'), {});
+    const docDetailGoodName = document.getElementById("docDetailGoodName");
+    const docDetailList = document.getElementById("docDetailList");
+    const docDetailCountSummary = document.getElementById("docDetailCountSummary");
+
+    function openDocDetail(goodId, goodName) {
+        docDetailGoodName.textContent = goodName;
+        docDetailList.querySelectorAll("tr").forEach(tr => tr.remove());
+        fetch(`/Stocktaking/GetDetailGoodCountByDocs?stocktakingId=${idAct}&goodId=${goodId}`)
+            .then(r => r.json())
+            .then(docs => docs.forEach(doc => {
+                if (doc.type != "Итог") {
+                    let tr = document.createElement("tr");
+                    tr.innerHTML = `<td>${doc.type}</td><td>${doc.num}</td><td>${doc.count}</td>`;
+                    docDetailList.append(tr);
+                }
+                else
+                    docDetailCountSummary.textContent = doc.count;
+            }));
+
+        docDetailModal.show();
+    }
+</script>

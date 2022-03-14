@@ -16,5 +16,7 @@ namespace OnlineCash.Services
 
         public Task Save(StockTakingSaveModel model);
         public Task<Stocktaking> GetSummary(int id);
+
+        public Task<List<dynamic>> GetDetailGoodCountByDocs(int stocktakingId, int goodId);
     }
 }

@@ -240,9 +240,9 @@ namespace OnlineCash.Services
         public async Task CreateReportAfterSave(int stocktakingId)
         {
             var stocktaking = await db.Stocktakings.Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
-            int stocktackingOldId = stocktakingId - 1;
+            int stocktackingOldId = stocktakingId;
             Stocktaking stocktakingOld = null;
-            while (stocktackingOldId > 0 & stocktakingOld == null)
+            while (--stocktackingOldId > 0 & stocktakingOld == null)
                 stocktakingOld = await db.Stocktakings.Where(s => s.Id == stocktackingOldId).Include(s=>s.ReportsAfterStocktaking).FirstOrDefaultAsync();
             decimal stocktakingOldSum = stocktakingOld==null ? 0 : stocktakingOld.SumFact;
             DateTime startDate = stocktakingOld==null ? DateTime.Now.AddDays(-7).Date : stocktakingOld.Start.Date;
@@ -256,10 +256,10 @@ namespace OnlineCash.Services
             foreach (var arrival in arrivals)
                 sumArrival += arrival.SumArrival;
             //Выплаты
-            decimal sumIncome = 0;
-            var incomes = await db.CashMoneys.Where(c => c.TypeOperation == CashMoneyTypeOperations.Income & c.Create.Date >= startDate & c.Create.Date <= stopDate).ToListAsync();
-            foreach (var income in incomes)
-                sumIncome += income.Sum;
+            decimal sumOutcome = 0;
+            var outcomes = await db.CashMoneys.Where(c => c.TypeOperation == CashMoneyTypeOperations.Outcome & c.Create.Date >= startDate & c.Create.Date <= stopDate).ToListAsync();
+            foreach (var outcome in outcomes)
+                sumOutcome += outcome.Sum;
             //Терминал
             decimal sumElectron = 0;
             var shifts = await db.Shifts.Where(s => s.Start.Date >= startDate & s.Start.Date <= stopDate).ToListAsync();
@@ -281,7 +281,7 @@ namespace OnlineCash.Services
                 StocktakingPrependSum=stocktakingOldSum,
                 CashStartSum=cashMoneyOld,
                 ArrivalSum=sumArrival,
-                IncomeSum=sumIncome,
+                IncomeSum=sumOutcome,
                 ElectronSum=sumElectron,
                 WriteOfSum=sumWritof,
                 CashEndSum= cashMoneyEnd,
@@ -293,7 +293,7 @@ namespace OnlineCash.Services
 Иверторизация было - {stocktakingOldSum}
 Было денег в кассе - {cashMoneyOld}
 Приход - {sumArrival}
-Выплаты - {sumIncome}
+Выплаты - {sumOutcome}
 Терминал - {sumElectron}
 Списание - {sumWritof}
 
@@ -302,6 +302,54 @@ namespace OnlineCash.Services
 Факт. инверторизация - {stocktaking.SumFact}
 Денег в кассе - {cashMoneyEnd}
 ");
+        }
+
+        public async Task<List<dynamic>> GetDetailGoodCountByDocs(int stocktakingId, int goodId)
+        {
+            List<dynamic> documents = new List<dynamic>();
+            decimal countItog = 0;
+            var stocktaking = await db.Stocktakings.Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
+            DateTime stopDate = stocktaking.Start.Date;
+            int stocktakingOldId = stocktakingId;
+            Stocktaking stocktakingOld = null;
+            while (--stocktakingOldId > 0 & stocktakingOld == null)
+                stocktakingOld = await db.Stocktakings.Include(s=>s.StocktakingSummaryGoods).Where(s => s.Id == stocktakingOldId).FirstOrDefaultAsync();
+            DateTime startDate = stocktakingOld==null ? DateTime.Now.AddDays(-7).Date : stocktakingOld.Start.Date;
+            if (stocktakingOld != null)
+            {
+                double count = (double)stocktakingOld.StocktakingSummaryGoods.Where(s => s.GoodId == goodId).Sum(s => s.CountFact);
+                documents.Add(new { Type = "Предыдущая инверторизация", Num = "", Count = count });
+                countItog = (decimal)count;
+            }
+            var arrivals=await db.Arrivals.Include(a=>a.ArrivalGoods).Where(a => a.isSuccess == true & a.DateArrival.Date >= startDate & a.DateArrival.Date < stopDate).ToListAsync();
+            foreach(var arrival in arrivals)
+            {
+                double count = arrival.ArrivalGoods.Where(g => g.GoodId == goodId).Sum(a => a.Count);
+                if (count > 0)
+                    documents.Add(new { Type = "Приход", Num = $"{arrival.Num} от {arrival.DateArrival.ToString("dd.MM")}", Count = $"+ {count}" });
+                countItog += (decimal)count;
+            };
+
+            var shifts = await db.Shifts.Include(s=>s.ShiftSales).Where(s => s.Start.Date >= startDate & s.Start.Date < stopDate).ToListAsync();
+            foreach(var shift in shifts)
+            {
+                double count = shift.ShiftSales.Where(s => s.GoodId == goodId).Sum(s => s.Count - (double)s.CountReturn);
+                if (count > 0)
+                    documents.Add(new { Type = "Смена", Num = $"{shift.Start.ToString("dd.MM")}", Count = $"- {count}" });
+                countItog -= (decimal)count;
+            }
+
+            var writeofs = await db.Writeofs.Include(w=>w.WriteofGoods).Where(w => w.IsSuccess == true & w.DateWriteof.Date >= startDate & w.DateWriteof.Date < stopDate).ToListAsync();
+            foreach(var writeof in writeofs)
+            {
+                double count = writeof.WriteofGoods.Where(w => w.GoodId == goodId).Sum(w => w.Count);
+                if (count > 0)
+                    documents.Add(new { Type = "Списание", Num = $"{writeof.DateWriteof.ToString("dd.MM")}", Count = $"- {count}" });
+                countItog -= (decimal)count;
+            }
+
+            documents.Add(new { Type = "Итог", Num = $"", Count = $"{countItog}" });
+            return documents;
         }
     }
 
