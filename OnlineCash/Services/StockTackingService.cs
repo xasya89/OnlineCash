@@ -156,7 +156,10 @@ namespace OnlineCash.Services
             }
             await db.SaveChangesAsync();
             if (model.isSuccess & !isSuccessOld)
+            {
                 await SuccessCalc(stocktaking.Id);
+                await CreateReportAfterSave(stocktaking.Id);
+            }
         }
 
         private async Task SuccessCalc(int stocktakingId)

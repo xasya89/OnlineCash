@@ -21,13 +21,16 @@ namespace OnlineCash.Controllers.Api
             this.db = db;
         }
         [HttpGet]
+        //TODO: Создано временное решение для выыборки только не удаленных товаров, т.к. ошибка MySQL server version for the right syntax to use near 'NOT 
         public async Task<IActionResult> Get(string Name)
-            => Ok( await db.Goods
+            => Ok((
+                await db.Goods
                 .Include(g=>g.BarCodes)
                 .Include(g=>g.GoodPrices)
                 .Include(g=>g.GoodGroup)
                 .Include(g=>g.Supplier)
-                .Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync());
+                .Where(g => EF.Functions.Like(g.Name, $"%{Name}%")).ToListAsync()
+                ).Where(g=>g.IsDeleted==false).ToList());
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Default(int id)
@@ -55,12 +58,12 @@ namespace OnlineCash.Controllers.Api
         //TODO: Проверить необходимость и адекватность данной функции
         public async Task<IActionResult> DefaultList([FromBody] List<int> idGoods, int idShop)
         {
-            var goods = await db.Goods
+            var goods = (await db.Goods
                 .Include(g=>g.BarCodes)
                 .Include(g=>g.GoodGroup)
                 .Include(g=>g.GoodPrices)
                 .Include(g=>g.Supplier)
-                .Where(g=>idGoods.Contains(g.Id)).ToListAsync();
+                .Where(g=>idGoods.Contains(g.Id) & g.IsDeleted == false).ToListAsync()).Where(g=>g.IsDeleted==false).ToList();
             foreach (var good in goods)
             {
                 var goodprice = good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault();
@@ -71,19 +74,10 @@ namespace OnlineCash.Controllers.Api
         }
         [HttpGet("find/{find}")]
         public async Task<IActionResult> Find(string find) =>
-            Ok(await db.Goods
+            Ok((
+                await db.Goods
                 .Include(g=>g.BarCodes)
-                .Where(g => EF.Functions.Like(g.Name, $"%{find}%")).ToListAsync());
-        /*
-        [HttpGet("barcode/{barcode}")]
-        public async Task<IActionResult> GetBarcode(string barcode)
-        {
-
-            return Ok( JsonSerializer.Serialize(
-                await db.Goods.Include(g => g.GoodPrices).Include(g=>g.Supplier).Where(g => g.BarCode == barcode).FirstOrDefaultAsync()
-                ));
-
-        }
-        */
+                .Where(g => EF.Functions.Like(g.Name, $"%{find}%")).ToListAsync()
+                ).Where(g=>g.IsDeleted==false).ToList());
     }
 }
