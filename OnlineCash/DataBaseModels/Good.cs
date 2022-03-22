@@ -40,5 +40,6 @@ namespace OnlineCash.DataBaseModels
         public List<GoodBalanceHistory> GoodBalanceHistories { get; set; }
         public List<ShiftSale> ShiftSales { get; set; }
         public List<NewGoodFromCash> NewGoodFromCashes { get; set; }
+        public List<RevaluationGood> RevaluationGoods { get; set; }
     }
 }

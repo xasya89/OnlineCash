@@ -1,0 +1,26 @@
+﻿@model List<OnlineCash.DataBaseModels.Revaluation>
+
+<h3 class="mt-2">Переоценка</h3>
+<div class="mt-1 table-responsive">
+    <table class="table table-sm table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Статус</th>
+                <th>Дата</th>
+                <th>Было</th>
+                <th>Стало</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var revaluation in Model)
+            {
+            <tr>
+                <td>@revaluation.Status.GetDescription()</td>
+                <td><a asp-action="edit" asp-route-id="@revaluation.Id">@revaluation.Create.ToString("dd.MM.yy")</a></td>
+                <td><a asp-action="edit" asp-route-id="@revaluation.Id">@revaluation.SumOld</a></td>
+                <td><a asp-action="edit" asp-route-id="@revaluation.Id">@revaluation.SumNew</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,43 @@
+﻿@model OnlineCash.DataBaseModels.Revaluation;
+
+<h4>Пересортица <span>@Model.Create.ToString("dd.MM.yy")</span></h4>
+<div class="mt-2 table-responsive">
+    <table class="table table-sm table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th rowspan="2">Товар</th>
+                <th rowspan="2">Кол-во</th>
+                <th colspan="2">Было</th>
+                <th colspan="2">Стало</th>
+            </tr>
+            <tr>
+                <th>Цена</th>
+                <th>Стоимость</th>
+                <th>Цена</th>
+                <th>Стоимость</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var revaluation in Model.RevaluationGoods)
+            {
+                <tr>
+                    <td>@revaluation.Good.Name</td>
+                    <td>@revaluation.Good.Unit.GetDescription()</td>
+                    <td>@revaluation.Count</td>
+                    <td>@revaluation.PriceOld</td>
+                    <td>@revaluation.SumOld</td>
+                    <td>@revaluation.PriceNew</td>
+                    <td>@revaluation.SumNew</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4">Итого</th>
+                <th>@Model.SumOld</th>
+                <th></th>
+                <th>@Model.SumNew</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>

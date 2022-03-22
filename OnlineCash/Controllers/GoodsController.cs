@@ -67,9 +67,12 @@ namespace OnlineCash.Controllers
             ViewBag.FindIsDeleted = filterIsDeleted;
             ViewBag.GoodGroups = await db.GoodGroups.ToListAsync();
             ViewBag.Shops = await db.Shops.OrderBy(s => s.Name).ToListAsync();
-            var barcode = await db.BarCodes.Where(b => b.Code == find).FirstOrDefaultAsync();
-            if (barcode != null)
-                return View("Index",await db.Goods.Where(g=>g.Id==barcode.GoodId).ToListAsync());
+            if(find!="")
+            {
+                var barcode = await db.BarCodes.Where(b => b.Code == find).FirstOrDefaultAsync();
+                if (barcode != null)
+                    return View("Index", await db.Goods.Where(g => g.Id == barcode.GoodId).ToListAsync());
+            }
 
             return View("Index", await db.Goods
                 .Where(g => EF.Functions.Like(g.Name, $"%{find}%"))
