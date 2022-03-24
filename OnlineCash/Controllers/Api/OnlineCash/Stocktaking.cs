@@ -23,6 +23,10 @@ namespace OnlineCash.Controllers.Api.OnlineCash
             _service = service;
         }
 
+        [HttpPost("start/{shopId}")]
+        public async Task<IActionResult> Start(int shopId, [FromBody] StocktakingReciveDataModel model)
+            => _service.StartFromOnlineCash(shopId, model);
+
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Save(int shopId, [FromBody] StocktakingReciveDataModel model)
         {

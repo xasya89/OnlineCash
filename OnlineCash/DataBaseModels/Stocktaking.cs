@@ -21,6 +21,8 @@ namespace OnlineCash.DataBaseModels
         public double CountFact { get; set; }
         public decimal SumDb { get; set; }
         public decimal SumFact { get; set; }
+        public decimal CashMoneyFact { get; set; }
+        public decimal CashMoneyDb { get; set; }
         public DocumentStatus Status { get; set; } = DocumentStatus.New;
         public List<StockTakingGroup> StockTakingGroups { get; set; } = new List<StockTakingGroup>();
         public List<StocktakingSummaryGood> StocktakingSummaryGoods { get; set; } = new List<StocktakingSummaryGood>();

@@ -17,14 +17,19 @@ namespace OnlineCash.Services
             _db = db;
             _logger = logger;
         }
-
-        private async Task<MoneyBalanceHistory> GetToday(int shopId)
+        //TODO: Требуется переделать метод с учетом, если пропущеные несколько дней. Он должен пересчитывать их
+        public async Task<MoneyBalanceHistory> GetToday(int shopId, DateTime? date=null)
         {
+            DateTime today = date == null ? DateTime.Now.Date : ((DateTime)date).Date;
             var shop = _db.Shops.Where(s => s.Id == shopId).FirstOrDefault();
             if (shop == null)
                 throw new Exception("Магазин не найден");
-            var balanceNowAndLast = await _db.MoneyBalanceHistories.Where(m => m.ShopId == shopId & DateTime.Compare(m.DateBalance, DateTime.Now.Date) <= 0).OrderByDescending(m=>m.DateBalance).Take(2).ToListAsync();
-            var balanceNow = balanceNowAndLast.Where(b => DateTime.Compare(b.DateBalance, DateTime.Now.Date) == 0).FirstOrDefault();
+            var balanceNowAndLast = await _db.MoneyBalanceHistories
+                .Where(m => m.ShopId == shopId & DateTime.Compare(m.DateBalance, today) <= 0)
+                .OrderByDescending(m=>m.DateBalance)
+                .Take(2)
+                .ToListAsync();
+            var balanceNow = balanceNowAndLast.Where(b => DateTime.Compare(b.DateBalance, today) == 0).FirstOrDefault();
             if (balanceNow== null)
             {
                 var last = balanceNowAndLast.FirstOrDefault();
@@ -34,7 +39,7 @@ namespace OnlineCash.Services
                     last.SumEnd= last.SumStart + last.SumSale + last.SumIncome - last.SumReturn - last.SumOutcome + last.SumOther;
                     sumStart = last.SumEnd;
                 }
-                balanceNow = new MoneyBalanceHistory { ShopId = shopId, DateBalance = DateTime.Now.Date, SumStart = sumStart, SumEnd=sumStart };
+                balanceNow = new MoneyBalanceHistory { ShopId = shopId, DateBalance = today, SumStart = sumStart, SumEnd=sumStart };
                 _db.MoneyBalanceHistories.Add(balanceNow);
                 await _db.SaveChangesAsync();
             }

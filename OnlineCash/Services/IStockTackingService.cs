@@ -12,8 +12,8 @@ namespace OnlineCash.Services
     public interface IStockTackingService
     {
         public Task<StockTackingGruppingModel> GetDetailsGroups(int idStocktaking);
+        public Task StartFromOnlineCash(int shopId, StocktakingReciveDataModel model);
         public Task SaveFromOnlinCash(int shopId, StocktakingReciveDataModel model);
-
         public Task Save(StockTakingSaveModel model);
         public Task<Stocktaking> GetSummary(int id);
 

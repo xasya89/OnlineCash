@@ -16,12 +16,18 @@ namespace OnlineCash.Services
         IGoodBalanceService _goodBalanceService;
         CashMoneyService _moneyService;
         NotificationOfEventInSystemService _notificationService;
-        public StockTackingService(shopContext db, IGoodBalanceService goodBalanceService, CashMoneyService moneyService, NotificationOfEventInSystemService notificationService)
+        MoneyBalanceService _moneyBalanceService;
+        public StockTackingService(shopContext db, 
+            IGoodBalanceService goodBalanceService, 
+            CashMoneyService moneyService, 
+            NotificationOfEventInSystemService notificationService,
+            MoneyBalanceService moneyBalanceService)
         {
             this.db = db;
             _goodBalanceService = goodBalanceService;
             _moneyService = moneyService;
             _notificationService = notificationService;
+            _moneyBalanceService = moneyBalanceService;
         }
 
         public async Task<StockTackingGruppingModel> GetDetailsGroups(int idStocktaking)
@@ -73,6 +79,35 @@ namespace OnlineCash.Services
             return stocktaking;
         }
 
+        public async Task StartFromOnlineCash(int shopId, StocktakingReciveDataModel model)
+        {
+            decimal sumYesterday = (await _moneyBalanceService.GetToday(shopId, model.Create.AddDays(1).Date)).SumEnd;
+            var stocktaking = new Stocktaking
+            {
+                Create = model.Create,
+                Start = model.Create,
+                Num = await db.Stocktakings.MaxAsync(s => s.Num) + 1,
+                ShopId = shopId,
+                Status = DocumentStatus.New,
+                isSuccess = false,
+                CashMoneyDb=sumYesterday,
+                CashMoneyFact=model.CashMoney
+            };
+            db.Stocktakings.Add(stocktaking);
+            var goods = await db.Goods.Include(g=>g.GoodPrices).ToListAsync();
+            var countsCurrent = await db.GoodCountBalanceCurrents.ToListAsync();
+            foreach(var current in countsCurrent)
+            {
+                decimal price = goods.Where(g => g.Id == current.GoodId).FirstOrDefault().GoodPrices.Where(p => p.ShopId == shopId).FirstOrDefault().Price;
+                db.StocktakingSummaryGoods.Add(new StocktakingSummaryGood {
+                    Stocktaking = stocktaking,
+                    GoodId = current.GoodId,
+                    Price = price,
+                    CountDb = current.Count
+                    });
+            }
+            await db.SaveChangesAsync();
+        }
         public async Task SaveFromOnlinCash(int shopId, StocktakingReciveDataModel model)
         {
             var goods = await db.Goods.Include(g => g.GoodPrices).ToListAsync();
@@ -356,6 +391,7 @@ namespace OnlineCash.Services
     public class StocktakingReciveDataModel
     {
         public DateTime Create { get; set; }
+        public decimal CashMoney { get; set; }
         public List<StocktakingGroupReciveDataModel> Groups { get; set; } = new List<StocktakingGroupReciveDataModel>();
     }
 
