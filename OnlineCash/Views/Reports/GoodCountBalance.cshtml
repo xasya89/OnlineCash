@@ -1,0 +1,24 @@
+﻿@model IEnumerable<OnlineCash.DataBaseModels.GoodCountBalanceCurrent>
+
+<div class="table-responsive">
+    <table class="table table-sm table-hover table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Ед</th>
+                <th>Кол-во</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var cur in Model)
+                if(cur.Good.IsDeleted==false)
+                {
+                    <tr>
+                        <td>@cur.Good.Name</td>
+                        <td>@cur.Good.Unit.GetDescription()</td>
+                        <td>@cur.Count</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+</div>

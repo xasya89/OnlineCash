@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using OnlineCash.Services;
 using OnlineCash.ViewModels.GoodsPrint;
+using OnlineCash.Services;
 
 namespace OnlineCash.Controllers
 {
@@ -21,11 +22,13 @@ namespace OnlineCash.Controllers
         public IConfiguration configuration;
         public ILogger<GoodsController> logger;
         public shopContext db;
-        public GoodsController(IConfiguration configuration, ILogger<GoodsController> logger, shopContext db)
+        private readonly GoodCountBalanceService _balanceService;
+        public GoodsController(IConfiguration configuration, ILogger<GoodsController> logger, shopContext db, GoodCountBalanceService balanceService)
         {
             this.configuration = configuration;
             this.logger = logger;
             this.db = db;
+            _balanceService = balanceService;
         }
 
         public async Task<IActionResult> Index()
@@ -228,15 +231,9 @@ namespace OnlineCash.Controllers
                         var shop = await db.Shops.FirstOrDefaultAsync(s => s.Id == p.idShop);
                         var price = new GoodPrice { Good = good, Shop = shop, Price = p.Price };
                         await db.GoodPrices.AddAsync(price);
-                        var goodBalance = new GoodBalance
-                        {
-                            Shop = shop,
-                            Good = good,
-                            Count = 0
-                        };
-                        db.GoodBalances.Add(goodBalance);
                     }
                     db.SaveChanges();
+                    await _balanceService.NewGood(good.Id);
                     return RedirectToAction("Index");
                 }
                 if (g.Id != 0)

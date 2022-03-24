@@ -16,20 +16,24 @@ namespace OnlineCash.Controllers.Api.OnlineCash
     {
         ArrivalService service;
         NotificationOfEventInSystemService _notificationService;
+        GoodCountBalanceService _countBalanceService;
         //ILogger _logger;
-        public ArrivalSynchController(ArrivalService service/*, ILogger logger*/, NotificationOfEventInSystemService notificationService)
+        public ArrivalSynchController(ArrivalService service/*, ILogger logger*/, 
+            NotificationOfEventInSystemService notificationService,
+            GoodCountBalanceService countBalanceService)
         {
             this.service = service;
             _notificationService = notificationService;
+            _countBalanceService = countBalanceService;
         }
 
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Save(int shopId, [FromBody] ArrivalSynchModel model)
         {
-            HttpContext.Response.Headers.Add("interceptro-x", "interceptor");
             try
             {
                 var arrival=await service.SaveSynchAsync(shopId, model);
+                
                 await _notificationService.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId="+arrival.Id);
                 return Ok();
             }

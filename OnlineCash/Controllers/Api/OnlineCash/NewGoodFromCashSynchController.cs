@@ -17,10 +17,12 @@ namespace OnlineCash.Controllers.Api.OnlineCash
     {
         shopContext _db;
         NotificationOfEventInSystemService _notification;
-        public NewGoodFromCashSynch(shopContext db, NotificationOfEventInSystemService notification)
+        GoodCountBalanceService _balanceService;
+        public NewGoodFromCashSynch(shopContext db, NotificationOfEventInSystemService notification, GoodCountBalanceService balanceService)
         {
             _db = db;
             _notification = notification;
+            _balanceService = balanceService;
         }
 
         [HttpPost("{shopId}")]
@@ -77,6 +79,7 @@ namespace OnlineCash.Controllers.Api.OnlineCash
             var newGoodFromCashNew = new NewGoodFromCash { Good = good, IsNewGood = true };
             _db.NewGoodFromCashes.Add(newGoodFromCashNew);
             await _db.SaveChangesAsync();
+            await _balanceService.NewGood(good.Id);
             await _notification.Send(@$"Новый товар {good.Name}
 Цена {good.Price}
 Ед измерения {good.Unit.GetDescription()}", "NewGoodsFromCash/open/" + newGoodFromCashNew.Id);

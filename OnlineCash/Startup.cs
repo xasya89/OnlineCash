@@ -65,6 +65,7 @@ namespace OnlineCash
             services.AddSingleton<NotificationOfEventInSystemService>();
             services.AddTransient<GoodCountAnalyseService>();
             services.AddTransient<RevaluationService>();
+            services.AddTransient<GoodCountBalanceService>();
             //services.AddScoped<IEvotorService, EvotorService>();
             services.AddControllersWithViews(options=> {
                 options.Filters.Add(typeof(Filters.ControlCountGoodsFilter));
@@ -109,13 +110,14 @@ namespace OnlineCash
             });
 
             app.UseHangfireDashboard();
+            /*
             backgroundJobClient.Enqueue(() => Console.WriteLine("Hello Hanfire job!"));
             recurringJobManager.AddOrUpdate(
                 "Run calc good balance",
                 () => serviceProvider.GetService<IGoodBalanceService>().CalcAsync(shopIdDefault, DateTime.Now),
                 configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
                 );
-
+            */
             recurringJobManager.AddOrUpdate(
                 "Run calc money balance",
                 () => serviceProvider.GetService<MoneyBalanceService>().Calculate(shopIdDefault, DateTime.Now),

@@ -16,12 +16,18 @@ namespace OnlineCash.Services
         ILogger<WriteofService> logger;
         IGoodBalanceService goodBalance;
         IConfiguration _configuration;
-        public WriteofService(shopContext db, ILogger<WriteofService> logger, IConfiguration configuration, IGoodBalanceService goodBalance)
+        GoodCountBalanceService _countBalanceService;
+        public WriteofService(shopContext db, 
+            ILogger<WriteofService> logger, 
+            IConfiguration configuration, 
+            IGoodBalanceService goodBalance,
+            GoodCountBalanceService countBalanceService)
         {
             this.db = db;
             this.logger = logger;
             this.goodBalance = goodBalance;
             _configuration = configuration;
+            _countBalanceService = countBalanceService;
         }
 
         public async Task<Writeof> SaveSynch(int shopId, WriteofSynchModel model)
@@ -39,21 +45,24 @@ namespace OnlineCash.Services
                 SumAll=model.Goods.Sum(w=>(decimal)w.Count * w.Price)
             };
             db.Writeofs.Add(writeofDb);
+            List<WriteofGood> writeofGoods = new List<WriteofGood>();
             foreach(var wgood in model.Goods)
             {
                 Good good = await db.Goods.Where(g => g.Uuid == wgood.Uuid).FirstOrDefaultAsync();
                 if (good == null) return null;
-                db.WriteofGoods.Add(new WriteofGood
+                writeofGoods.Add(new WriteofGood
                 {
-                    Writeof=writeofDb,
+                    Writeof = writeofDb,
                     GoodId = good.Id,
                     Count = wgood.Count,
                     Price = wgood.Price
                 });
             };
+            db.WriteofGoods.AddRange(writeofGoods);
             await db.SaveChangesAsync();
-            if(autoSuccess)
-                await goodBalance.CalcAsync(shopId, model.DateCreate);
+            if (autoSuccess)
+                await _countBalanceService.Add<WriteofGood>(writeofDb.Id, DateTime.Now, writeofGoods);
+                //await goodBalance.CalcAsync(shopId, model.DateCreate);
             return writeofDb;
         }
     }

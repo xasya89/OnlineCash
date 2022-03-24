@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220322073812_Add_GoodBlanacesNew")]
+    partial class Add_GoodBlanacesNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -497,26 +499,6 @@ namespace OnlineCash.Migrations
                         .IsUnique();
 
                     b.ToTable("GoodCountBalances");
-                });
-
-            modelBuilder.Entity("OnlineCash.DataBaseModels.GoodCountBalanceCurrent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Count")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("GoodId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GoodId")
-                        .IsUnique();
-
-                    b.ToTable("GoodCountBalanceCurrents");
                 });
 
             modelBuilder.Entity("OnlineCash.DataBaseModels.GoodCountDocHistory", b =>
@@ -1440,17 +1422,6 @@ namespace OnlineCash.Migrations
                     b.Navigation("Good");
                 });
 
-            modelBuilder.Entity("OnlineCash.DataBaseModels.GoodCountBalanceCurrent", b =>
-                {
-                    b.HasOne("OnlineCash.DataBaseModels.Good", "Good")
-                        .WithMany("GoodCountBalanceCurrents")
-                        .HasForeignKey("GoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Good");
-                });
-
             modelBuilder.Entity("OnlineCash.DataBaseModels.GoodCountDocHistory", b =>
                 {
                     b.HasOne("OnlineCash.DataBaseModels.Good", "Good")
@@ -1768,8 +1739,6 @@ namespace OnlineCash.Migrations
                     b.Navigation("GoodBalanceHistories");
 
                     b.Navigation("GoodBalances");
-
-                    b.Navigation("GoodCountBalanceCurrents");
 
                     b.Navigation("GoodCountBalances");
 

@@ -16,13 +16,20 @@ namespace OnlineCash.Controllers
         IGoodBalanceService goodBalanceService;
         MoneyBalanceService _moneyBalanceService;
         GoodCountAnalyseService _analyseService;
-        public ReportsController(shopContext db, IReportsService reportsService, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyBalanceService, GoodCountAnalyseService analyseService)
+        GoodCountBalanceService _countBalanceService;
+        public ReportsController(shopContext db, 
+            IReportsService reportsService, 
+            IGoodBalanceService goodBalanceService, 
+            MoneyBalanceService moneyBalanceService, 
+            GoodCountAnalyseService analyseService,
+            GoodCountBalanceService countBalanceService)
         {
             this.db = db;
             this.reportsService = reportsService;
             this.goodBalanceService = goodBalanceService;
             _moneyBalanceService = moneyBalanceService;
             _analyseService = analyseService;
+            _countBalanceService = countBalanceService;
         }
 
         [HttpGet]
@@ -50,6 +57,16 @@ namespace OnlineCash.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GoodCountBalanceInit()
+        {
+            await _countBalanceService.Init();
+            return Redirect("GoodBalanceHistory");
+        }
+
+        public async Task<IActionResult> GoodCountBalance(string find)
+            => View(await db.GoodCountBalanceCurrents.Include(c => c.Good).Where(c => EF.Functions.Like(c.Good.Name, $"%{find}%")).OrderBy(c => c.Good.Name).ToListAsync());
+
+        [HttpGet]
         public async Task<IActionResult> MoneyBalanceHistory(int shopId)
             => View(await db.MoneyBalanceHistories.OrderByDescending(m => m.DateBalance).ToListAsync());
 
@@ -72,5 +89,7 @@ namespace OnlineCash.Controllers
             ViewBag.Stop = stopDay;
             return View(await _analyseService.GetAnalyse(shopId, startDay, stopDay));
         }
+
+
     }
 }

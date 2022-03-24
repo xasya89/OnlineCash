@@ -13,15 +13,18 @@ namespace OnlineCash.Services
     public class CashBoxService : ICashBoxService
     {
         shopContext db;
-        IGoodBalanceService goodBalanceService;
         CashMoneyService _moneyService;
         MoneyBalanceService _moneyBalanceService;
-        public CashBoxService(shopContext db, IGoodBalanceService goodBalanceService, MoneyBalanceService moneyBalanceService, CashMoneyService moneyService)
+        GoodCountBalanceService _countBalanceService;
+        public CashBoxService(shopContext db,
+            MoneyBalanceService moneyBalanceService, 
+            CashMoneyService moneyService,
+            GoodCountBalanceService countBalanceService)
         {
             this.db = db;
-            this.goodBalanceService = goodBalanceService;
             _moneyService = moneyService;
             _moneyBalanceService = moneyBalanceService;
+            _countBalanceService = countBalanceService;
         }
         //TODO: Возможно данный метод не нужен
         public async Task<bool> Buy(Guid uuid, List<CashBoxBuyReturnModel> buylist)
@@ -46,7 +49,6 @@ namespace OnlineCash.Services
                         Price = buy.Price,
                         Count = buy.Count
                     });
-                await goodBalanceService.MinusAsync(shift.ShopId, good.Id, buy.Count);
             }
             shift.SumSell += buylist.Sum(b => (decimal)b.Count * b.Price);
             shift.SumElectron+=buylist.Where(b=>b.IsElectron).Sum(b => (decimal)b.Count * b.Price);
@@ -81,7 +83,8 @@ namespace OnlineCash.Services
                             Price = checkGood.Price,
                             Count = (double)checkGood.Count
                         });
-                    await goodBalanceService.MinusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
+                    await _countBalanceService.AddSell(shift.Id, shift.Start, good.Id, checkGood.Count);
+                    //await goodBalanceService.MinusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
                 }
                 if (check.IsReturn == true)
                 {
@@ -95,7 +98,8 @@ namespace OnlineCash.Services
                             PriceReturn = checkGood.Price,
                             CountReturn = checkGood.Count
                         });
-                    await goodBalanceService.PlusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
+                    await _countBalanceService.AddReturn(shift.Id, shift.Start, good.Id, checkGood.Count);
+                    //await goodBalanceService.PlusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
                 }
             }
             if (check.IsReturn == false)
@@ -164,7 +168,6 @@ namespace OnlineCash.Services
             if (shift == null)
                 throw new Exception($"Смена uuid - {uuid} не найдена или закрыта");
             shift.Stop = stop;
-            await goodBalanceService.CalcAsync(shift.ShopId, shift.Start);
             await db.SaveChangesAsync();
             await _moneyService.Add(shift.ShopId, new CashMoney {
                 Create = stop,

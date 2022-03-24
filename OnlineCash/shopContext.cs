@@ -24,6 +24,9 @@ namespace OnlineCash
         public DbSet<StocktakingSummaryGood> StocktakingSummaryGoods { get; set; }
         public DbSet<GoodBalance> GoodBalances { get; set; }
         public DbSet<GoodBalanceHistory> GoodBalanceHistories { get; set; }
+        public DbSet<GoodCountBalance> GoodCountBalances { get; set; }
+        public DbSet<GoodCountDocHistory> GoodCountDocHistories { get; set; }
+        public DbSet<GoodCountBalanceCurrent> GoodCountBalanceCurrents { get; set; }
         public DbSet<SumBalanceHistory> SumBalanceHistories { get; set; }
         public DbSet<MoneyBalanceHistory> MoneyBalanceHistories { get; set; }
         public DbSet<Arrival> Arrivals { get; set; }
@@ -218,6 +221,19 @@ namespace OnlineCash
                 .HasOne(m => m.Shop)
                 .WithMany(s => s.MoneyBalanceHistories)
                 .HasForeignKey(m => m.ShopId);
+            //Goodbalance NEW
+            modelBuilder.Entity<GoodCountBalance>()
+                .HasOne(b => b.Good)
+                .WithMany(g => g.GoodCountBalances)
+                .HasForeignKey(b => b.GoodId);
+            modelBuilder.Entity<GoodCountDocHistory>()
+                .HasOne(h => h.Good)
+                .WithMany(g => g.GoodCountDocHistories)
+                .HasForeignKey(h => h.GoodId);
+            modelBuilder.Entity<GoodCountBalanceCurrent>()
+                .HasOne(c => c.Good)
+                .WithMany(g => g.GoodCountBalanceCurrents)
+                .HasForeignKey(c => c.GoodId);
 
             //SumBalance
             modelBuilder.Entity<SumBalanceHistory>()
