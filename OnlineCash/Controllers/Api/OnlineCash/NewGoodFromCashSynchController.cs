@@ -8,11 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Models;
 using OnlineCash.Services;
+using OnlineCash.Filters;
 
 namespace OnlineCash.Controllers.Api.OnlineCash
 {
     [Route("api/onlinecash/[controller]")]
     [ApiController]
+    [TypeFilterAttribute(typeof(ControlDocSynchFilter))]
+    [TypeFilterAttribute(typeof(ControlExceptionDocSynchFilter))]
     public class NewGoodFromCashSynch : ControllerBase
     {
         shopContext _db;

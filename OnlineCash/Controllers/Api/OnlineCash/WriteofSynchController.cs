@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using OnlineCash.Models;
 using OnlineCash.Services;
 using OnlineCash.Models;
+using OnlineCash.Filters;
 
 namespace OnlineCash.Controllers.Api
 {
     [Route("api/onlinecash/[controller]")]
     [ApiController]
+    [TypeFilterAttribute(typeof(ControlDocSynchFilter))]
+    [TypeFilterAttribute(typeof(ControlExceptionDocSynchFilter))]
     public class WriteofSynchController : ControllerBase
     {
         IWriteofService writeofService;

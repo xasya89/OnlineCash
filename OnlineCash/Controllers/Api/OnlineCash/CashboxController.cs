@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using OnlineCash.Services;
 using OnlineCash.Models;
 using OnlineCash.Models.CashBox;
+using OnlineCash.Filters;
 
 namespace OnlineCash.Controllers.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/onlinecash/[controller]")]
     [ApiController]
+    [TypeFilterAttribute(typeof(ControlDocSynchFilter))]
+    [TypeFilterAttribute(typeof(ControlExceptionDocSynchFilter))]
     public class CashboxController : ControllerBase
     {
         ICashBoxService service;

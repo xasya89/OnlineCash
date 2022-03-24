@@ -6,11 +6,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using OnlineCash.Models;
 using OnlineCash.Services;
+using OnlineCash.Filters;
 
 namespace OnlineCash.Controllers.Api.OnlineCash
 {
     [Route("api/onlinecash/[controller]")]
     [ApiController]
+    [TypeFilterAttribute(typeof(ControlDocSynchFilter))]
+    [TypeFilterAttribute(typeof(ControlExceptionDocSynchFilter))]
     public class RevaluationSynchController : ControllerBase
     {
         private readonly RevaluationService _service;

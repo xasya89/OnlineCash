@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Services;
 using Microsoft.Extensions.Logging;
+using OnlineCash.Filters;
 
 namespace OnlineCash.Controllers.Api.OnlineCash
 {
     [Route("api/onlinecash/[controller]")]
     [ApiController]
+    [TypeFilterAttribute(typeof(ControlDocSynchFilter))]
+    [TypeFilterAttribute(typeof(ControlExceptionDocSynchFilter))]
     public class CashMoneysController : ControllerBase
     {
 
@@ -26,21 +29,13 @@ namespace OnlineCash.Controllers.Api.OnlineCash
         }
 
         [HttpPost("{shopId}")]
-        public async Task<IActionResult> Recive(int shopId, [FromBody]CashMoney model)
+        public async Task<IActionResult> Recive(int shopId, [FromBody] CashMoney model)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    throw new Exception("Ошибка валидации");
-                var cashMoney=await _moneyService.Add(shopId, model);
-                await _notification.Send($"{cashMoney.TypeOperation.GetDescription()} на сумму {cashMoney.Sum}. Примечание {cashMoney.Note}", "CashMoney");
-                return Ok();
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex.Message + "\n" + ex.StackTrace);
-                return BadRequest();
-            }
+            if (!ModelState.IsValid)
+                throw new Exception("Ошибка валидации");
+            var cashMoney = await _moneyService.Add(shopId, model);
+            await _notification.Send($"{cashMoney.TypeOperation.GetDescription()} на сумму {cashMoney.Sum}. Примечание {cashMoney.Note}", "CashMoney");
+            return Ok();
         }
     }
 }

@@ -8,6 +8,7 @@ namespace OnlineCash
 {
     public partial class shopContext : DbContext
     {
+        public DbSet<DocSynch> DocSynches { get; set; }
         public DbSet<Cashier> Cashiers { get; set; }
         public DbSet<Good> Goods { get; set; }
         public DbSet<BarCode> BarCodes { get; set; }

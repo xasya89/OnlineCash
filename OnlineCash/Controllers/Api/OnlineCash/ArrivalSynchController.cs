@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using OnlineCash.Models;
 using OnlineCash.Services;
 using Serilog;
+using OnlineCash.Filters;
 
 namespace OnlineCash.Controllers.Api.OnlineCash
 {
     [Route("api/onlinecash/[controller]")]
     [ApiController]
+    [TypeFilterAttribute(typeof(ControlDocSynchFilter))]
+    [TypeFilterAttribute(typeof(ControlExceptionDocSynchFilter))]
     public class ArrivalSynchController : ControllerBase
     {
         ArrivalService service;
