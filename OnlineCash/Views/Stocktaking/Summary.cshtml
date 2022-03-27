@@ -1,8 +1,8 @@
-﻿@model OnlineCash.DataBaseModels.Stocktaking
+﻿@model OnlineCash.Models.StockTackingModels.StocktackingSummaryModel
 
 <div class="row mt-4">
     <div class="col-12">
-        <h4>Инверторизация @Model.Num от @Model.Create.ToString("dd.MM.yy")</h4>
+        <h4>Инверторизация @Model.Start.ToString("dd.MM.yy HH:mm")</h4>
         <h5 class="mb-1">Сумма товара в магазине до инверторизации @Model.SumDb</h5>
         <h5 class="mb-1">Сумма товара в магазине по инверторизации @Model.SumFact</h5>
         @if (Model.SumFact - Model.SumDb > 0)
@@ -16,48 +16,46 @@
     </div>
 </div>
 
+<div class="row mt-1">
+    <div class="col-lg-4">
+        <input id="findGood" oninput="find()" class="form-control form-control-sm" placeholder="Поиск" />
+    </div>
+</div>
+
 <div class="table-responsive mt-2">
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th rowspan="2">Товар</th>
-                <th rowspan="2">Ед</th>
-                <th colspan="2">До инверторизации</th>
-                <th colspan="2">В инверторизации</th>
-                <th rowspan="2">Разница</th>
-            </tr>
-            <tr>
-                <th>Кол-во</th>
-                <th>Стоимость</th>
-                <th>Кол-во</th>
-                <th>Стоимость</th>
+                <th>Товар</th>
+                <th>Ед</th>
+                <th>Предыдущая инверт</th>
+                <th>Факт остаток</th>
+                <th>Расхождение</th>
+                <th>Сумма расхождения</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var summary in Model.StocktakingSummaryGoods)
+        <tbody id="summaryTable">
+            @foreach (var summary in Model.Goods)
             {
                 string background = "";
                 if (summary.CountFact - summary.CountDb > 0)
                     background = "bg-info";
                 if (summary.CountFact - summary.CountDb < 0)
                     background = "bg-warning";
-                <tr class="@background" onclick="openDocDetail(@summary.GoodId, '@summary.Good.Name')">
-                    <td>@summary.Good?.Name</td>
-                    <td>@summary.Good?.Unit.GetDescription()</td>
-                    <td>@summary.CountDb</td>
-                    <td>@(summary.CountDb * summary.Price)</td>
+                <tr class="@background" onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">
+                    <td goodName>@summary.GoodName</td>
+                    <td>@summary.Unit.GetDescription()</td>
+                    <td>@summary.CountLast</td>
                     <td>@summary.CountFact</td>
-                    <td>@(summary.CountFact * summary.Price)</td>
-                    <td>@(summary.CountFact * summary.Price - summary.CountDb * summary.Price)</td>
+                    <td>@summary.CountEnd</td>
+                    <td>@summary.SumEnd</td>
                 </tr>
             }
         </tbody>
         <thead>
             <tr>
-                <th colspan="2">Итого</th>
-                <th colspan="2">@Model.SumDb</th>
-                <th colspan="2">@Model.SumFact</th>
-                <th>@(Model.SumFact - Model.SumDb)</th>
+                <th colspan="5">Итого</th>
+                <th>@(Model.SumDb - Model.SumFact)</th>
             </tr>
         </thead>
     </table>
@@ -97,10 +95,23 @@
 <script>
     var idAct =@Model.Id ;
 
+    const findGood = document.getElementById("findGood");
+    const summaryTable = document.getElementById("summaryTable");
     const docDetailModal = new bootstrap.Modal(document.getElementById('docDetailModal'), {});
     const docDetailGoodName = document.getElementById("docDetailGoodName");
     const docDetailList = document.getElementById("docDetailList");
     const docDetailCountSummary = document.getElementById("docDetailCountSummary");
+
+    function find() {
+        let str = findGood.value.toLowerCase();
+        summaryTable.querySelectorAll("tr").forEach(tr => {
+            let name = tr.querySelector("td[goodName]").textContent;
+            if (name.toLowerCase().indexOf(str) != -1)
+                tr.style.display = "table-row";
+            else
+                tr.style.display = "none";
+        })
+    }
 
     function openDocDetail(goodId, goodName) {
         docDetailGoodName.textContent = goodName;

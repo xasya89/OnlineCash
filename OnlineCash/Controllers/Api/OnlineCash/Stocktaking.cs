@@ -25,7 +25,17 @@ namespace OnlineCash.Controllers.Api.OnlineCash
 
         [HttpPost("start/{shopId}")]
         public async Task<IActionResult> Start(int shopId, [FromBody] StocktakingReciveDataModel model)
-            => _service.StartFromOnlineCash(shopId, model);
+        {
+            await _service.StartFromOnlineCash(shopId, model);
+            return Ok();
+        }
+
+        [HttpPost("stop/{uuid}")]
+        public async Task<IActionResult> Stop(Guid uuid, [FromBody] List<StocktakingGroupReciveDataModel> groups)
+        {
+            await _service.StopFromOnlineCash(uuid, groups);
+            return Ok();
+        }
 
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Save(int shopId, [FromBody] StocktakingReciveDataModel model)

@@ -13,9 +13,10 @@ namespace OnlineCash.Services
     {
         public Task<StockTackingGruppingModel> GetDetailsGroups(int idStocktaking);
         public Task StartFromOnlineCash(int shopId, StocktakingReciveDataModel model);
+        public Task StopFromOnlineCash(Guid uuid, List<StocktakingGroupReciveDataModel> groups);
         public Task SaveFromOnlinCash(int shopId, StocktakingReciveDataModel model);
         public Task Save(StockTakingSaveModel model);
-        public Task<Stocktaking> GetSummary(int id);
+        public Task<StocktackingSummaryModel> GetSummary(int id);
 
         public Task<List<dynamic>> GetDetailGoodCountByDocs(int stocktakingId, int goodId);
     }

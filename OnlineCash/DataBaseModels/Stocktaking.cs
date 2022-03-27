@@ -12,6 +12,7 @@ namespace OnlineCash.DataBaseModels
         [JsonPropertyName("id")]
         public int Id { get; set; }
         public int Num { get; set; }
+        public Guid Uuid { get; set; }
         public DateTime Create { get; set; } = DateTime.Now;
         public DateTime Start { get; set; } = DateTime.Now;
         public int ShopId { get; set; }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.Models;
+using OnlineCash.Models.StockTackingModels;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Services;
 
@@ -71,42 +72,132 @@ namespace OnlineCash.Services
             return model;
         }
 
-        public async Task<Stocktaking> GetSummary(int stocktakingId)
+        public async Task<StocktackingSummaryModel> GetSummary(int stocktakingId)
         {
-            var stocktaking= await db.Stocktakings.Include(s => s.StocktakingSummaryGoods).ThenInclude(g => g.Good).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
-            if (stocktaking == null)
-                stocktaking = new Stocktaking();
-            return stocktaking;
+            var stocktaking= await db.Stocktakings
+                .Include(s => s.StocktakingSummaryGoods)
+                .ThenInclude(g => g.Good).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
+            StocktackingSummaryModel model = new StocktackingSummaryModel
+            {
+                Id=stocktaking.Id,
+                Start = stocktaking.Start,
+                SumDb = stocktaking.SumDb,
+                SumFact = stocktaking.SumFact,
+                CashMoneyDb = stocktaking.CashMoneyDb,
+                CashMoneyFact = stocktaking.CashMoneyFact
+            };
+
+            var stocktackingOld = await db.Stocktakings.Include(s => s.StocktakingSummaryGoods).Where(s => s.Start < stocktaking.Start).OrderBy(s => s.Start).LastOrDefaultAsync();
+            Dictionary<int, decimal> summaryOldDict = new Dictionary<int, decimal>();
+            if (stocktackingOld != null)
+                foreach (var summaryOld in stocktackingOld.StocktakingSummaryGoods)
+                    summaryOldDict.Add(summaryOld.GoodId, summaryOld.CountFact);
+
+            foreach (var summary in stocktaking.StocktakingSummaryGoods)
+                model.Goods.Add(new StocktackingSummaryGoodModel
+                {
+                    GoodId = summary.GoodId,
+                    GoodName = summary.Good.Name,
+                    Price = summary.Price,
+                    CountLast = summaryOldDict.ContainsKey(summary.GoodId) ? summaryOldDict[summary.GoodId] : 0,
+                    CountDb=summary.CountDb,
+                    CountFact=summary.CountFact
+                });
+            return model;
         }
 
         public async Task StartFromOnlineCash(int shopId, StocktakingReciveDataModel model)
         {
             decimal sumYesterday = (await _moneyBalanceService.GetToday(shopId, model.Create.AddDays(1).Date)).SumEnd;
+            int num = await db.Stocktakings.CountAsync();
             var stocktaking = new Stocktaking
             {
+
                 Create = model.Create,
                 Start = model.Create,
-                Num = await db.Stocktakings.MaxAsync(s => s.Num) + 1,
+                Uuid = model.Uuid,
+                Num = num + 1,
                 ShopId = shopId,
                 Status = DocumentStatus.New,
                 isSuccess = false,
-                CashMoneyDb=sumYesterday,
-                CashMoneyFact=model.CashMoney
+                CashMoneyDb = sumYesterday,
+                CashMoneyFact = model.CashMoney
             };
             db.Stocktakings.Add(stocktaking);
-            var goods = await db.Goods.Include(g=>g.GoodPrices).ToListAsync();
+            var goods = await db.Goods.Include(g => g.GoodPrices).ToListAsync();
             var countsCurrent = await db.GoodCountBalanceCurrents.ToListAsync();
-            foreach(var current in countsCurrent)
-            {
-                decimal price = goods.Where(g => g.Id == current.GoodId).FirstOrDefault().GoodPrices.Where(p => p.ShopId == shopId).FirstOrDefault().Price;
-                db.StocktakingSummaryGoods.Add(new StocktakingSummaryGood {
-                    Stocktaking = stocktaking,
-                    GoodId = current.GoodId,
-                    Price = price,
-                    CountDb = current.Count
+            decimal sumDb = 0;
+            foreach (var current in countsCurrent)
+                if (countsCurrent.Count != 0)
+                {
+                    var good = goods.Where(g => g.Id == current.GoodId).FirstOrDefault();
+                    decimal price = good.GoodPrices.Where(p => p.ShopId == shopId).FirstOrDefault()?.Price ?? 0;
+                    db.StocktakingSummaryGoods.Add(new StocktakingSummaryGood
+                    {
+                        Stocktaking = stocktaking,
+                        GoodId = current.GoodId,
+                        Price = price,
+                        CountDb = current.Count
                     });
-            }
+                    sumDb += price * current.Count;
+                }
+            stocktaking.SumDb = sumDb;
             await db.SaveChangesAsync();
+        }
+
+        public async Task StopFromOnlineCash(Guid uuid, List<StocktakingGroupReciveDataModel> groups)
+        {
+            var stocktacking = await db.Stocktakings.Where(s => s.Uuid == uuid).FirstOrDefaultAsync();
+            if (stocktacking == null)
+                throw new Exception($"Не найдена инверторизация с uuid {uuid}");
+            stocktacking.isSuccess = true;
+            stocktacking.Status = DocumentStatus.Confirm;
+            var goods = await db.Goods.Include(g => g.GoodPrices).ToListAsync();
+            foreach (var group in groups)
+                foreach (var good in group.Goods)
+                    if (goods.Where(g => g.Uuid == good.Uuid).FirstOrDefault() == null)
+                        throw new Exception($"Товар с uuid - {good.Uuid} не существует");
+
+            Dictionary<int, decimal> summary = new Dictionary<int, decimal>();
+            foreach (var group in groups)
+            {
+                var groupDb = new StockTakingGroup { Stocktaking = stocktacking, Name = group.Name };
+                db.StockTakingGroups.Add(groupDb);
+                foreach (var good in group.Goods)
+                {
+                    var gooddb = goods.Where(g => g.Uuid == good.Uuid).FirstOrDefault();
+                    var pricedb = gooddb.GoodPrices.Where(p => p.ShopId == stocktacking.ShopId).FirstOrDefault().Price;
+                    db.StocktakingGoods.Add(new StocktakingGood { 
+                        StockTakingGroup = groupDb, GoodId = gooddb.Id, Price = pricedb, CountFact = good.CountFact 
+                    });
+                    if (summary.ContainsKey(gooddb.Id))
+                        summary[gooddb.Id] += (decimal)good.CountFact;
+                    else
+                        summary.Add(gooddb.Id, (decimal)good.CountFact);
+                }
+            }
+            var summaryDbList = await db.StocktakingSummaryGoods.Where(s => s.StocktakingId == stocktacking.Id).ToListAsync();
+            foreach (KeyValuePair<int, decimal> su in summary)
+            {
+                var summaryDb = summaryDbList.Where(s => s.GoodId == su.Key).FirstOrDefault();
+                if (summaryDb != null)
+                    summaryDb.CountFact = su.Value;
+                else
+                {
+                    summaryDb = new StocktakingSummaryGood
+                    {
+                        GoodId = su.Key,
+                        Price = goods.Where(g => g.Id == su.Key).FirstOrDefault().GoodPrices.Where(g => g.ShopId == stocktacking.ShopId).FirstOrDefault()?.Price ?? 0,
+                        CountDb = 0,
+                        CountFact = su.Value
+                    };
+                    db.StocktakingSummaryGoods.Add(summaryDb);
+                }
+                stocktacking.SumFact += summaryDb.CountFact * summaryDb.Price;
+            }
+            
+            await db.SaveChangesAsync();
+            await CreateReportAfterSave(stocktacking.Id);
         }
         public async Task SaveFromOnlinCash(int shopId, StocktakingReciveDataModel model)
         {
@@ -197,6 +288,7 @@ namespace OnlineCash.Services
             }
         }
 
+        //TODO: Переписать с учетом CountGoodBalance
         private async Task SuccessCalc(int stocktakingId)
         {
             var stocktaking = await db.Stocktakings.Include(s=>s.StockTakingGroups).ThenInclude(gr=>gr.StocktakingGoods).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
@@ -391,6 +483,7 @@ namespace OnlineCash.Services
     public class StocktakingReciveDataModel
     {
         public DateTime Create { get; set; }
+        public Guid Uuid { get; set; }
         public decimal CashMoney { get; set; }
         public List<StocktakingGroupReciveDataModel> Groups { get; set; } = new List<StocktakingGroupReciveDataModel>();
     }
