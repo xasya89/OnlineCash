@@ -114,6 +114,14 @@ namespace OnlineCash.Services
                 foreach (var writeofGood in writeofGoods)
                     goodCounts.Add(new GoodCount { GoodId = writeofGood.GoodId, Count = -1M * (decimal)writeofGood.Count });
             };
+            if(typeDocument == typeof(IEnumerable<StocktakingSummaryGood>) || typeDocument==typeof(List<StocktakingSummaryGood>))
+            {
+                typeDoc = TypeDocs.Stocktaking;
+                var stocktakingGoods = (IEnumerable<StocktakingSummaryGood>)document;
+                foreach (var stGood in stocktakingGoods)
+                    if (stGood.CountDb - stGood.CountFact != 0)
+                        goodCounts.Add(new GoodCount { GoodId = stGood.GoodId, Count = stGood.CountFact - stGood.CountDb });
+            }
             foreach (var goodCount in goodCounts)
             {
                 _db.GoodCountDocHistories.Add(new GoodCountDocHistory

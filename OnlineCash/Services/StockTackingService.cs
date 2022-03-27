@@ -18,17 +18,20 @@ namespace OnlineCash.Services
         CashMoneyService _moneyService;
         NotificationOfEventInSystemService _notificationService;
         MoneyBalanceService _moneyBalanceService;
+        GoodCountBalanceService _countBalanceService;
         public StockTackingService(shopContext db, 
             IGoodBalanceService goodBalanceService, 
             CashMoneyService moneyService, 
             NotificationOfEventInSystemService notificationService,
-            MoneyBalanceService moneyBalanceService)
+            MoneyBalanceService moneyBalanceService,
+            GoodCountBalanceService countBalanceService)
         {
             this.db = db;
             _goodBalanceService = goodBalanceService;
             _moneyService = moneyService;
             _notificationService = notificationService;
             _moneyBalanceService = moneyBalanceService;
+            _countBalanceService = countBalanceService;
         }
 
         public async Task<StockTackingGruppingModel> GetDetailsGroups(int idStocktaking)
@@ -98,6 +101,7 @@ namespace OnlineCash.Services
                 {
                     GoodId = summary.GoodId,
                     GoodName = summary.Good.Name,
+                    Unit=summary.Good.Unit,
                     Price = summary.Price,
                     CountLast = summaryOldDict.ContainsKey(summary.GoodId) ? summaryOldDict[summary.GoodId] : 0,
                     CountDb=summary.CountDb,
@@ -195,8 +199,13 @@ namespace OnlineCash.Services
                 }
                 stocktacking.SumFact += summaryDb.CountFact * summaryDb.Price;
             }
-            
+
             await db.SaveChangesAsync();
+            await _countBalanceService.Add<StocktakingSummaryGood>(
+                stocktacking.Id, 
+                stocktacking.Start, 
+                await db.StocktakingSummaryGoods.Where(s => s.StocktakingId == stocktacking.Id).ToListAsync()
+                );
             await CreateReportAfterSave(stocktacking.Id);
         }
         public async Task SaveFromOnlinCash(int shopId, StocktakingReciveDataModel model)
@@ -397,6 +406,15 @@ namespace OnlineCash.Services
             var writeofs = await db.Writeofs.Where(w => w.IsSuccess == true & w.DateWriteof.Date >= startDate & w.DateWriteof.Date <= stopDate).ToListAsync();
             foreach (var writeof in writeofs)
                 sumWritof += writeof.SumAll;
+            //Переоценка
+            decimal revaluationWriteOf = 0;
+            decimal revaluationArrival = 0;
+            var revaluations = await db.Revaluations.Where(r => r.Create >= startDate & r.Create <= stopDate).ToListAsync();
+            foreach(var revaluation in revaluations)
+            {
+                revaluationWriteOf += revaluation.SumOld;
+                revaluationArrival += revaluation.SumNew;
+            }
             //Остаток денег в кассе
             var cashMoneyBalance = await db.MoneyBalanceHistories.Where(m => m.DateBalance.Date == stopDate).FirstOrDefaultAsync();
             decimal cashMoneyEnd = cashMoneyBalance == null ? 0 : cashMoneyBalance.SumEnd;
@@ -411,6 +429,8 @@ namespace OnlineCash.Services
                 IncomeSum=sumOutcome,
                 ElectronSum=sumElectron,
                 WriteOfSum=sumWritof,
+                RevaluationWriteOf=revaluationWriteOf,
+                RevaluationArrival=revaluationArrival,
                 CashEndSum= cashMoneyEnd,
                 StocktakingFactSum=stocktaking.SumFact
             };
@@ -423,6 +443,8 @@ namespace OnlineCash.Services
 Выплаты - {sumOutcome}
 Терминал - {sumElectron}
 Списание - {sumWritof}
+Переоценка (минус) - {revaluationWriteOf}
+Переоценка (плюс) - {revaluationArrival}
 
 Должны быть остатки по документам - {reportAfterStocktaking.StopSum}
 

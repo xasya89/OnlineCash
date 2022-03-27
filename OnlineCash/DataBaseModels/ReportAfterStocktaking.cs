@@ -21,9 +21,13 @@ namespace OnlineCash.DataBaseModels
         public decimal ElectronSum { get; set; }
         public decimal ArrivalSum { get; set; }
         public decimal WriteOfSum { get; set; }
+        public decimal RevaluationWriteOf { get; set; }
+        public decimal RevaluationArrival { get; set; }
         public decimal CashEndSum { get; set; }
 
-        public decimal StopSum { get => StocktakingPrependSum + CashStartSum + ArrivalSum - IncomeSum - ElectronSum - WriteOfSum - CashEndSum; }
+        public decimal StopSum { 
+            get => StocktakingPrependSum + CashStartSum + ArrivalSum + RevaluationArrival - RevaluationWriteOf - IncomeSum - ElectronSum - WriteOfSum - CashEndSum; 
+        }
 
         public decimal StocktakingFactSum { get; set; }
     }
