@@ -26,7 +26,7 @@ namespace OnlineCash.Services
                 throw new Exception($"Документ с пересортица с uuid - {model.Uuid} уже существует в базе данных");
 
             var goods = await _db.Goods.ToListAsync();
-            var goodBalance = await _db.GoodBalances.ToListAsync();
+            var balanseCurrents = await _db.GoodCountBalanceCurrents.ToListAsync();
             foreach (var rGood in model.RevaluationGoods)
                 if (goods.Where(g => g.Uuid == rGood.Uuid).FirstOrDefault() == null)
                     throw new Exception($"При попытке сохранения акта Переоценки, товар с uuid - {rGood.Uuid} не найден");
@@ -36,7 +36,7 @@ namespace OnlineCash.Services
             foreach(var rGood in model.RevaluationGoods)
             {
                 int goodId = goods.Where(g => g.Uuid == rGood.Uuid).FirstOrDefault().Id;
-                decimal count = (decimal?)goodBalance.Where(b => b.GoodId == goodId).FirstOrDefault()?.Count ?? 0;
+                decimal count = (decimal?)balanseCurrents.Where(b => b.GoodId == goodId).FirstOrDefault()?.Count ?? 0;
                 RevaluationGood revaluationGood = new RevaluationGood
                 {
                     Revaluation = revaluation,

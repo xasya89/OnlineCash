@@ -16,6 +16,7 @@ namespace OnlineCash.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            /*
             string uuidStr = context.HttpContext.Request.Headers.Where(h => h.Key.ToLower() == "doc-uuid").Select(h => h.Value).FirstOrDefault();
             if (uuidStr != null)
             {
@@ -31,6 +32,8 @@ namespace OnlineCash.Filters
             }
             else
                 await next();
+            */
+            await next();
         }
     }
 }

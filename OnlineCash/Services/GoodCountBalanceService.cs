@@ -34,7 +34,7 @@ namespace OnlineCash.Services
         {
             DateTime periodOld = Convert.ToDateTime($"01.{DateTime.Now.Month}.{DateTime.Now.Year}").Date;
             DateTime periodNew = Convert.ToDateTime($"01.{DateTime.Now.AddMonths(1).Month}.{DateTime.Now.AddMonths(1).Year}").Date;
-
+            
             var goods = await _db.Goods.ToListAsync();
             var oldCurrents = new List<GoodCountBalance>();
             var newCurrents = new List<GoodCountBalance>();
@@ -46,7 +46,9 @@ namespace OnlineCash.Services
                 newCurrents.Add(new GoodCountBalance { Period=periodNew, GoodId = good.Id, Count = (decimal) (balance?.Count ?? 0)  });
                 _db.GoodCountBalanceCurrents.Add(new GoodCountBalanceCurrent { GoodId = good.Id, Count = (decimal)(balance?.Count ?? 0) });
             };
-
+            _db.GoodCountBalances.AddRange(oldCurrents);
+            _db.GoodCountBalances.AddRange(newCurrents);
+            /*
             var arrivals = await _db.Arrivals.Include(a => a.ArrivalGoods).Where(a => a.DateArrival > periodOld).ToListAsync();
             foreach(var arrival in arrivals)
                 foreach(var agood in arrival.ArrivalGoods)
@@ -82,14 +84,20 @@ namespace OnlineCash.Services
                         GoodId = sgood.GoodId,
                         Count = (decimal)sgood.Count
                     });
+            */
             await _db.SaveChangesAsync();
         }
 
         public async Task NewGood(int goodId)
         {
-            DateTime minPeriod= await _db.GoodCountBalances.MinAsync(b => b.Period);
-            DateTime maxPeriod = await _db.GoodCountBalances.MaxAsync(b => b.Period);
-            for (DateTime i = minPeriod; i <= maxPeriod; i = i.AddDays(1))
+            DateTime minPeriod = DateTime.Parse($"01.{DateTime.Now.Month}.{DateTime.Now.Year}");
+            DateTime maxPeriod = DateTime.Parse($"01.{DateTime.Now.AddMonths(1).Month}.{DateTime.Now.AddMonths(1).Year}");
+            if (await _db.GoodCountBalances.CountAsync() > 0)
+            {
+                minPeriod = await _db.GoodCountBalances.MinAsync(b => b.Period);
+                maxPeriod = await _db.GoodCountBalances.MaxAsync(b => b.Period);
+            };
+            for (DateTime i = (DateTime)minPeriod; i <= maxPeriod; i = i.AddMonths(1))
                 _db.GoodCountBalances.Add(new GoodCountBalance { Period = i, GoodId = goodId, Count = 0 });
             _db.GoodCountBalanceCurrents.Add(new GoodCountBalanceCurrent { GoodId = goodId, Count=0 });
             await _db.SaveChangesAsync();

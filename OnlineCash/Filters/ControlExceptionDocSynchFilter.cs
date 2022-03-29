@@ -17,7 +17,7 @@ namespace OnlineCash.Filters
 
         public async Task OnExceptionAsync(ExceptionContext context)
         {
-            
+            /*
             string actionName = context.ActionDescriptor.DisplayName;
             string exceptionStack = context.Exception.StackTrace;
             string exceptionMessage = context.Exception.Message;
@@ -36,6 +36,7 @@ namespace OnlineCash.Filters
                  StatusCode=500
             };
             context.ExceptionHandled = true;
+            */
         }
     }
 }
