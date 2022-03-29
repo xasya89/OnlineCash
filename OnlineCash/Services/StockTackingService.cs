@@ -190,6 +190,7 @@ namespace OnlineCash.Services
                 {
                     summaryDb = new StocktakingSummaryGood
                     {
+                        StocktakingId=stocktacking.Id,
                         GoodId = su.Key,
                         Price = goods.Where(g => g.Id == su.Key).FirstOrDefault().GoodPrices.Where(g => g.ShopId == stocktacking.ShopId).FirstOrDefault()?.Price ?? 0,
                         CountDb = 0,
