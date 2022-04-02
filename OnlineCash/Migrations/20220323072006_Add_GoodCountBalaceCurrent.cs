@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineCash.Migrations
@@ -28,6 +29,12 @@ namespace OnlineCash.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8")
                 .Annotation("Relational:Collation", "utf8_general_ci");
+            migrationBuilder.Sql(@"INSERT INTO goodcountbalancecurrents (GoodId, Count) 
+SELECT g.id,ifnull(b.Count,0) FROM goods g LEFT JOIN goodbalances b ON g.id=b.GoodId;");
+            migrationBuilder.Sql(@$"INSERT INTO goodcountbalances (Period, GoodId, Count) 
+SELECT STR_TO_DATE('{DateTime.Now.ToString("01.MM.yyyy")}','%d.%m.%Y'), g.id, IFNULL(c.Count,0) FROM Goods g LEFT JOIN goodcountbalancecurrents c ON g.id=c.GoodId;");
+            migrationBuilder.Sql(@$"INSERT INTO goodcountbalances (Period, GoodId, Count) 
+SELECT STR_TO_DATE('{DateTime.Now.AddMonths(1).ToString("01.MM.yyyy")}','%d.%m.%Y'), g.id, IFNULL(c.Count,0) FROM Goods g LEFT JOIN goodcountbalancecurrents c ON g.id=c.GoodId;");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -55,6 +55,8 @@ namespace OnlineCash
         public DbSet<Revaluation> Revaluations { get; set; }
         public DbSet<RevaluationGood> RevaluationGoods { get; set; }
 
+        public DbSet<TelegramUser> TelegramUsers { get; set; }
+
         public shopContext()
         {
         }

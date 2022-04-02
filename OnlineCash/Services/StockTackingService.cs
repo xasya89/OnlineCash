@@ -216,11 +216,11 @@ namespace OnlineCash.Services
                 foreach (var good in group.Goods)
                     if (goods.Where(g => g.Uuid == good.Uuid).FirstOrDefault() == null)
                         throw new Exception($"Товар с uuid - {good.Uuid} не существует");
-
+            var num = await db.Stocktakings.CountAsync();
             var stocktaking = new Stocktaking {
                 Create = model.Create,
                 Start = model.Create,
-                Num = await db.Stocktakings.MaxAsync(s => s.Num) + 1,
+                Num =num + 1,
                 ShopId = shopId,
                 Status = DocumentStatus.Confirm,
                 isSuccess = true

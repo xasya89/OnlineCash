@@ -62,7 +62,7 @@ namespace OnlineCash
             services.AddScoped<ISmsService, SmsStreamTelecom>();
             services.AddTransient<CashMoneyService>();
             services.AddTransient<MoneyBalanceService>();
-            services.AddSingleton<NotificationOfEventInSystemService>();
+            services.AddScoped<NotificationOfEventInSystemService>();
             services.AddTransient<GoodCountAnalyseService>();
             services.AddTransient<RevaluationService>();
             services.AddTransient<GoodCountBalanceService>();
@@ -70,7 +70,7 @@ namespace OnlineCash
             services.AddControllersWithViews(options=> {
                 //options.Filters.Add(typeof(Filters.ControlDocSynchFilter));
             });
-
+            services.AddHostedService<HostedServices.TelegramHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
