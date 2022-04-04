@@ -31,11 +31,13 @@ namespace OnlineCash.Controllers.Api.OnlineCash
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Post(int shopId, [FromBody] GoodSynchModel model)
         {
-            var goodOldDb = await _db.Goods.Where(g => g.Uuid == model.Uuid).FirstOrDefaultAsync();
-            /*
+            var goodOldDb = await _db.Goods.Include(g=>g.GoodPrices).Where(g => g.Uuid == model.Uuid).FirstOrDefaultAsync();
             if (goodOldDb != null)
-                return BadRequest();
-            */
+            {
+                goodOldDb.Name = model.Name;
+                goodOldDb.Unit = model.Unit;
+                goodOldDb.SpecialType = model.SpecialType;
+            }
             if(goodOldDb!=null)
             {
                 goodOldDb.Price = model.Price;

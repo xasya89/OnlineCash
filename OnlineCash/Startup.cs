@@ -66,6 +66,7 @@ namespace OnlineCash
             services.AddTransient<GoodCountAnalyseService>();
             services.AddTransient<RevaluationService>();
             services.AddTransient<GoodCountBalanceService>();
+            services.AddTransient<GoodService>();
             //services.AddScoped<IEvotorService, EvotorService>();
             services.AddControllersWithViews(options=> {
                 //options.Filters.Add(typeof(Filters.ControlDocSynchFilter));

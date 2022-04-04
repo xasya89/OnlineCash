@@ -23,12 +23,19 @@ namespace OnlineCash.Controllers
         public ILogger<GoodsController> logger;
         public shopContext db;
         private readonly GoodCountBalanceService _balanceService;
-        public GoodsController(IConfiguration configuration, ILogger<GoodsController> logger, shopContext db, GoodCountBalanceService balanceService)
+        private readonly GoodService _goodService;
+        public GoodsController(
+            IConfiguration configuration, 
+            ILogger<GoodsController> logger, 
+            shopContext db, 
+            GoodCountBalanceService balanceService,
+            GoodService goodService)
         {
             this.configuration = configuration;
             this.logger = logger;
             this.db = db;
             _balanceService = balanceService;
+            _goodService = goodService;
         }
 
         public async Task<IActionResult> Index()
@@ -205,96 +212,26 @@ namespace OnlineCash.Controllers
                 var goodGroup = await db.GoodGroups.Where(gr => gr.Id == g.GoodGroupId).FirstOrDefaultAsync();
                 Supplier supplier = null;
                 supplier = await db.Suppliers.Where(s => s.Id == g.SupplierId).FirstOrDefaultAsync();
+                g.GoodGroup = goodGroup;
+                g.Supplier = supplier;
+                if (g.GoodPrices == null)
+                    g.GoodPrices = new List<GoodPrice>();
+                foreach (var p in g.PriceShops)
+                    g.GoodPrices.Add(new GoodPrice { Id=p.idPrice, ShopId = p.idShop, Price = p.Price, BuySuccess=p.BuySuccess });
                 if (g.Id == 0)
                 {
-                    var good = new Good { 
-                        Uuid=Guid.NewGuid(), 
-                        Name = g.Name, 
-                        Article = g.Article, 
-                        BarCode = g.BarCode, 
-                        Unit = g.Unit, 
-                        SpecialType=g.SpecialType,
-                        VPackage=g.VPackage,
-                        Price = g.Price, 
-                        GoodGroup=goodGroup, 
-                        Supplier=supplier 
-                    };
-                    db.Goods.Add(good);
-                    foreach (var barcode in g.BarCodes)
-                        db.BarCodes.Add(new BarCode
-                        {
-                            Good=good,
-                            Code=barcode.Code
-                        });
-                    foreach (var p in g.PriceShops)
-                    {
-                        var shop = await db.Shops.FirstOrDefaultAsync(s => s.Id == p.idShop);
-                        var price = new GoodPrice { Good = good, Shop = shop, Price = p.Price };
-                        await db.GoodPrices.AddAsync(price);
-                    }
-                    db.SaveChanges();
-                    await _balanceService.NewGood(good.Id);
-                    return RedirectToAction("Index");
-                }
+                    g.Uuid = Guid.NewGuid();
+                    var newGood=await _goodService.Add(g as Good);
+                };
                 if (g.Id != 0)
                 {
-                    var good = await db.Goods.Include(g=>g.BarCodes).FirstOrDefaultAsync(good => good.Id == g.Id);
-                    if (good != null)
-                    {
-                        good.Name = g.Name;
-                        good.Article = g.Article;
-                        string barcodeForGood = g.BarCodes.FirstOrDefault()?.Code;
-                        good.BarCode = barcodeForGood;
-                        good.Unit = g.Unit;
-                        good.SpecialType = g.SpecialType;
-                        good.VPackage = g.VPackage;
-                        good.Price = g.Price;
-                        good.GoodGroup = goodGroup;
-                        good.SupplierId = g.SupplierId==-1 ? null : g.SupplierId;
-                        foreach (var p in g.PriceShops)
-                        {
-                            if (p.idPrice == 0)
-                            {
-                                var shop = await db.Shops.FirstOrDefaultAsync(s => s.Id == p.idShop);
-                                var price = new GoodPrice { Good = good, Shop = shop, Price = p.Price, BuySuccess=p.BuySuccess };
-                                await db.GoodPrices.AddAsync(price);
-                            }
-                            if (p.idPrice != 0)
-                            {
-                                var price = await db.GoodPrices.FirstOrDefaultAsync(price => price.Id == p.idPrice);
-                                price.Price = p.Price;
-                                price.BuySuccess = p.BuySuccess;
-                            }
-                        }
-                        //Определим удаленные штриходы
-                        foreach (var codeDb in good.BarCodes)
-                        {
-                            var flagNotIn = true;
-                            foreach (var code in g.BarCodes.Where(b => b.Id != 0).ToList())
-                                if (codeDb.Id == code.Id)
-                                    flagNotIn = false;
-                            if (flagNotIn)
-                                db.BarCodes.Remove(codeDb);
-                        }
-                        //Изменим текущие штрих коды
-                        foreach (var barcode in g.BarCodes.Where(b => b.Id != 0 & b.Id!=-1).ToList())
-                        {
-                            var code = good.BarCodes.Where(b => b.Id == barcode.Id).FirstOrDefault();
-                            if (code != null)
-                                code.Code = barcode.Code;
-                        }
-                        //Добавим новые штрих коды
-                        foreach (var barcode in g.BarCodes.Where(b => b.Id == 0 || b.Id==-1).ToList())
-                            db.BarCodes.Add(new BarCode
-                            {
-                                Good = good,
-                                Code = barcode.Code
-                            });
-                        
-                        db.SaveChanges();
-                        return RedirectToAction("Index");
-                    }
+                    /*
+                    foreach (var p in g.PriceShops)
+                        g.GoodPrices.Add(new GoodPrice { Id = p.idPrice, ShopId = p.idShop, Price = p.Price, BuySuccess = p.BuySuccess });
+                    */
+                    await _goodService.Edit(g as Good);
                 }
+                return RedirectToAction("Index");
             }
             ViewBag.Goods = await db.Goods.ToListAsync();
             ViewBag.Groups = await db.GoodGroups.OrderBy(gr => gr.Name).ToListAsync();
