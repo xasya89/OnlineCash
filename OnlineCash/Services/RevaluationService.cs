@@ -11,12 +11,14 @@ namespace OnlineCash.Services
 {
     public class RevaluationService
     {
-        public IConfiguration _configuration;
-        public shopContext _db;
-        public RevaluationService(shopContext db, IConfiguration configuration)
+        private readonly IConfiguration _configuration;
+        private readonly shopContext _db;
+        private readonly NotificationOfEventInSystemService _notification;
+        public RevaluationService(shopContext db, IConfiguration configuration, NotificationOfEventInSystemService notification)
         {
             _db = db;
             _configuration = configuration;
+            _notification = notification;
         }
 
         public async Task<RevaluationModel> SaveSynch(RevaluationModel model)
@@ -62,5 +64,33 @@ namespace OnlineCash.Services
 
         public async Task<Revaluation> GetRevaluation(int id)
             => await _db.Revaluations.Include(r => r.RevaluationGoods).ThenInclude(r => r.Good).Where(r => r.Id == id).FirstOrDefaultAsync();
+
+        public async Task Create(List<RevaluationAddModel> goods)
+        {
+            var revaluation = await _db.Revaluations.Where(r => DateTime.Compare(r.Create.Date, DateTime.Now) == 0).FirstOrDefaultAsync();
+            if (revaluation == null)
+            {
+                revaluation = new Revaluation { Create = DateTime.Now, Status = DocumentStatus.Confirm };
+                _db.Revaluations.Add(revaluation);
+            };
+            string notifyMessage = "Переоценка";
+            foreach (var good in goods)
+            {
+                decimal countCurrent = (await _db.GoodCountBalanceCurrents.Where(g => g.GoodId == good.Good.Id).FirstOrDefaultAsync())?.Count ?? 0;
+                _db.RevaluationGoods.Add(new RevaluationGood
+                {
+                    Revaluation = revaluation,
+                    GoodId = good.Good.Id,
+                    PriceOld = good.PriceOld,
+                    PriceNew = good.PriceNew,
+                    Count = countCurrent
+                });
+                revaluation.SumOld += good.PriceOld * countCurrent;
+                revaluation.SumNew += good.PriceNew * countCurrent;
+                notifyMessage += $"\n{good.Good.Name} было {good.PriceOld * countCurrent} стало {good.PriceNew * countCurrent}\nКоличество {countCurrent}";
+            };
+            await _db.SaveChangesAsync();
+            await _notification.Send(notifyMessage);
+        }
     }
 }

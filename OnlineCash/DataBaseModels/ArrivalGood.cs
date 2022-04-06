@@ -10,13 +10,13 @@ namespace OnlineCash.DataBaseModels
         public int Id { get; set; }
         public int GoodId { get; set; }
         public Good Good { get; set; }
-        public double Count { get; set; }
+        public decimal Count { get; set; }
         public decimal Price { get; set; }
         public string Nds { get; set; }
         public decimal PriceSell { get; set; }
         public decimal Sum { get
             {
-                decimal sum = (decimal)Count * Price;
+                decimal sum = Count * Price;
                 switch (Nds)
                 {
                     case "20%":
@@ -40,7 +40,7 @@ namespace OnlineCash.DataBaseModels
         {
             get
             {
-                decimal sum = (decimal)Count * Price;
+                decimal sum = Count * Price;
                 switch (Nds)
                 {
                     case "20%":
@@ -60,7 +60,7 @@ namespace OnlineCash.DataBaseModels
                 }
             }
         }
-        public decimal SumSell { get => Math.Round((decimal)Count * PriceSell, 2); }
+        public decimal SumSell { get => Math.Round(Count * PriceSell, 2); }
         public DateTime? ExpiresDate { get; set; }
         public int ArrivalId { get; set; }
         public Arrival Arrival { get; set; }

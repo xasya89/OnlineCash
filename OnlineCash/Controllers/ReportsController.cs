@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.Services;
 using OnlineCash.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnlineCash.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class ReportsController : Controller
     {
         shopContext db;

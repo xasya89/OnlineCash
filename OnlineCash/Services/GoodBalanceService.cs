@@ -58,7 +58,7 @@ namespace OnlineCash.Services
                     .ToListAsync();
                 foreach (var arrival in arrivalLastDay)
                     foreach (var arrivalgood in arrival.ArrivalGoods)
-                        BalanceGoodPlus(balanceDict, arrivalgood.GoodId, arrivalgood.Count);
+                        BalanceGoodPlus(balanceDict, arrivalgood.GoodId, (double)arrivalgood.Count);
 
                 var writeofs = await db.Writeofs.Include(w => w.WriteofGoods)
                     .Where(w => w.ShopId == ShopId & w.IsSuccess & DateTime.Compare(w.DateWriteof, curDate) == 0)

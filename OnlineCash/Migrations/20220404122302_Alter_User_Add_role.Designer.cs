@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineCash;
 
 namespace OnlineCash.Migrations
 {
     [DbContext(typeof(shopContext))]
-    partial class shopContextModelSnapshot : ModelSnapshot
+    [Migration("20220404122302_Alter_User_Add_role")]
+    partial class Alter_User_Add_role
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,6 @@ namespace OnlineCash.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<int>("ShopId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<decimal>("SumArrival")
@@ -73,8 +72,8 @@ namespace OnlineCash.Migrations
                     b.Property<int>("ArrivalId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Count")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Count")
+                        .HasColumnType("double");
 
                     b.Property<DateTime?>("ExpiresDate")
                         .HasColumnType("datetime(6)");

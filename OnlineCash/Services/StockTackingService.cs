@@ -474,7 +474,7 @@ namespace OnlineCash.Services
             var arrivals=await db.Arrivals.Include(a=>a.ArrivalGoods).Where(a => a.isSuccess == true & a.DateArrival.Date >= startDate & a.DateArrival.Date < stopDate).ToListAsync();
             foreach(var arrival in arrivals)
             {
-                double count = arrival.ArrivalGoods.Where(g => g.GoodId == goodId).Sum(a => a.Count);
+                decimal count = arrival.ArrivalGoods.Where(g => g.GoodId == goodId).Sum(a => a.Count);
                 if (count > 0)
                     documents.Add(new { Type = "Приход", Num = $"{arrival.Num} от {arrival.DateArrival.ToString("dd.MM")}", Count = $"+ {count}" });
                 countItog += (decimal)count;

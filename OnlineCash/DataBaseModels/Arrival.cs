@@ -9,6 +9,7 @@ namespace OnlineCash.DataBaseModels
     public class Arrival
     {
         public int Id { get; set; }
+        public DocumentStatus Status { get; set; } = DocumentStatus.New;
         public string Num { get; set; }
         public DateTime DateArrival { get; set; }
         public int SupplierId { get; set; }

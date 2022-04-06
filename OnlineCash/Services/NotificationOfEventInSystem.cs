@@ -10,14 +10,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace OnlineCash.Services
 {
     public class NotificationOfEventInSystemService
     {
         private IConfiguration _configuration;
-        private IBus _bus;
-        private readonly string _serverNotification;
         private readonly shopContext _db;
         private ITelegramBotClient _botClient;
         public NotificationOfEventInSystemService(IConfiguration configuration, shopContext db)
@@ -29,30 +28,15 @@ namespace OnlineCash.Services
         }
         public async Task Send(string message, string url = null)
         {
-            //await _bus.PubSub.PublishAsync<NotificationMessage>(new NotificationMessage { Notification = message, Url = url }, "NotificationOfEventInSystem");
-            /*
-            try
-            {
-                
-                await
-            $"{_serverNotification}/api/notifications".PostJsonAsync(
-                new NotificationMessage {
-                    Owner = _configuration.GetSection("ServerName").Value,
-                    Message = message,
-                    Url = url != null ? "http://"+ _configuration.GetSection("ServerName").Value + "/" + url : null}
-                );
-            }
-            catch (FlurlHttpException ex) { }
-            catch (Exception) { };
-            */
             foreach (var tgUser in await _db.TelegramUsers.ToListAsync())
             {
-                url = url != null ? "http://" + _configuration.GetSection("ServerName").Value + "/" + url : null;
-                string html = $"{message}\n<a href='{url}'>посмотреть</a>";
-                await _botClient.SendTextMessageAsync(chatId: tgUser.ChatId,
-                                                                    text: html,
-                                                                    parseMode: ParseMode.Html
-                                                                    );
+                if(url!=null)
+                {
+                    var keyboard = new InlineKeyboardMarkup(InlineKeyboardButton.WithUrl("Открыть", _configuration.GetSection("ServerName").Value + "/" + url));
+                    await _botClient.SendTextMessageAsync(tgUser.ChatId, message, replyMarkup: keyboard);
+                }
+                else
+                    await _botClient.SendTextMessageAsync(tgUser.ChatId, message);
             }
         }
     }

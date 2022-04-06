@@ -18,12 +18,19 @@ namespace OnlineCash.Controllers
         public ILogger<ArrivalsController> logger;
         public IConfiguration configuration;
         IGoodBalanceService goodBalanceService;
-        public ArrivalsController(shopContext db, ILogger<ArrivalsController> logger, IConfiguration configuration, IGoodBalanceService goodBalanceService)
+        ArrivalService _arrivalService;
+        public ArrivalsController(shopContext db, 
+            ILogger<ArrivalsController> logger, 
+            IConfiguration configuration, 
+            IGoodBalanceService goodBalanceService,
+            ArrivalService arrivalService
+            )
         {
             this.db = db;
             this.logger = logger;
             this.configuration = configuration;
             this.goodBalanceService = goodBalanceService;
+            _arrivalService = arrivalService;
         }
         [Authorize]
         public async Task<IActionResult> Index() =>
@@ -57,99 +64,10 @@ namespace OnlineCash.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Arrival model)
         {
-            var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
-            var supplier = await db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefaultAsync();
-            if (model.Num == "" || model.DateArrival == DateTime.MinValue || shop == null || supplier == null)
-                return BadRequest();
-            Arrival arrival = null;
-            decimal priceAll = model.ArrivalGoods.Sum(g => g.Price);
-            double countAll = model.ArrivalGoods.Sum(g => g.Count);
             if (model.Id == -1)
-            {
-                arrival = new Arrival
-                {
-                    Num = model.Num,
-                    DateArrival = model.DateArrival,
-                    Shop = shop,
-                    Supplier = supplier,
-                    //TODO: Дописать расчет CSumSellountSell, SumArrival, SumNds
-                    isSuccess = model.isSuccess
-                };
-                db.Arrivals.Add(arrival);
-            }
+                await _arrivalService.Create(model);
             else
-            {
-                arrival = await db.Arrivals.Where(a => a.Id == model.Id).FirstOrDefaultAsync();
-                if (arrival == null)
-                    return BadRequest();
-                arrival.Num = model.Num;
-                arrival.DateArrival = model.DateArrival;
-                arrival.Shop = shop;
-                arrival.Supplier = supplier;
-                //TODO: Дописать расчет CSumSellountSell, SumArrival, SumNds
-                arrival.isSuccess = model.isSuccess;
-                //Найдем удаленные товары
-                foreach (var arrivalgood in await db.ArrivalGoods.Where(a => a.ArrivalId == model.Id).ToListAsync())
-                    if (model.ArrivalGoods.Where(m => m.Id == arrivalgood.Id).FirstOrDefault() == null)
-                        db.Remove(arrivalgood);
-            };
-
-            foreach (var modelGood in model.ArrivalGoods)
-                if (modelGood.Id == -1)
-                {
-                    var good = await db.Goods.Where(g => g.Id == modelGood.GoodId).FirstOrDefaultAsync();
-                    if (good == null)
-                        return BadRequest();
-                    var arrivalGood = new ArrivalGood
-                    {
-                        Arrival = arrival,
-                        Good = good,
-                        Price = modelGood.Price,
-                        PriceSell=modelGood.PriceSell,
-                        Count = modelGood.Count,
-                        Nds=modelGood.Nds,
-                        ExpiresDate=modelGood.ExpiresDate
-                    };
-                    db.ArrivalGoods.Add(arrivalGood);
-                }
-                else
-                {
-                    var arrivalGood = await db.ArrivalGoods.Where(a => a.Id == modelGood.Id).FirstOrDefaultAsync();
-                    if (arrivalGood == null)
-                        return BadRequest();
-                    arrivalGood.Price = modelGood.Price;
-                    arrivalGood.PriceSell = modelGood.PriceSell;
-                    arrivalGood.Count = modelGood.Count;
-                    arrivalGood.Nds = modelGood.Nds;
-                    arrivalGood.ExpiresDate = modelGood.ExpiresDate;
-                };
-            if (model.isSuccess)
-                foreach(ArrivalGood modelGood in arrival.ArrivalGoods)
-                {
-                    var goodBalance = await db.GoodBalances.Where(g => g.GoodId == modelGood.GoodId & g.ShopId==model.ShopId).FirstOrDefaultAsync();
-                    if (goodBalance == null)
-                    {
-                        var good = await db.Goods.Where(g => g.Id == modelGood.GoodId).FirstOrDefaultAsync();
-                        db.GoodBalances.Add(new GoodBalance
-                        {
-                            Shop = shop,
-                            Good = good,
-                            Count = modelGood.Count
-                        });
-                    }
-                    else
-                        goodBalance.Count += modelGood.Count;
-                    //Изменим цену на товар
-                    var goodPrice = await db.GoodPrices.Where(p => p.ShopId == arrival.ShopId & p.GoodId == modelGood.GoodId).FirstOrDefaultAsync();
-                    goodPrice.Price = modelGood.PriceSell;
-                }
-            //Подсчет итогов
-            arrival.SumArrival = model.ArrivalGoods.Sum(a => a.Sum);
-            arrival.SumNds = model.ArrivalGoods.Sum(a =>  a.SumNds);
-            arrival.SumSell = model.ArrivalGoods.Sum(a => a.SumSell);
-            await db.SaveChangesAsync();
-            if (model.isSuccess)
-                await goodBalanceService.CalcAsync(shop.Id, model.DateArrival);
+                await _arrivalService.Edit(model);
             return Ok();
         }
 

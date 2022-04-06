@@ -50,6 +50,7 @@ namespace OnlineCash
                 .AddCookie(options =>
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                    options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/AccessDenied");
                 });
             services.AddScoped<Filters.ControlCountGoodsFilter>();
             services.AddScoped<IGoodBalanceService, GoodBalanceService>();
@@ -74,6 +75,7 @@ namespace OnlineCash
             services.AddHostedService<HostedServices.TelegramHostedService>();
         }
 
+        public static string ShopName = "OnlineCash";
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app, 
@@ -124,7 +126,9 @@ namespace OnlineCash
                 () => serviceProvider.GetService<MoneyBalanceService>().Calculate(shopIdDefault, DateTime.Now),
                 configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
                 );
+
             db.Database.Migrate();
+            ShopName = db.Shops.FirstOrDefault()?.Name ?? "OnlineCash";
         }
     }
 }

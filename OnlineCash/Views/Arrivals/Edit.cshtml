@@ -104,7 +104,7 @@
                     decimal sellpercent = 0;
                     if (arrivalGood.Price != 0)
                         sellpercent = Math.Round((arrivalGood.PriceSell / arrivalGood.Price - 1) * 100);
-                    double sum = (double)arrivalGood.Price * arrivalGood.Count;
+                    decimal sum = arrivalGood.Price * arrivalGood.Count;
                     <tr data-id="@arrivalGood.Id" data-id-good="@arrivalGood.GoodId">
                         <td><span onclick="deleteGood(this.parentElement.parentElement)" class="fa fa-trash"></span></td>
                         <td>@arrivalGood.Good?.Name</td>
