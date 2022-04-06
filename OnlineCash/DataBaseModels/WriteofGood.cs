@@ -12,8 +12,8 @@ namespace OnlineCash.DataBaseModels
         public Writeof Writeof { get; set; }
         public int GoodId { get; set; }
         public Good Good { get; set; }
-        public double Count { get; set; }
+        public decimal Count { get; set; }
         public decimal Price { get; set; }
-        public decimal Sum { get => Math.Round((decimal)Count * Price, 2); }
+        public decimal Sum { get => Math.Round(Count * Price, 2); }
     }
 }

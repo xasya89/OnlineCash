@@ -21,7 +21,7 @@ namespace OnlineCash.Models
     {
         public Guid Uuid { get; set; }
         public decimal Price { get; set; }
-        public double Count { get; set; }
+        public decimal Count { get; set; }
         
         //public decimal Sum { get => (decimal)Count * Price; }
     }

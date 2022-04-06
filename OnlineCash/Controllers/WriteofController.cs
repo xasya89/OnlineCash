@@ -155,7 +155,7 @@ namespace OnlineCash.Controllers
                 {
                     GoodId = group.Key,
                     ShopId = model.ShopId,
-                    Count = group.Sum(gr => gr.Count)
+                    Count = (double) group.Sum(gr => gr.Count)
                 });
             }
             await goodBalance.MinusAsync(goodBalances);

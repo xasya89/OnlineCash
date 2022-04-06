@@ -65,5 +65,37 @@ namespace OnlineCash.Services
                 //await goodBalance.CalcAsync(shopId, model.DateCreate);
             return writeofDb;
         }
+
+        public async Task Create(Writeof model)
+        {
+            var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
+            decimal sumAll = model.WriteofGoods.Sum(w => (decimal)w.Count * w.Price);
+            var writeof = new Writeof
+            {
+                Status = model.IsSuccess ? DocumentStatus.Confirm : DocumentStatus.New,
+                Shop = shop,
+                DateWriteof = model.DateWriteof,
+                IsSuccess = model.IsSuccess,
+                Note = model.Note,
+                SumAll = sumAll
+            };
+            db.Writeofs.Add(writeof);
+            foreach (var wgood in model.WriteofGoods)
+            {
+                var good = await db.Goods.Where(g => g.Id == wgood.GoodId).FirstOrDefaultAsync();
+                var writeofGood = new WriteofGood
+                {
+                    Writeof = writeof,
+                    Good = good,
+                    Count = wgood.Count,
+                    Price = wgood.Price
+                };
+                db.WriteofGoods.Add(writeofGood);
+            }
+            await db.SaveChangesAsync();
+            if (writeof.IsSuccess)
+                await goodBalance.CalcAsync(writeof.ShopId, writeof.DateWriteof);
+
+        }
     }
 }

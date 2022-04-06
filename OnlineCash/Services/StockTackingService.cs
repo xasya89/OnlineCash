@@ -492,7 +492,7 @@ namespace OnlineCash.Services
             var writeofs = await db.Writeofs.Include(w=>w.WriteofGoods).Where(w => w.IsSuccess == true & w.DateWriteof.Date >= startDate & w.DateWriteof.Date < stopDate).ToListAsync();
             foreach(var writeof in writeofs)
             {
-                double count = writeof.WriteofGoods.Where(w => w.GoodId == goodId).Sum(w => w.Count);
+                decimal count = writeof.WriteofGoods.Where(w => w.GoodId == goodId).Sum(w => w.Count);
                 if (count > 0)
                     documents.Add(new { Type = "Списание", Num = $"{writeof.DateWriteof.ToString("dd.MM")}", Count = $"- {count}" });
                 countItog -= (decimal)count;

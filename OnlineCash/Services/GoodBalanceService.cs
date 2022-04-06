@@ -65,7 +65,7 @@ namespace OnlineCash.Services
                     .ToListAsync();
                 foreach (var writeof in writeofs)
                     foreach (var wgood in writeof.WriteofGoods)
-                        BalanceGoodMinus(balanceDict, wgood.GoodId, wgood.Count);
+                        BalanceGoodMinus(balanceDict, wgood.GoodId, (double)wgood.Count);
 
                 var shifts = await db.Shifts
                     .Include(s => s.ShiftSales)

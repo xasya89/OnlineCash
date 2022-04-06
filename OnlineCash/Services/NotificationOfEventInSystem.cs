@@ -22,7 +22,6 @@ namespace OnlineCash.Services
         public NotificationOfEventInSystemService(IConfiguration configuration, shopContext db)
         {
             _configuration = configuration;
-            _serverNotification = _configuration.GetConnectionString("ServerNotification");
             _db = db;
             _botClient = new TelegramBotClient(configuration.GetConnectionString("Telegram"));
         }
