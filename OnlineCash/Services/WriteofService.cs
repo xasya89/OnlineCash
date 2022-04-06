@@ -12,22 +12,19 @@ namespace OnlineCash.Services
 {
     public class WriteofService : IWriteofService
     {
-        shopContext db;
-        ILogger<WriteofService> logger;
-        IGoodBalanceService goodBalance;
-        IConfiguration _configuration;
-        GoodCountBalanceService _countBalanceService;
+        private readonly shopContext db;
+        private readonly IConfiguration _configuration;
+        private readonly GoodCountBalanceService _countBalanceService;
+        private readonly NotificationOfEventInSystemService _notificationService;
         public WriteofService(shopContext db, 
-            ILogger<WriteofService> logger, 
             IConfiguration configuration, 
-            IGoodBalanceService goodBalance,
+            NotificationOfEventInSystemService notificationService,
             GoodCountBalanceService countBalanceService)
         {
             this.db = db;
-            this.logger = logger;
-            this.goodBalance = goodBalance;
             _configuration = configuration;
             _countBalanceService = countBalanceService;
+            _notificationService = notificationService;
         }
 
         public async Task<Writeof> SaveSynch(int shopId, WriteofSynchModel model)
@@ -39,7 +36,7 @@ namespace OnlineCash.Services
                 IsSuccess=autoSuccess,
                 Uuid = model.Uuid, 
                 ShopId=shopId, 
-                Status=DocumentStatus.New, 
+                Status=autoSuccess? DocumentStatus.Confirm : DocumentStatus.New, 
                 DateWriteof = model.DateCreate, 
                 Note = model.Note,
                 SumAll=model.Goods.Sum(w=>(decimal)w.Count * w.Price)
@@ -69,7 +66,7 @@ namespace OnlineCash.Services
         public async Task Create(Writeof model)
         {
             var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
-            decimal sumAll = model.WriteofGoods.Sum(w => (decimal)w.Count * w.Price);
+            decimal sumAll = model.WriteofGoods.Sum(w => w.Count * w.Price);
             var writeof = new Writeof
             {
                 Status = model.IsSuccess ? DocumentStatus.Confirm : DocumentStatus.New,
@@ -80,22 +77,65 @@ namespace OnlineCash.Services
                 SumAll = sumAll
             };
             db.Writeofs.Add(writeof);
+            List<WriteofGood> writeofGoods = new List<WriteofGood>();
             foreach (var wgood in model.WriteofGoods)
-            {
-                var good = await db.Goods.Where(g => g.Id == wgood.GoodId).FirstOrDefaultAsync();
-                var writeofGood = new WriteofGood
+                writeofGoods.Add(new WriteofGood
                 {
                     Writeof = writeof,
-                    Good = good,
+                    GoodId = wgood.GoodId,
                     Count = wgood.Count,
                     Price = wgood.Price
-                };
-                db.WriteofGoods.Add(writeofGood);
-            }
+                });
+            db.WriteofGoods.AddRange(writeofGoods);
             await db.SaveChangesAsync();
-            if (writeof.IsSuccess)
-                await goodBalance.CalcAsync(writeof.ShopId, writeof.DateWriteof);
 
+            if (writeof.Status == DocumentStatus.Confirm)
+            {
+                await _countBalanceService.Add<WriteofGood>(writeof.Id, DateTime.Now, writeofGoods);
+                await _notificationService.Send($"Списание на сумму {writeof.SumAll} Примечание {writeof.Note}", "Writeof/edit/" + writeof.Id);
+            }
+        }
+
+        public async Task Edit(Writeof model)
+        {
+            var writeof = await db.Writeofs.Where(w => w.Id == model.Id).Include(w => w.WriteofGoods).FirstOrDefaultAsync();
+            var docStatusOld = writeof.Status;
+            writeof.Status = model.IsSuccess ? DocumentStatus.Confirm : writeof.Status;
+            writeof.ShopId = model.ShopId;
+            writeof.DateWriteof = model.DateWriteof;
+            writeof.IsSuccess = model.IsSuccess;
+            writeof.Note = model.Note;
+            writeof.SumAll = model.WriteofGoods.Sum(wg => (decimal)wg.Count * wg.Price);
+            await db.SaveChangesAsync();
+            //Удалим удаленные позиции
+            foreach (var writegood in writeof.WriteofGoods)
+                if (model.WriteofGoods.Where(wg => wg.Id == writegood.Id).FirstOrDefault() == null)
+                    db.WriteofGoods.Remove(writegood);
+            //Добавим новые позиции
+            foreach (var wgood in model.WriteofGoods.Where(wg => wg.Id == -1).ToList())
+                db.WriteofGoods.Add(new WriteofGood
+                {
+                    Writeof = writeof,
+                    GoodId = wgood.GoodId,
+                    Count = wgood.Count,
+                    Price = wgood.Price
+                });
+            //Изменим существующие позиции
+            foreach (var wgood in model.WriteofGoods.Where(wg => wg.Id != -1).ToList())
+            {
+                var writegood = await db.WriteofGoods.Where(wg => wg.Id == wgood.Id).FirstOrDefaultAsync();
+                writegood.Count = wgood.Count;
+                writegood.Price = wgood.Price;
+            };
+            await db.SaveChangesAsync();
+
+            if (docStatusOld != DocumentStatus.Confirm & writeof.Status == DocumentStatus.Confirm)
+            {
+                await _countBalanceService.Add<WriteofGood>(writeof.Id, DateTime.Now, 
+                    (await db.Writeofs.Include(w=>w.WriteofGoods).Where(w=>w.Id==model.Id).FirstOrDefaultAsync()).WriteofGoods
+                    );
+                await _notificationService.Send($"Списание на сумму {writeof.SumAll} Примечание {writeof.Note}", "Writeof/edit/" + writeof.Id);
+            }
         }
     }
 }
