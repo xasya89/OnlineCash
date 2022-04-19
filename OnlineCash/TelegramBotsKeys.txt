@@ -6,3 +6,7 @@ http://t.me/onlineshop_stepnaya_bot
 http://t.me/onlineshop_severnyi_bot
 5181093424:AAEG0BT5z6Qd6w5k342GBptHALLJwdMP7uI - 60 лет
 http://t.me/onlinshop_60ago_bot
+5333877565:AAFpVREs3_hi7EYUpnrwr1TJOdanEsu-Iuc - Сторожевая
+http://t.me/onlineshop_storojevaya_bot
+5353876337:AAEPi2Cq6w-ell1S5bVJP3yjBcoDwW0PK0c - Бульвар юности
+http://t.me/onlinecash_bulvar_bot

@@ -14,6 +14,7 @@ using Hangfire;
 using OnlineCash.Services;
 using Hangfire.MemoryStorage;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace OnlineCash
 {
@@ -100,6 +101,21 @@ namespace OnlineCash
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.StartsWithSegments("/robots.txt"))
+                {
+                    var robotsTxtPath = Path.Combine(env.ContentRootPath, "robots.txt");
+                    string output = "User-agent: *  \nDisallow: /";
+                    if (File.Exists(robotsTxtPath))
+                    {
+                        output = await File.ReadAllTextAsync(robotsTxtPath);
+                    }
+                    context.Response.ContentType = "text/plain";
+                    await context.Response.WriteAsync(output);
+                }
+                else await next();
+            });
             app.UseRouting();
 
             app.UseAuthentication();
