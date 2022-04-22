@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Hangfire;
 using OnlineCash.Services;
+using DatabaseBuyer;
 using Hangfire.MemoryStorage;
 using System.IO;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,10 @@ namespace OnlineCash
             services.AddDbContext<shopContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("MySQL"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.30-mysql"));
+            });
+            services.AddDbContext<shopbuyerContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString("MySQLBuyer"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("5.7.30-mysql"));
             });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -86,7 +91,7 @@ namespace OnlineCash
             IRecurringJobManager recurringJobManager,
             IServiceProvider serviceProvider,
             ILoggerFactory loggerFactory,
-            shopContext db)
+            shopContext db, shopbuyerContext dbBuyer)
         {
             int shopIdDefault = Convert.ToInt32(configuration.GetSection("ShopIdDefault").Value);
 
@@ -144,6 +149,7 @@ namespace OnlineCash
                 );
 
             db.Database.Migrate();
+            dbBuyer.Database.Migrate();
             ShopName = db.Shops.FirstOrDefault()?.Name ?? "OnlineCash";
         }
     }

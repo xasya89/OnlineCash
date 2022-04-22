@@ -68,6 +68,26 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> GoodCountBalance(string find)
             => View(await db.GoodCountBalanceCurrents.Include(c => c.Good).Where(c => EF.Functions.Like(c.Good.Name, $"%{find}%")).OrderBy(c => c.Good.Name).ToListAsync());
 
+        public async Task<List<dynamic>> GoodCountDetail(int goodId)
+        {
+            DateTime dateLast = DateTime.Now.AddMonths(-1).Date;
+            decimal? countLast = (await db.GoodCountBalances
+                .Where(b => b.GoodId == goodId & DateTime.Compare(b.Period.Date, dateLast) == 0)
+                .FirstOrDefaultAsync())?.Count;
+            var stocktackingLast = await db.Stocktakings
+                .Include(s=>s.StocktakingSummaryGoods).Where(s=>s.Status==DataBaseModels.DocumentStatus.Confirm)
+                .OrderBy(s=>s.Create).LastAsync();
+            if(stocktackingLast!=null)
+            {
+                countLast = stocktackingLast.StocktakingSummaryGoods.Where(s => s.GoodId == goodId).FirstOrDefault()?.CountFact ?? countLast;
+                dateLast = stocktackingLast.Create;
+            }
+            List<dynamic> histoies = new List<dynamic>() { new { Title="Начало", Date=dateLast, DateStr=dateLast.ToString("dd.MM.yy"), Count=countLast } };
+            foreach (var doc in await db.GoodCountDocHistories.Where(d => d.Date > dateLast).ToListAsync())
+                histoies.Add(new { Title = doc.TypeDoc.GetDescription(), Date = doc.Date, DateStr = doc.Date.ToString("dd.MM.yy"), Count = doc.Count });
+            return histoies;
+        }
+
         [HttpGet]
         public async Task<IActionResult> MoneyBalanceHistory(int shopId)
             => View(await db.MoneyBalanceHistories.OrderByDescending(m => m.DateBalance).ToListAsync());

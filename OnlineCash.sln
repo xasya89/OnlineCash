@@ -14,9 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBase", "DataBase\DataBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationServer", "NotificationServer\NotificationServer.csproj", "{8235AF25-40C5-4F5B-BC25-1126695ED507}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMqMessages", "RabbitMqMessages\RabbitMqMessages.csproj", "{F15A9B0F-82D9-4855-ACC8-631D2252EBA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMqMessages", "RabbitMqMessages\RabbitMqMessages.csproj", "{F15A9B0F-82D9-4855-ACC8-631D2252EBA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuyersServiceApp", "BuyersServiceApp\BuyersServiceApp.csproj", "{321EF05C-94C6-4F8C-99F9-1CAEA31FCB60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuyersServiceApp", "BuyersServiceApp\BuyersServiceApp.csproj", "{321EF05C-94C6-4F8C-99F9-1CAEA31FCB60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseBuyer", "DatabaseBuyer\DatabaseBuyer.csproj", "{EAB0A251-13A4-49CE-9C3E-2D2440C6A9D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +50,10 @@ Global
 		{321EF05C-94C6-4F8C-99F9-1CAEA31FCB60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{321EF05C-94C6-4F8C-99F9-1CAEA31FCB60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{321EF05C-94C6-4F8C-99F9-1CAEA31FCB60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAB0A251-13A4-49CE-9C3E-2D2440C6A9D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAB0A251-13A4-49CE-9C3E-2D2440C6A9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAB0A251-13A4-49CE-9C3E-2D2440C6A9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAB0A251-13A4-49CE-9C3E-2D2440C6A9D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

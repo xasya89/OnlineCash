@@ -1,5 +1,12 @@
 ﻿@model IEnumerable<OnlineCash.DataBaseModels.GoodCountBalanceCurrent>
 
+    <form asp-action="GoodCountBalance" method="get">
+        <div class="input-group input-group-sm mt-3 mb-3">
+            <input type="text" name="find" class="form-control" placeholder="Поиск товара" aria-label="Поиск товара" aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Найти</button>
+        </div>
+    </form>
+
 <div class="table-responsive">
     <table class="table table-sm table-hover table-striped table-bordered">
         <thead>
@@ -13,7 +20,7 @@
             @foreach(var cur in Model)
                 if(cur.Good.IsDeleted==false)
                 {
-                    <tr>
+                    <tr onclick="getDetail(@cur.GoodId, '@cur.Good.Name')">
                         <td>@cur.Good.Name</td>
                         <td>@cur.Good.Unit.GetDescription()</td>
                         <td>@cur.Count</td>
@@ -22,3 +29,60 @@
         </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="moveDialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moveGoodName">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Документ</th>
+                            <th>Дата</th>
+                            <th>Движение</th>
+                        </tr>
+                    </thead>
+                    <tbody id="moveTable"></tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2">Остаток</th>
+                            <th id="moveCountEnd"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const moveDialog = new bootstrap.Modal(document.getElementById('moveDialog'));
+    const moveGoodName = document.getElementById("moveGoodName");
+    const moveTable = document.getElementById("moveTable");
+    const moveCountEnd = document.getElementById("moveCountEnd");
+
+    function getDetail(goodId, goodName) {
+        moveTable.querySelectorAll("tr").forEach(tr => tr.remove());
+        fetch("GoodCountDetail?goodId=" + goodId)
+            .then(r => r.json())
+            .then(list => {
+                moveGoodName.textContent = goodName;
+                let countEnd = 0;
+                list.forEach(doc => {
+                    let tr = document.createElement("tr");
+                    tr.innerHTML = `<td>${doc.title}</td><td>${doc.dateStr}</td><td>${doc.count}</td>`;
+                    moveTable.append(tr);
+                    countEnd += doc.count;
+                });
+                moveCountEnd.textContent = countEnd;
+                moveDialog.show();
+            })
+    }
+</script>
