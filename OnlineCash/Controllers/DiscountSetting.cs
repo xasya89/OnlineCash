@@ -5,23 +5,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using io=System.IO;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using OnlineCash.Models.Discounts;
+using DatabaseBuyer;
 
 namespace OnlineCash.Controllers
 {
     public class DiscountSettingController : Controller
     {
-        const string settingFileName = "discounts.json";
+        private readonly shopbuyerContext _dbBuyer;
+        public DiscountSettingController(shopbuyerContext dbBuyer) => _dbBuyer = dbBuyer;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            DiscountParamContainerModel model;
-            if (!io.File.Exists("discounts.json"))
-                using (io.StreamWriter writer = new io.StreamWriter(settingFileName))
+            var settingStr = (await _dbBuyer.DiscountSettings.FirstOrDefaultAsync())?.Settings;
+            DiscountParamContainerModel model=null;
+            if (settingStr != null)
+                try
                 {
-                    model = new DiscountParamContainerModel
-                    {
-                        Weeks = new List<DiscountParamWeeksModel>()
+                    model = JsonSerializer.Deserialize<DiscountParamContainerModel>(settingStr);
+                }
+                catch (Exception) { };
+            if(model==null)
+                model = new DiscountParamContainerModel
+                {
+                    Weeks = new List<DiscountParamWeeksModel>()
                         {
                             new DiscountParamWeeksModel{DayNum=1,DayName="Пн."},
                             new DiscountParamWeeksModel{DayNum=2,DayName="Вт."},
@@ -31,22 +39,21 @@ namespace OnlineCash.Controllers
                             new DiscountParamWeeksModel{DayNum=6,DayName="Сб."},
                             new DiscountParamWeeksModel{DayNum=7,DayName="Вс."}
                         }
-                    };
-
-                    writer.Write(JsonSerializer.Serialize(model));
-                }
-            else
-                using (io.StreamReader reader = new io.StreamReader(settingFileName))
-                    model = JsonSerializer.Deserialize<DiscountParamContainerModel>(reader.ReadToEnd());
+                };
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] DiscountParamContainerModel model)
         {
-            io.File.Delete(settingFileName);
-            using (io.StreamWriter writer = new io.StreamWriter(settingFileName))
-                writer.Write(JsonSerializer.Serialize(model));
+            var dbmodel = await _dbBuyer.DiscountSettings.FirstOrDefaultAsync();
+            if(dbmodel==null)
+            {
+                dbmodel = new DiscountSetting();
+                _dbBuyer.DiscountSettings.Add(dbmodel);
+            }
+            dbmodel.Settings = JsonSerializer.Serialize(model);
+            await _dbBuyer.SaveChangesAsync();
             return Ok(model);
         }
     }

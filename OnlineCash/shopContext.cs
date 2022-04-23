@@ -42,10 +42,6 @@ namespace OnlineCash
         public DbSet<MoveDoc> MoveDocs { get; set; }
         public DbSet<MoveGood> MoveGoods { get; set; }
 
-        public DbSet<DiscountCard> DiscountCards { get; set; }
-        public DbSet<Buyer> Buyers { get; set; }
-        public DbSet<PersonalDiscount> PersonalDiscounts { get; set; }
-
         public DbSet<CashMoney> CashMoneys { get; set; }
 
         public DbSet<NewGoodFromCash> NewGoodFromCashes { get; set; }
@@ -243,19 +239,6 @@ namespace OnlineCash
                 .HasOne(b => b.Shop)
                 .WithMany(s => s.SumBalanceHistories)
                 .HasForeignKey(b => b.ShopId);
-
-            modelBuilder.Entity<Buyer>()
-                .HasOne(b => b.DiscountCard)
-                .WithMany(d => d.Buyers)
-                .HasForeignKey(b=>b.DiscountCardId);
-            modelBuilder.Entity<CheckSell>()
-                .HasOne(c => c.Buyer)
-                .WithMany(b => b.CheckSells)
-                .HasForeignKey(b => b.BuyerId);
-            modelBuilder.Entity<PersonalDiscount>()
-                .HasOne(p => p.Buyer)
-                .WithMany(b => b.PersonalDiscounts)
-                .HasForeignKey(p => p.BuyerId);
 
             //Внесение и изЪятие денег в кассе
             modelBuilder.Entity<CashMoney>()

@@ -14,8 +14,8 @@ namespace DatabaseBuyer
         public string Name { get; set; }
         public string Phone { get; set; }
         public DateTime? Birthday { get; set; }
-        public int? TemporyPercent { get; set; }
-        public int? SpecialPercent { get; set; }
+        public int TemporyPercent { get; set; }
+        public int SpecialPercent { get; set; }
         public decimal DiscountSum { get; set; }
         public decimal SumBuy { get; set; }
         public bool isBlock { get; set; } = false;

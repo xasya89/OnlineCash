@@ -7,21 +7,25 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Models.CashBox;
+using DatabaseBuyer;
 
 namespace OnlineCash.Services
 {
     public class CashBoxService : ICashBoxService
     {
         shopContext db;
+        shopbuyerContext _dbBuyer;
         CashMoneyService _moneyService;
         MoneyBalanceService _moneyBalanceService;
         GoodCountBalanceService _countBalanceService;
         public CashBoxService(shopContext db,
+            shopbuyerContext dbBuyer,
             MoneyBalanceService moneyBalanceService, 
             CashMoneyService moneyService,
             GoodCountBalanceService countBalanceService)
         {
             this.db = db;
+            _dbBuyer = dbBuyer;
             _moneyService = moneyService;
             _moneyBalanceService = moneyBalanceService;
             _countBalanceService = countBalanceService;
@@ -119,23 +123,25 @@ namespace OnlineCash.Services
             Buyer buyer = null;
             if (check.Buyer != null)
             {
-                buyer = await db.Buyers.Where(b => b.Uuid == check.Buyer.Uuid).FirstOrDefaultAsync();
+                buyer = await _dbBuyer.Buyers.Where(b => b.Uuid == check.Buyer.Uuid).FirstOrDefaultAsync();
                 if (buyer == null)
                 {
                     buyer = new Buyer
                     {
                         Uuid = check.Buyer.Uuid,
-                        Phone = check.Buyer.Phone,
-                        SumBuy = check.IsReturn ? 0 : check.SumCash + check.SumElectron
+                        Phone = check.Buyer.Phone
                     };
-                    db.Buyers.Add(buyer);
+                    _dbBuyer.Buyers.Add(buyer);
                 }
             }
+            buyer.SumBuy += check.IsReturn || check.SumDiscount > 0 ? 0 : check.SumCash + check.SumElectron;
             var checksell = new CheckSell { 
                 DateCreate=check.Create,
                 TypeSell = check.IsReturn ? TypeSell.Return : TypeSell.Sell,
                 Shift=shift,
-                Buyer =buyer,
+                BuyerId=buyer?.Id,
+                BuyerName=buyer?.Name,
+                BuyerPhone=buyer?.Phone,
                 SumCash=check.SumCash,
                 SumElectron=check.SumElectron,
                 Sum=check.SumCash + check.SumElectron,
@@ -156,6 +162,7 @@ namespace OnlineCash.Services
             }
 
             await db.SaveChangesAsync();
+            await _dbBuyer.SaveChangesAsync();
             if (check.SumCash > 0 && check.IsReturn==false)
                 await _moneyBalanceService.AddSale(shift.ShopId, check.SumCash);
             if (check.SumCash > 0 && check.IsReturn == true)
@@ -194,6 +201,7 @@ namespace OnlineCash.Services
                 if (shift != null)
                     throw new Exception("Нет закрытых смен");
                 var cashier = await db.Cashiers.FirstOrDefaultAsync();
+
                 var shop = await db.Shops.Where(s => s.Id == idShop).FirstOrDefaultAsync();
                 if (shop == null)
                     throw new Exception("Магазин не найден");

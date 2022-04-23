@@ -65,7 +65,6 @@ namespace OnlineCash
             services.AddScoped<IWriteofService, WriteofService>();
             services.AddScoped<ArrivalService>();
             services.AddScoped<IStockTackingService, StockTackingService>();
-            services.AddTransient<BuyerRegistration>();
             services.AddScoped<ISmsService, SmsStreamTelecom>();
             services.AddTransient<CashMoneyService>();
             services.AddTransient<MoneyBalanceService>();

@@ -8,6 +8,8 @@ namespace DatabaseBuyer
 {
     public partial class shopbuyerContext : DbContext
     {
+        public DbSet<Buyer> Buyers { get; set; }
+        public DbSet<DiscountSetting> DiscountSettings { get; set; }
         public shopbuyerContext()
         {
         }
