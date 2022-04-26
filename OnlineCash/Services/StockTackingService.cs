@@ -75,7 +75,7 @@ namespace OnlineCash.Services
             return model;
         }
 
-        public async Task<StocktackingSummaryModel> GetSummary(int stocktakingId)
+        public async Task<StocktackingSummaryModel> GetSummary(int stocktakingId, int? goodGroupdId)
         {
             var stocktaking= await db.Stocktakings
                 .Include(s => s.StocktakingSummaryGoods)
@@ -97,6 +97,7 @@ namespace OnlineCash.Services
                     summaryOldDict.Add(summaryOld.GoodId, summaryOld.CountFact);
 
             foreach (var summary in stocktaking.StocktakingSummaryGoods)
+                if(goodGroupdId==null || summary.Good.GoodGroupId==goodGroupdId)
                 model.Goods.Add(new StocktackingSummaryGoodModel
                 {
                     GoodId = summary.GoodId,

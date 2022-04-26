@@ -164,7 +164,14 @@ namespace OnlineCash.Controllers
 
 
         [HttpGet("Stocktaking/Summary/{id}")]
-        public async Task<IActionResult> Summary(int id) => View(await stockTackingService.GetSummary(id));
+        public async Task<IActionResult> Summary(int id, int? goodGroupId)
+        {
+            var goodGroups = new List<GoodGroup>() { new GoodGroup { Id = 0 } };
+            goodGroups.AddRange(await db.GoodGroups.OrderBy(gr => gr.Name).ToListAsync());
+            ViewBag.GoodGroups = goodGroups;
+            ViewBag.GoodGroupIdSelected = goodGroupId;
+            return View(await stockTackingService.GetSummary(id, goodGroupId));
+        }
 
         public async Task<IActionResult> GetDetailGoodCountByDocs(int stocktakingId, int goodId)
             => Ok(await stockTackingService.GetDetailGoodCountByDocs(stocktakingId, goodId));

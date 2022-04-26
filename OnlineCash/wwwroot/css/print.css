@@ -33,6 +33,18 @@
     article {
         page-break-inside: always;
     }
+        #pager,
+        form,
+        .no-print {
+            display: none !important;
+            height: 0;
+        }
+
+
+            .no-print, .no-print * {
+                display: none !important;
+                height: 0;
+            }
 }
 
 @page {
