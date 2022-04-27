@@ -17,6 +17,7 @@
         {
             <h5>Недостача @(Model.SumDb - Model.SumFact) руб.</h5>
         }
+        <button onclick="window.print()" class="btn btn-sm btn-secondary">Печать</button>
     </div>
 </div>
 
@@ -28,7 +29,7 @@
         <label class="form-label">Группа</label>
     </div>
     <div class="col-lg">
-        <select onchange="window.location.href='/stocktaking/summary/1?goodGroupId='+this.value" asp-items="@(new SelectList(ViewBag.GoodGroups, nameof(GoodGroup.Id), nameof(GoodGroup.Name)))"></select>
+        <select onchange="window.location.href = '/stocktaking/summary/' +@Model.Id+'?goodGroupId=' + this.value" asp-items="@(new SelectList(ViewBag.GoodGroups, nameof(GoodGroup.Id), nameof(GoodGroup.Name)))"></select>
     </div>
 </div>
 

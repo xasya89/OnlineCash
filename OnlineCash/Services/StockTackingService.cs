@@ -80,6 +80,7 @@ namespace OnlineCash.Services
             var stocktaking= await db.Stocktakings
                 .Include(s => s.StocktakingSummaryGoods)
                 .ThenInclude(g => g.Good).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
+
             StocktackingSummaryModel model = new StocktackingSummaryModel
             {
                 Id=stocktaking.Id,
@@ -462,10 +463,9 @@ namespace OnlineCash.Services
             var stocktaking = await db.Stocktakings.Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
             DateTime stopDate = stocktaking.Start.Date;
             int stocktakingOldId = stocktakingId;
-            Stocktaking stocktakingOld = null;
-            while (--stocktakingOldId > 0 & stocktakingOld == null)
-                stocktakingOld = await db.Stocktakings.Include(s=>s.StocktakingSummaryGoods).Where(s => s.Id == stocktakingOldId).FirstOrDefaultAsync();
-            DateTime startDate = stocktakingOld==null ? DateTime.Now.AddDays(-7).Date : stocktakingOld.Start.Date;
+            Stocktaking stocktakingOld = await db.Stocktakings.Include(s=>s.StocktakingSummaryGoods)
+                .Where(s=>s.Id< stocktakingId & s.Status==DocumentStatus.Confirm).OrderByDescending(s=>s.Id).FirstOrDefaultAsync();
+            DateTime startDate = stocktakingOld?.Start.Date ?? DateTime.Now.AddDays(-7).Date;
             if (stocktakingOld != null)
             {
                 double count = (double)stocktakingOld.StocktakingSummaryGoods.Where(s => s.GoodId == goodId).Sum(s => s.CountFact);
