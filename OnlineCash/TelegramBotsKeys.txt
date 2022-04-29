@@ -12,3 +12,5 @@ http://t.me/onlineshop_storojevaya_bot
 http://t.me/onlinecash_bulvar_bot
 5377439670:AAEn3Wxzd_6yNfCxa5f1oRWvG6xx57KrEL8 - Щорса
 http://t.me/onlinecash_shorsa_bot
+5398097989:AAG6djd8ASEp0FjbWKBsCbVm3wz1Vp1570o - Губарев
+http://t.me/gubarev_onlinecash_bot

@@ -1,11 +1,25 @@
-﻿@model IEnumerable<OnlineCash.DataBaseModels.GoodCountBalanceCurrent>
+﻿@using OnlineCash.DataBaseModels
+@model IEnumerable<OnlineCash.DataBaseModels.GoodCountBalanceCurrent>
 
     <form asp-action="GoodCountBalance" method="get">
+        @{ 
+            string viewNullStr = (bool)ViewBag.ViewNull ? "checked" : "";
+
+        }
         <div class="input-group input-group-sm mt-3 mb-3">
-            <input type="text" name="find" class="form-control" placeholder="Поиск товара" aria-label="Поиск товара" aria-describedby="button-addon2">
+            <input type="text" name="find" class="form-control form-control-sm" style="margin: 0 5px 0 0" placeholder="Поиск товара" aria-label="Поиск товара" aria-describedby="button-addon2">
+            <label class="form-label" style="margin: 0 5px 0 0">Группа</label>
+            <select name="goodGroupId" class="form-select form-select-sm" asp-items="@(new SelectList(ViewBag.GoodGroups, nameof(GoodGroup.Id), nameof(GoodGroup.Name)))" style="margin: 0 5px 0 0"></select>
+            <div class="form-check" style="margin: 0 5px 0 0">
+                <input class="form-check-input" type="checkbox" name="viewNull" value="true" @viewNullStr id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    Скрыть нулевые
+                </label>
+            </div>
             <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Найти</button>
         </div>
     </form>
+
 
 <div class="table-responsive">
     <table class="table table-sm table-hover table-striped table-bordered">

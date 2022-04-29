@@ -65,9 +65,16 @@ namespace OnlineCash.Controllers
             return Redirect("GoodBalanceHistory");
         }
 
-        public async Task<IActionResult> GoodCountBalance(string find)
-            => View(await db.GoodCountBalanceCurrents.Include(c => c.Good).Where(c => EF.Functions.Like(c.Good.Name, $"%{find}%")).OrderBy(c => c.Good.Name).ToListAsync());
-
+        public async Task<IActionResult> GoodCountBalance(string find, int goodGroupId, bool viewNull)
+        {
+            var goodGroups = new List<DataBaseModels.GoodGroup>() { new DataBaseModels.GoodGroup { } };
+            goodGroups.AddRange(await db.GoodGroups.ToListAsync());
+            ViewBag.GoodGroups = goodGroups;
+            ViewBag.ViewNull = viewNull;
+            return View(await db.GoodCountBalanceCurrents.Include(c => c.Good)
+                .Where(c =>(goodGroupId==0 || c.Good.GoodGroupId==goodGroupId) & (!viewNull || c.Count>0) & EF.Functions.Like(c.Good.Name, $"%{find}%"))
+                .OrderBy(c => c.Good.Name).ToListAsync());
+        }
         public async Task<List<dynamic>> GoodCountDetail(int goodId)
         {
             DateTime dateLast = DateTime.Now.AddMonths(-1).Date;

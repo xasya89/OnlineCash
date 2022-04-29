@@ -133,8 +133,8 @@ namespace OnlineCash.Services
                     };
                     _dbBuyer.Buyers.Add(buyer);
                 }
+                buyer.SumBuy += check.IsReturn || check.SumDiscount > 0 ? 0 : check.SumCash + check.SumElectron;
             }
-            buyer.SumBuy += check.IsReturn || check.SumDiscount > 0 ? 0 : check.SumCash + check.SumElectron;
             var checksell = new CheckSell { 
                 DateCreate=check.Create,
                 TypeSell = check.IsReturn ? TypeSell.Return : TypeSell.Sell,
