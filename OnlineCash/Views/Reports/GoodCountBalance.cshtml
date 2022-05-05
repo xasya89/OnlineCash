@@ -1,6 +1,15 @@
 ﻿@using OnlineCash.DataBaseModels
 @model IEnumerable<OnlineCash.DataBaseModels.GoodCountBalanceCurrent>
 
+    <div class="row">
+        <div class="col">
+            <h5>Сумма товара всего: @ViewBag.SumAll</h5>
+        </div>
+        <div class="col">
+            <button class="btn btn-sm btn-secondary">Печать</button>
+        </div>
+    </div>
+
     <form asp-action="GoodCountBalance" method="get">
         @{ 
             string viewNullStr = (bool)ViewBag.ViewNull ? "checked" : "";
@@ -27,20 +36,33 @@
             <tr>
                 <th>Наименование</th>
                 <th>Ед</th>
+                <th>Цена</th>
                 <th>Кол-во</th>
+                <th>Сумма</th>
             </tr>
         </thead>
         <tbody>
+            @{ decimal sumAll = 0; }
             @foreach(var cur in Model)
                 if(cur.Good.IsDeleted==false)
                 {
+                    decimal sum = cur.Good.Price * cur.Count;
+                    sumAll += sum;
                     <tr onclick="getDetail(@cur.GoodId, '@cur.Good.Name')">
                         <td>@cur.Good.Name</td>
                         <td>@cur.Good.Unit.GetDescription()</td>
+                        <td>@cur.Good.Price</td>
                         <td>@cur.Count</td>
+                        <td>@Math.Round(sum,2)</td>
                     </tr>
                 }
         </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="4">Сумма</th>
+                <th>@Math.Round(sumAll,2)</th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 

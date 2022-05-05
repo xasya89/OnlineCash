@@ -71,6 +71,8 @@ namespace OnlineCash.Controllers
             goodGroups.AddRange(await db.GoodGroups.ToListAsync());
             ViewBag.GoodGroups = goodGroups;
             ViewBag.ViewNull = viewNull;
+            ViewBag.SumAll = Math.Round(await db.GoodCountBalanceCurrents.Include(b => b.Good)
+                .SumAsync(b => b.Count * b.Good.Price),2);
             return View(await db.GoodCountBalanceCurrents.Include(c => c.Good)
                 .Where(c =>(goodGroupId==0 || c.Good.GoodGroupId==goodGroupId) & (!viewNull || c.Count>0) & EF.Functions.Like(c.Good.Name, $"%{find}%"))
                 .OrderBy(c => c.Good.Name).ToListAsync());
