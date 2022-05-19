@@ -81,9 +81,12 @@ namespace OnlineCash.Services
                 .Include(s => s.StocktakingSummaryGoods)
                 .ThenInclude(g => g.Good).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
 
+            var stocktackingLateCount = await db.Stocktakings.Where(s => s.Id > stocktakingId).CountAsync();
+
             StocktackingSummaryModel model = new StocktackingSummaryModel
             {
                 Id=stocktaking.Id,
+                isEditable=stocktackingLateCount==0,
                 Start = stocktaking.Start,
                 SumDb = stocktaking.SumDb,
                 SumFact = stocktaking.SumFact,
@@ -112,6 +115,26 @@ namespace OnlineCash.Services
             return model;
         }
 
+        /// <summary>
+        /// Изменение обощенных данных по инверторизации
+        /// </summary>
+        public async Task ChangeSummary(int stocktackingId, List<StocktackingSummaryGoodModel> model)
+        {
+            foreach (var summary in model)
+            {
+                var dbSummary= await db.StocktakingSummaryGoods.Where(s => s.StocktakingId == stocktackingId & s.GoodId == summary.GoodId).FirstOrDefaultAsync();
+                if(dbSummary!=null)
+                    dbSummary.CountFact = summary.CountFact;
+            }
+                
+            await db.SaveChangesAsync();
+            foreach (var summary in model)
+                await _countBalanceService.Change(stocktackingId, summary);
+        }
+
+        /// <summary>
+        /// Получение инверторизации через api кассы. Начало записть текущих остатков из бд и суммы денег в кассе
+        /// </summary>
         public async Task StartFromOnlineCash(int shopId, StocktakingReciveDataModel model)
         {
             decimal sumYesterday = (await _moneyBalanceService.GetToday(shopId, model.Create.AddDays(1).Date)).SumEnd;
@@ -151,6 +174,9 @@ namespace OnlineCash.Services
             await db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Завершение инверторизации по кассе запись фактических остков и их анализ
+        /// </summary>
         public async Task StopFromOnlineCash(Guid uuid, List<StocktakingGroupReciveDataModel> groups)
         {
             var stocktacking = await db.Stocktakings.Where(s => s.Uuid == uuid).FirstOrDefaultAsync();

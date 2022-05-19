@@ -29,6 +29,12 @@
             <th>Правило</th>
         </tr>
     </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td>Начислять баллы в ввиде <input id="percentFromSale" value="@Model.PercentFromSale"> процентов при каждой покупке</td>
+        </tr>
+    </tbody>
     <tbody id="discountParamSumBuys">
         @foreach(DiscountParamSumBuyModel sumBuy in Model.SumBuys)
         { 
@@ -162,6 +168,7 @@
 </table>
 
 <script>
+    const percentFromSaleInp = document.getElementById("percentFromSale");
     const sumBuyTable = document.getElementById("discountParamSumBuys");
     const sumOneBuyTable = document.getElementById("discountParamSumOneBuy");
     const discountParamNumBuyer = document.getElementById("discountParamNumBuyer");
@@ -371,7 +378,7 @@
                 'Content-Type': 'application/json'
             },
             method: "POST",
-            body: JSON.stringify({ sumBuys: sumBuyes, sumOneBuys: sumOneBuyes, numBuyer: numBuyers, holidays: holidays, birthdays: birthdays, weeks: weeks })
+            body: JSON.stringify({ percentFromSale: parseFloat(percentFromSaleInp.value), sumBuys: sumBuyes, sumOneBuys: sumOneBuyes, numBuyer: numBuyers, holidays: holidays, birthdays: birthdays, weeks: weeks })
         })
             .then(resp => resp.json())
             .then(model => console.log(model));

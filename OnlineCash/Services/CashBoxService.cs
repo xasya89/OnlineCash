@@ -9,6 +9,8 @@ using OnlineCash.DataBaseModels;
 using OnlineCash.Models.CashBox;
 using DatabaseBuyer;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using OnlineCash.Models.Discounts;
 
 namespace OnlineCash.Services
 {
@@ -95,7 +97,6 @@ namespace OnlineCash.Services
                             Count = (double)checkGood.Count
                         });
                     await _countBalanceService.AddSell(shift.Id, shift.Start, good.Id, checkGood.Count);
-                    //await goodBalanceService.MinusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
                 }
                 if (check.IsReturn == true)
                 {
@@ -110,7 +111,6 @@ namespace OnlineCash.Services
                             CountReturn = checkGood.Count
                         });
                     await _countBalanceService.AddReturn(shift.Id, shift.Start, good.Id, checkGood.Count);
-                    //await goodBalanceService.PlusAsync(shift.ShopId, good.Id, (double)checkGood.Count);
                 }
             }
             if (check.IsReturn == false)
@@ -141,7 +141,17 @@ namespace OnlineCash.Services
                     _dbBuyer.Buyers.Add(buyer);
                 }
                 buyer.SumBuy += check.IsReturn || check.SumDiscount > 0 ? 0 : check.SumCash + check.SumElectron;
+                //Discounts
+                var settingStr = (await _dbBuyer.DiscountSettings.FirstOrDefaultAsync())?.Settings;
+                if (settingStr != null)
+                    try
+                    {
+                        var discounts = JsonSerializer.Deserialize<DiscountParamContainerModel>(settingStr);
+                        buyer.DiscountSum += check.IsReturn || check.SumDiscount > 0 ? 0 : (check.SumCash + check.SumElectron) * (discounts.PercentFromSale ?? 0);
+                    }
+                    catch (Exception) { };
             }
+
             var checksell = new CheckSell { 
                 DateCreate=check.Create,
                 TypeSell = check.IsReturn ? TypeSell.Return : TypeSell.Sell,

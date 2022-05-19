@@ -17,6 +17,7 @@
         {
             <h5>Недостача @(Model.SumDb - Model.SumFact) руб.</h5>
         }
+        <button onclick="saveChanged()" class="btn btn-sm btn-success">Сохранить</button>
         <button onclick="window.print()" class="btn btn-sm btn-secondary">Печать</button>
     </div>
 </div>
@@ -39,6 +40,7 @@
             <tr>
                 <th>Товар</th>
                 <th>Ед</th>
+                <th>Цена</th>
                 <th>Предыдущая инверт</th>
                 <th>Факт остаток</th>
                 <th>Расхождение</th>
@@ -55,13 +57,21 @@
                     background = "bg-info";
                 if (summary.CountFact - summary.CountDb < 0)
                     background = "bg-warning";
-                <tr class="@background" onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">
-                    <td goodName>@summary.GoodName</td>
-                    <td>@summary.Unit.GetDescription()</td>
-                    <td>@summary.CountLast</td>
-                    <td>@summary.CountFact</td>
-                    <td>@summary.CountEnd</td>
-                    <td>@summary.SumEnd</td>
+                <tr class="@background">
+                    <td goodName onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">@summary.GoodName</td>
+                    <td onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">@summary.Unit.GetDescription()</td>
+                    <td onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">@summary.Price</td>
+                    <td onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">@summary.CountLast</td>
+                    <td>
+                        @if (Model.isEditable)
+                        {
+                            <input oninput="this.value = this.value.replace(',','.')" onchange="editCount(this, @summary.GoodId)" value="@summary.CountFact" class="form-control form-control-sm" />
+                        }
+                        else
+                            @summary.CountFact
+                    </td>
+                    <td onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">@summary.CountEnd</td>
+                    <td onclick="openDocDetail(@summary.GoodId, '@summary.GoodName')">@summary.SumEnd</td>
                 </tr>
             }
         </tbody>
@@ -123,6 +133,33 @@
                 tr.style.display = "table-row";
             else
                 tr.style.display = "none";
+        })
+    }
+
+    var countChanged = new Array();
+    function editCount(inp, goodId) {
+        let finded = false;
+        countChanged.forEach(summary => {
+            if (summary.goodId == goodId) {
+                summary.countFact = parseFloat(inp.value);
+                finded = true;
+            }
+        });
+        if (!finded)
+            countChanged.push({
+                goodId: goodId,
+                countFact:parseFloat(inp.value)
+            });
+    }
+
+    function saveChanged() {
+        fetch(`/Stocktaking/summary/` +@Model.Id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(countChanged)
         })
     }
 

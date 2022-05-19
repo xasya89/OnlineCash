@@ -30,7 +30,7 @@ namespace OnlineCash.Controllers
         public async Task<IActionResult> Index()
         {
             ViewBag.Shops = await db.Shops.ToListAsync();
-            return View("Index",await db.Stocktakings.Include(s => s.Shop).OrderBy(s => s.Create).OrderByDescending(s=>s.Create).ToListAsync());
+            return View("Index", await db.Stocktakings.Include(s => s.Shop).OrderBy(s => s.Create).OrderByDescending(s => s.Create).ToListAsync());
         }
 
         public async Task<IActionResult> Create(int idShop)
@@ -66,19 +66,19 @@ namespace OnlineCash.Controllers
             var stocktaking = new Stocktaking { Num = num, Shop = shop, Create = DateTime.Now, Start = DateTime.Now };
             db.Stocktakings.Add(stocktaking);
             var goodbalance = await db.GoodBalances.ToListAsync();
-            foreach(var supplier in suppliers)
+            foreach (var supplier in suppliers)
             {
                 var group = new StockTakingGroup { Name = supplier.Name, Stocktaking = stocktaking };
                 db.StockTakingGroups.Add(group);
                 var goodsSupplier = goods.Where(g => g.SupplierId == supplier.Id & g.IsDeleted == false).ToList();
-                foreach(var good in goodsSupplier)
+                foreach (var good in goodsSupplier)
                 {
                     var gb = goodbalance.Where(g => g.GoodId == good.Id).FirstOrDefault();
                     if (gb != null)
                     {
                         var stGood = new StocktakingGood
                         {
-                            StockTakingGroup=group,
+                            StockTakingGroup = group,
                             GoodId = good.Id,
                             CountDB = gb.Count,
                             Price = good.GoodPrices.Where(p => p.ShopId == idShop).FirstOrDefault().Price
@@ -96,7 +96,7 @@ namespace OnlineCash.Controllers
             {
                 var group = new StockTakingGroup { Name = "Без поставщика", Stocktaking = stocktaking };
                 db.StockTakingGroups.Add(group);
-                foreach(var good in goodNotSupplier)
+                foreach (var good in goodNotSupplier)
                 {
                     var gb = goodbalance.Where(g => g.GoodId == good.Id).FirstOrDefault();
                     if (gb != null)
@@ -113,7 +113,7 @@ namespace OnlineCash.Controllers
                         //group.StocktakingGoods.Add(stGood);
                     }
                 }
-                
+
                 group.StocktakingId = stocktaking.Id;
                 //stocktaking.StockTakingGroups.Add(group);
             }
@@ -122,13 +122,13 @@ namespace OnlineCash.Controllers
             return View("Edit", stocktaking);
         }
 
-        public async Task<IActionResult> Edit(int id) 
+        public async Task<IActionResult> Edit(int id)
         {
             ViewBag.Goods = await db.Goods.Include(g => g.GoodPrices).ToListAsync();
-            var stocktaking = await db.Stocktakings.Include(s => s.Shop).Include(s => s.StockTakingGroups).ThenInclude(gr=>gr.StocktakingGoods).ThenInclude(sg=>sg.Good).Where(s=>s.Id==id).FirstOrDefaultAsync();
+            var stocktaking = await db.Stocktakings.Include(s => s.Shop).Include(s => s.StockTakingGroups).ThenInclude(gr => gr.StocktakingGoods).ThenInclude(sg => sg.Good).Where(s => s.Id == id).FirstOrDefaultAsync();
             return View(stocktaking);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] Models.StockTakingSaveModel model)
         {
@@ -157,10 +157,9 @@ namespace OnlineCash.Controllers
         [HttpGet]
         public async Task<IActionResult> Print(int id)
             => View(await db.Stocktakings.Include(s => s.Shop).Include(s => s.StockTakingGroups).ThenInclude(g => g.StocktakingGoods).ThenInclude(g => g.Good).Where(s => s.Id == id).FirstOrDefaultAsync());
-        
+
         [HttpGet("Stocktaking/DetailsGroups/{id}")]
         public async Task<IActionResult> DetailsGroups(int id) => View(await stockTackingService.GetDetailsGroups(id));
-
 
 
         [HttpGet("Stocktaking/Summary/{id}")]
@@ -171,6 +170,13 @@ namespace OnlineCash.Controllers
             ViewBag.GoodGroups = goodGroups;
             ViewBag.GoodGroupIdSelected = goodGroupId;
             return View(await stockTackingService.GetSummary(id, goodGroupId));
+        }
+
+        [HttpPost("Stocktaking/Summary/{id}")]
+        public async Task<IActionResult> Summary(int id, [FromBody] List<StocktackingSummaryGoodModel> model)
+        {
+            await stockTackingService.ChangeSummary(id, model);
+            return Ok();
         }
 
         public async Task<IActionResult> GetDetailGoodCountByDocs(int stocktakingId, int goodId)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
+using OnlineCash.Models.StockTackingModels;
 
 namespace OnlineCash.Services
 {
@@ -144,6 +145,22 @@ namespace OnlineCash.Services
             await _db.SaveChangesAsync();
             foreach (var goodCount in goodCounts)
                 await AddGoodCountBalance(docDate, goodCount.GoodId, goodCount.Count);
+        }
+
+        /// <summary>
+        /// Ищменение кол-во при измении инверторизации
+        /// </summary>
+        public async Task Change(int stocktackingId, StocktackingSummaryGoodModel summary)
+        {
+            var countHistory = await _db.GoodCountDocHistories.Where(h => h.DocId == stocktackingId & h.GoodId == summary.GoodId).FirstOrDefaultAsync();
+            
+            if(countHistory!=null)
+            {
+                decimal countchange = summary.CountFact - countHistory.Count;
+                countHistory.Count = summary.CountFact;
+                await _db.SaveChangesAsync();
+                await AddGoodCountBalance(countHistory.Date, countHistory.GoodId, countchange);
+            }
         }
 
         public async Task AddSell(int shiftId, DateTime date, int goodId, decimal count)

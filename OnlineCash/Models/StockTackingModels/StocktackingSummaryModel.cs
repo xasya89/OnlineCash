@@ -9,6 +9,7 @@ namespace OnlineCash.Models.StockTackingModels
     public class StocktackingSummaryModel
     {
         public int Id { get; set; }
+        public bool isEditable { get; set; }
         public DateTime Start { get; set; }
         public DateTime Stop { get; set; }
         public decimal CashMoneyDb { get; set; }
