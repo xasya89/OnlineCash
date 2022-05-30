@@ -16,6 +16,8 @@ using DatabaseBuyer;
 using Hangfire.MemoryStorage;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
+using OnlineCash.HostedServices;
 
 namespace OnlineCash
 {
@@ -37,6 +39,8 @@ namespace OnlineCash
                 .UseDefaultTypeSerializer()
                 .UseMemoryStorage());
             services.AddHangfireServer();
+
+            services.AddSignalR();
 
             services.AddSession(options =>
             {
@@ -77,6 +81,7 @@ namespace OnlineCash
             services.AddControllersWithViews(options=> {
                 //options.Filters.Add(typeof(Filters.ControlDocSynchFilter));
             });
+            services.AddScoped<HostedServices.BuyerObserverHostedService>();
             services.AddHostedService<HostedServices.TelegramHostedService>();
         }
 
@@ -125,8 +130,15 @@ namespace OnlineCash
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
+            /*
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<Controllers.DiscountAndBuyerHub>(Controllers.DiscountAndBuyerHub.HabUrl);
+            });
+            */
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<Controllers.DiscountAndBuyerHub>(Controllers.DiscountAndBuyerHub.HabUrl);
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -141,12 +153,17 @@ namespace OnlineCash
                 configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
                 );
             */
+
             recurringJobManager.AddOrUpdate(
                 "Run calc money balance",
                 () => serviceProvider.GetService<MoneyBalanceService>().Calculate(shopIdDefault, DateTime.Now),
                 configuration.GetSection("Jobs").GetSection("GoodBalanceCalc").Value
                 );
-
+            recurringJobManager.RemoveIfExists(nameof(BuyerObserverHostedService));
+            recurringJobManager.AddOrUpdate<BuyerObserverHostedService>(nameof(BuyerObserverHostedService),
+                job => job.Run(JobCancellationToken.Null),
+                Cron.MinuteInterval(1), TimeZoneInfo.Local);
+            
             db.Database.Migrate();
             dbBuyer.Database.Migrate();
             ShopName = db.Shops.FirstOrDefault()?.Name ?? "OnlineCash";

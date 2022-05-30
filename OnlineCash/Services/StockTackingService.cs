@@ -222,13 +222,12 @@ namespace OnlineCash.Services
                         GoodId = su.Key,
                         Price = goods.Where(g => g.Id == su.Key).FirstOrDefault().GoodPrices.Where(g => g.ShopId == stocktacking.ShopId).FirstOrDefault()?.Price ?? 0,
                         CountDb = 0,
-                        CountFact = su.Value
+                        CountFact = Math.Round( su.Value,3)
                     };
                     db.StocktakingSummaryGoods.Add(summaryDb);
                 }
                 stocktacking.SumFact += summaryDb.CountFact * summaryDb.Price;
             }
-
             await db.SaveChangesAsync();
             await _countBalanceService.Add<StocktakingSummaryGood>(
                 stocktacking.Id, 

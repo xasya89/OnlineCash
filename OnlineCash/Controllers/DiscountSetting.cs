@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using io=System.IO;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using OnlineCash.Models.Discounts;
 using DatabaseBuyer;
+using OnlineCash.Models;
 
 namespace OnlineCash.Controllers
 {

@@ -10,7 +10,6 @@ using OnlineCash.Models.CashBox;
 using DatabaseBuyer;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using OnlineCash.Models.Discounts;
 
 namespace OnlineCash.Services
 {
@@ -115,10 +114,11 @@ namespace OnlineCash.Services
             }
             if (check.IsReturn == false)
             {
-                shift.SumSell += check.SumCash + check.SumElectron - check.SumDiscount;
+                shift.SumSell += check.SumCash + check.SumElectron; //- check.SumDiscount;
                 shift.SumElectron += check.SumElectron;
                 shift.SumNoElectron += check.SumCash;
-                shift.SumAll += check.SumCash + check.SumElectron - check.SumDiscount;
+                shift.SumDiscount += check.SumDiscount;
+                shift.SumAll += check.SumCash + check.SumElectron; //- check.SumDiscount;
             }
             if (check.IsReturn == true)
             {
@@ -141,13 +141,14 @@ namespace OnlineCash.Services
                     _dbBuyer.Buyers.Add(buyer);
                 }
                 buyer.SumBuy += check.IsReturn || check.SumDiscount > 0 ? 0 : check.SumCash + check.SumElectron;
+                buyer.DiscountSum -= buyer.SpecialPercent > 0 ? 0 : check.SumDiscount;
                 //Discounts
                 var settingStr = (await _dbBuyer.DiscountSettings.FirstOrDefaultAsync())?.Settings;
                 if (settingStr != null)
                     try
                     {
                         var discounts = JsonSerializer.Deserialize<DiscountParamContainerModel>(settingStr);
-                        buyer.DiscountSum += check.IsReturn || check.SumDiscount > 0 ? 0 : (check.SumCash + check.SumElectron) * (discounts.PercentFromSale ?? 0);
+                        buyer.DiscountSum += check.IsReturn || check.SumDiscount > 0 ? 0 : (check.SumCash + check.SumElectron) * (discounts.PercentFromSale ?? 0) / 100;
                     }
                     catch (Exception) { };
             }
@@ -163,7 +164,7 @@ namespace OnlineCash.Services
                 SumElectron=check.SumElectron,
                 Sum=check.SumCash + check.SumElectron,
                 SumDiscont=check.SumDiscount,
-                SumAll= check.SumCash + check.SumElectron - check.SumDiscount
+                SumAll= check.SumCash + check.SumElectron //- check.SumDiscount
             };
             db.CheckSells.Add(checksell);
             foreach(var checkGood in check.Goods)
