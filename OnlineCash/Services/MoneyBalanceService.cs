@@ -80,6 +80,14 @@ namespace OnlineCash.Services
             }
         }
 
+        public async Task SetStocktacking(int shopId, decimal sumStocktacking)
+        {
+            var balanceNow = await GetToday(shopId);
+            balanceNow.SumStart=sumStocktacking;
+            balanceNow.SumEnd = sumStocktacking;
+            _db.SaveChanges();
+        }
+
         public async Task AddSale(int shopId, decimal sum)
         {
             try

@@ -137,7 +137,8 @@ namespace OnlineCash.Services
         /// </summary>
         public async Task StartFromOnlineCash(int shopId, StocktakingReciveDataModel model)
         {
-            decimal sumYesterday = (await _moneyBalanceService.GetToday(shopId, model.Create.AddDays(1).Date)).SumEnd;
+
+            decimal sumMoneyDb = (await _moneyBalanceService.GetToday(shopId, model.Create.AddDays(0).Date)).SumEnd;
             int num = await db.Stocktakings.CountAsync();
             var stocktaking = new Stocktaking
             {
@@ -149,7 +150,7 @@ namespace OnlineCash.Services
                 ShopId = shopId,
                 Status = DocumentStatus.New,
                 isSuccess = false,
-                CashMoneyDb = sumYesterday,
+                CashMoneyDb = sumMoneyDb,
                 CashMoneyFact = model.CashMoney
             };
             db.Stocktakings.Add(stocktaking);
@@ -172,6 +173,9 @@ namespace OnlineCash.Services
                 }
             stocktaking.SumDb = sumDb;
             await db.SaveChangesAsync();
+
+            //Установим деньги
+            await _moneyBalanceService.SetStocktacking(stocktaking.ShopId, model.CashMoney);
         }
 
         /// <summary>
@@ -228,6 +232,7 @@ namespace OnlineCash.Services
                 }
                 stocktacking.SumFact += summaryDb.CountFact * summaryDb.Price;
             }
+
             await db.SaveChangesAsync();
             await _countBalanceService.Add<StocktakingSummaryGood>(
                 stocktacking.Id, 
@@ -325,7 +330,6 @@ namespace OnlineCash.Services
             }
         }
 
-        //TODO: Переписать с учетом CountGoodBalance
         private async Task SuccessCalc(int stocktakingId)
         {
             var stocktaking = await db.Stocktakings.Include(s=>s.StockTakingGroups).ThenInclude(gr=>gr.StocktakingGoods).Where(s => s.Id == stocktakingId).FirstOrDefaultAsync();
