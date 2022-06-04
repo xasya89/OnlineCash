@@ -249,12 +249,17 @@ namespace OnlineCash.Services
             decimal sumIncomeToday = outcomes.Where(s => s.TypeOperation == CashMoneyTypeOperations.Income & s.Create.Date == stopDate).Sum(s => s.Sum);
             //Терминал
             decimal sumElectron = 0;
+            decimal sumDiscount = 0;
             decimal sumElectronToday = shift.SumElectron;
+            decimal sumDiscountToday = shift.SumDiscount;
             var shifts = await db.Shifts
                 .Where(s => s.Start.Date >= startDate & s.Start.Date <= stopDate)
                 .ToListAsync();
             foreach (var shift1 in shifts)
+            {
                 sumElectron += shift1.SumElectron;
+                sumDiscount += shift1.SumDiscount;
+            }
             //Списания
             decimal sumWriteof = 0;
             decimal sumWriteOfToday = 0;
@@ -288,7 +293,7 @@ namespace OnlineCash.Services
             //Товарар в магазине на сумму
             decimal sumGoodAll = await db.GoodCountBalanceCurrents.Include(b => b.Good).SumAsync(b => b.Count * b.Good.Price);
 
-            decimal docAllSum = stocktakingOldSum + cashMoneyOld + sumArrival + revaluationArrival - revaluationWriteOf - sumIncome - sumElectron - sumWriteof - cashMoneyEnd;
+            decimal docAllSum = stocktakingOldSum + cashMoneyOld + sumArrival + revaluationArrival - sumDiscount - revaluationWriteOf - sumIncome - sumElectron - sumWriteof - cashMoneyEnd;
             await _notificationService.Send($@"Итоговый отчет после закрытия смены № {shift.Id} от {shift.Start.ToString("dd.MM")}:
 Иверторизация было - {stocktakingOldSum}
 Было денег в кассе - {cashMoneyOld}
@@ -296,6 +301,7 @@ namespace OnlineCash.Services
 Выплаты - {sumOutcome} {(sumOutcomeToday != 0 ? $"+ {sumOutcomeToday}" : "")}
 Внесение денег - {sumIncome} {(sumIncomeToday != 0 ? $"+ {sumIncomeToday}" : "")}
 Терминал - {sumElectron} {(sumElectronToday != 0 ? $"+ {sumElectronToday}" : "")}
+Скидки - {sumDiscount} {(sumDiscountToday !=0 ? $"+ {sumDiscountToday}" : "")}
 Списание - {sumWriteof} {(sumWriteOfToday != 0 ? $"+ {sumWriteOfToday}" : "")}
 Переоценка (минус) - {revaluationWriteOf} {(revaluationWriteOfToday != 0 ? $"+ {revaluationWriteOfToday}" : "")}
 Переоценка (плюс) - {revaluationArrival} {(revaluationArrivalToday != 0 ? $"+ {revaluationArrivalToday}" : "")}
