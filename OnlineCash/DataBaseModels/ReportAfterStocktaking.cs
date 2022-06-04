@@ -17,6 +17,7 @@ namespace OnlineCash.DataBaseModels
         public Stocktaking Stocktaking { get; set; }
         public decimal StocktakingPrependSum { get; set; }
         public decimal CashStartSum { get; set; }
+        public decimal SumDiscount { get; set; }
         public decimal IncomeSum { get; set; }
         public decimal ElectronSum { get; set; }
         public decimal ArrivalSum { get; set; }
@@ -26,7 +27,7 @@ namespace OnlineCash.DataBaseModels
         public decimal CashEndSum { get; set; }
 
         public decimal StopSum { 
-            get => StocktakingPrependSum + CashStartSum + ArrivalSum + RevaluationArrival - RevaluationWriteOf - IncomeSum - ElectronSum - WriteOfSum - CashEndSum; 
+            get => StocktakingPrependSum + CashStartSum + ArrivalSum + RevaluationArrival - SumDiscount - RevaluationWriteOf - IncomeSum - ElectronSum - WriteOfSum - CashEndSum; 
         }
 
         public decimal StocktakingFactSum { get; set; }

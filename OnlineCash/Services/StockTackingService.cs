@@ -416,7 +416,7 @@ namespace OnlineCash.Services
             DateTime startDate = stocktakingOld==null ? DateTime.Now.AddDays(-7).Date : stocktakingOld.Start.Date;
             DateTime stopDate = stocktaking.Start.AddDays(-1).Date;
             decimal cashMoneyOld = 0;
-            if (stocktakingOld != null && stocktakingOld.ReportsAfterStocktaking.FirstOrDefault() != null)
+            if ((stocktakingOld?.ReportsAfterStocktaking.FirstOrDefault() ?? null) != null)
                 cashMoneyOld = stocktakingOld.ReportsAfterStocktaking.FirstOrDefault().CashStartSum;
             //Приходы
             decimal sumArrival = 0;
@@ -429,10 +429,14 @@ namespace OnlineCash.Services
             foreach (var outcome in outcomes)
                 sumOutcome += outcome.Sum;
             //Терминал
+            decimal sumDiscount = 0;
             decimal sumElectron = 0;
             var shifts = await db.Shifts.Where(s => s.Start.Date >= startDate & s.Start.Date <= stopDate).ToListAsync();
             foreach (var shift in shifts)
+            {
+                sumDiscount += shift.SumDiscount;
                 sumElectron += shift.SumElectron;
+            }
             //Списания
             decimal sumWritof = 0;
             var writeofs = await db.Writeofs.Where(w => w.IsSuccess == true & w.DateWriteof.Date >= startDate & w.DateWriteof.Date <= stopDate).ToListAsync();
@@ -457,6 +461,7 @@ namespace OnlineCash.Services
                 StopDate = stopDate,
                 StocktakingPrependSum=stocktakingOldSum,
                 CashStartSum=cashMoneyOld,
+                SumDiscount=sumDiscount,
                 ArrivalSum=sumArrival,
                 IncomeSum=sumOutcome,
                 ElectronSum=sumElectron,
