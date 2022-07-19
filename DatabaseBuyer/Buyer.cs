@@ -18,6 +18,7 @@ namespace DatabaseBuyer
         public int SpecialPercent { get; set; }
         public decimal DiscountSum { get; set; }
         public decimal SumBuy { get; set; }
+        public decimal SumDiscountInBuy { get; set; }
         public bool isBlock { get; set; } = false;
     }
 }

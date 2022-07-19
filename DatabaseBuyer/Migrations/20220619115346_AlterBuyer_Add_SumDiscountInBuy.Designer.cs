@@ -3,14 +3,16 @@ using System;
 using DatabaseBuyer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseBuyer.Migrations
 {
     [DbContext(typeof(shopbuyerContext))]
-    partial class shopbuyerContextModelSnapshot : ModelSnapshot
+    [Migration("20220619115346_AlterBuyer_Add_SumDiscountInBuy")]
+    partial class AlterBuyer_Add_SumDiscountInBuy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

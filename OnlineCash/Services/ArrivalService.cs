@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using OnlineCash.DataBaseModels;
 using OnlineCash.Models;
 
@@ -16,21 +17,24 @@ namespace OnlineCash.Services
         GoodCountBalanceService _countBalanceService;
         NotificationOfEventInSystemService _notification;
         RevaluationService _revaluationService;
+        ILogger<ArrivalService> _logger;
         public ArrivalService(shopContext db,
             IConfiguration configuration,
             IGoodBalanceService goodBalanceService,
             GoodCountBalanceService countBalanceService,
             RevaluationService revaluationService,
-            NotificationOfEventInSystemService notification)
+            NotificationOfEventInSystemService notification,
+            ILogger<ArrivalService> logger)
         {
             this.db = db;
             _configuration = configuration;
             _countBalanceService = countBalanceService;
             _notification = notification;
             _revaluationService = revaluationService;
+            _logger = logger;
         }
 
-        public async Task<Arrival> SaveSynchAsync(int shopId, ArrivalSynchModel model)
+        public async Task<Arrival> SaveSynchAsync(int shopId, ArrivalSynchModel model, Guid? uuiSynch)
         {
             if (db.Shops.Where(s => s.Id == shopId) == null)
                 throw new Exception($"Магазин shopId - {shopId} не найден");
@@ -71,11 +75,58 @@ namespace OnlineCash.Services
             arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
             arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
             arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
-
             await db.SaveChangesAsync();
-            if(autoSuccess)
-                await _countBalanceService.Add<ArrivalGood>(arrival.Id, DateTime.Now, arrivalGoods);
 
+            //Добавить goodCountBalance
+            try
+            {
+                List<GoodCountDocHistory> goodCounts = new List<GoodCountDocHistory>();
+                foreach (var arrivalGood in arrivalGoods)
+                    goodCounts.Add(new GoodCountDocHistory
+                    {
+                        DocId = arrival.Id,
+                        Date = arrival.DateArrival,
+                        TypeDoc = TypeDocs.Arrival,
+                        GoodId = arrivalGood.GoodId,
+                        Count = arrivalGood.Count
+                    });
+                db.GoodCountDocHistories.AddRange(goodCounts);
+                var date = model.DateArrival.AddMonths(1);
+                date = Convert.ToDateTime($"01.{date.Month}.{date.Year}").Date;
+                foreach (var arrivalGood in arrivalGoods)
+                {
+                    var balance = await db.GoodCountBalances.Where(b => b.GoodId == arrivalGood.GoodId & DateTime.Compare(b.Period, date) == 0).FirstOrDefaultAsync();
+                    if (balance != null)
+                        balance.Count += arrivalGood.Count;
+                    var current = await db.GoodCountBalanceCurrents.Where(c => c.GoodId == arrivalGood.GoodId).FirstOrDefaultAsync();
+                    current.Count += arrivalGood.Count;
+                };
+
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Ошибка добавление arrivalId={arrival.Id} в GoodCountBalance", ex.Message);
+            }
+            //Изменение истории синхронизации docSynch
+            try
+            {
+                if (uuiSynch != null)
+                {
+                    var docSynch = await db.DocSynches.Where(d => d.Uuid == uuiSynch).FirstOrDefaultAsync();
+                    if (docSynch != null)
+                    {
+                        docSynch.DocId = arrival.Id;
+                        docSynch.TypeDoc = TypeDocs.Arrival;
+                        docSynch.isSuccess = true;
+                    }
+                }
+                await db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Ошибка изменения статуса док-та arrivalId={arrival.Id}", ex.Message);
+            }
             return arrival;
         }
 

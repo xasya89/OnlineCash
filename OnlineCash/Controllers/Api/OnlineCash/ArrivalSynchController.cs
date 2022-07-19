@@ -35,12 +35,17 @@ namespace OnlineCash.Controllers.Api.OnlineCash
         {
             try
             {
-                var arrival=await service.SaveSynchAsync(shopId, model);
-                
-                await _notificationService.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId="+arrival.Id);
+                string uuidStr = HttpContext.Request.Headers.Where(h => h.Key.ToLower() == "doc-uuid").Select(h => h.Value).FirstOrDefault();
+                Guid? uuidSynch = null;
+                if (uuidStr != null)
+                    uuidSynch = Guid.Parse(uuidStr);
+
+                var arrival = await service.SaveSynchAsync(shopId, model, uuidSynch);
+
+                await _notificationService.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId=" + arrival.Id);
                 return Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //_logger.Error($"{ex.Message} \n {ex.StackTrace}");
                 return BadRequest();

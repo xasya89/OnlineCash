@@ -19,11 +19,11 @@ http://t.me/sport_onlinecash_bot
 5487279449:AAH75TOPgyn88FFxaSilcJzsPbBd3A6wPjk - Разумное
 http://t.me/razum_onlinecash_bot
 
-1 - 60 лет
-2 - Разумное
-3 - Степная
-4 - Сторожевая
-5 - Б Юности
+1 - 60 лет client server
+2 - Разумное server
+3 - Степная server
+4 - Сторожевая Башня
+5 - Б Юности client server
 6 - Спортивная
 7 - Северный
 8 - Щорса

@@ -10,6 +10,7 @@ using OnlineCash.Models.CashBox;
 using DatabaseBuyer;
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace OnlineCash.Services
 {
@@ -22,13 +23,15 @@ namespace OnlineCash.Services
         MoneyBalanceService _moneyBalanceService;
         GoodCountBalanceService _countBalanceService;
         NotificationOfEventInSystemService _notificationService;
+        ILogger<CashBoxService> _logger;
         public CashBoxService(shopContext db,
             IConfiguration configuration,
             shopbuyerContext dbBuyer,
             MoneyBalanceService moneyBalanceService, 
             CashMoneyService moneyService,
             GoodCountBalanceService countBalanceService,
-            NotificationOfEventInSystemService notificationService)
+            NotificationOfEventInSystemService notificationService,
+            ILogger<CashBoxService> logger)
         {
             this.db = db;
             _configuration = configuration;
@@ -37,6 +40,7 @@ namespace OnlineCash.Services
             _moneyBalanceService = moneyBalanceService;
             _countBalanceService = countBalanceService;
             _notificationService = notificationService;
+            _logger= logger;
         }
         //TODO: Возможно данный метод не нужен
         public async Task<bool> Buy(Guid uuid, List<CashBoxBuyReturnModel> buylist)
@@ -142,7 +146,11 @@ namespace OnlineCash.Services
                 }
                 buyer.SumBuy += check.IsReturn || check.SumDiscount > 0 ? 0 : check.SumCash + check.SumElectron;
                 buyer.DiscountSum -= buyer.SpecialPercent > 0 ? 0 : check.SumDiscount;
-                //Discounts
+                // Если в чеке есть скидка, то скорее всего она временнная
+                // тогда мы обнулим временный процент, т.к. мы уже им воспользовались
+                if (check.SumDiscount > 0 & buyer.TemporyPercent > 0)
+                    buyer.TemporyPercent = 0;
+                // Расчитаем возможные баллы или врменые скидки
                 var settingStr = (await _dbBuyer.DiscountSettings.FirstOrDefaultAsync())?.Settings;
                 if (settingStr != null)
                     try

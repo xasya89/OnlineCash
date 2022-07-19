@@ -10,6 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Hangfire;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
+using Microsoft.Extensions.Configuration;
 
 namespace OnlineCash.HostedServices
 {
@@ -19,10 +23,16 @@ namespace OnlineCash.HostedServices
 
         private readonly shopbuyerContext _db;
         private readonly IHubContext<DiscountAndBuyerHub> _hub;
-        public BuyerObserverHostedService(shopbuyerContext db, IHubContext<DiscountAndBuyerHub> hub)
+        private readonly IConfiguration _configuration;
+        private readonly ConnectionFactory _rabbitFactory;
+        public BuyerObserverHostedService(shopbuyerContext db, 
+            IHubContext<DiscountAndBuyerHub> hub,
+            IConfiguration configuration)
         {
             _db = db;
             _hub = hub;
+            _configuration = configuration;
+            _rabbitFactory = new ConnectionFactory() { HostName = "soft-impex.ru", UserName = "anikulshin", Password = "kt38hmapq" }; ;
         }
 
         public void Dispose()
@@ -38,7 +48,7 @@ namespace OnlineCash.HostedServices
 
         public async Task StartAsync()
         {
-            var buyersdb = await _db.Buyers.ToListAsync();
+                var buyersdb = await _db.Buyers.ToListAsync();
             foreach (var b in buyersdb)
             {
                 var buyer = buyers.Where(x => x.Uuid == b.Uuid).FirstOrDefault();

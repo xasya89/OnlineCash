@@ -17,5 +17,8 @@ namespace OnlineCash
                 return Convert.ToHexString(hashBytes);
             }
         }
+
+        public static string ToStringWithDotted(this decimal value) => value.ToString().Replace(",", ".");
+        public static string ToStringWithDotted(this decimal? value) => value.ToString()?.Replace(",", ".") ?? "";
     }
 }

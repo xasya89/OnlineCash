@@ -1,0 +1,40 @@
+﻿@model List<DatabaseBuyer.Buyer>
+
+<div class="table-responsive table-responsive-sm">
+    <table class="table table-sm table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th rowspan="2">Телефон</th>
+                <th rowspan="2">ФИО</th>
+                <th rowspan="2">День рождения</th>
+                <th colspan="2">Скидка</th>
+                <th rowspan="2">Накопленные баллы</th>
+                <th rowspan="2">Покупки на сумму</th>
+                <th rowspan="2">Использовано скидок</th>
+            </tr>
+            <tr>
+                <th>Постоянная</th>
+                <th>Временная</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var buyer in Model)
+            {
+                <tr>
+                    <td>@buyer.Phone</td>
+                    <td>@buyer.Name</td>
+                    <td>@buyer.Birthday?.ToString("dd.MM.yy")</td>
+                    <td>@buyer.SpecialPercent</td>
+                    <td>@buyer.TemporyPercent</td>
+                    <td>@buyer.DiscountSum</td>
+                    <td>@buyer.SumBuy</td>
+                    <td>@buyer.SumDiscountInBuy</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+</script>
