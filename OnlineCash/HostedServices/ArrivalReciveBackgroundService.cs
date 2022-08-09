@@ -114,6 +114,7 @@ namespace OnlineCash.HostedServices
                             balances.Add(new GoodBalanceSynchModel
                             {
                                 DocumentId = arrival.Id,
+                                DocumentDate=arrival.DateArrival,
                                 TypeDoc = TypeDocs.Arrival,
                                 GoodId = arrivalGood.GoodId,
                                 Count = arrivalGood.Count

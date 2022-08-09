@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using OnlineCash.Models;
 using OnlineCash.DataBaseModels;
 using System.Collections.Generic;
+using Dapper;
+using MySql.Data.MySqlClient;
 
 namespace OnlineCash.HostedServices
 {
@@ -63,8 +65,51 @@ namespace OnlineCash.HostedServices
                         var body = ex.Body.ToArray();
                         var str = Encoding.UTF8.GetString(body, 0, body.Length);
                         var model = JsonSerializer.Deserialize<List<GoodBalanceSynchModel>>(str);
-                        Console.WriteLine(model);
 
+                        using var con =new MySqlConnection(_configuration.GetConnectionString("MySQL"));
+                        
+                        DateTime? minPeriod = con.ExecuteScalar<DateTime?>("SELECT MIN(period) FROM goodcountbalances");
+                        DateTime? maxPeriod = con.ExecuteScalar<DateTime?>("SELECT MAX(period) FROM goodcountbalances");
+                        if(minPeriod==null)
+                        {
+                            con.Execute($@"INSERT INTO goodcountbalances (Period, GoodId, Count) 
+SELECT STR_TO_DATE('{DateTime.Now.ToString("01.MM.yyyy")}','%d.%m.%Y'), id, 0 FROM Goods");
+                            con.Execute($@"INSERT INTO goodcountbalancecurrents (GoodId, Count) 
+SELECT id, 0 FROM Goods");
+                        }
+                        var periodCur = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                        if(DateTime.Compare((DateTime)maxPeriod,periodCur)<0)
+                            for(DateTime p=maxPeriod.Value.AddMonths(1); DateTime.Compare(p, periodCur)<=0; p=p.AddMonths(1))
+                                con.Execute($@"INSERT INTO goodcountbalances (Period, GoodId, Count) 
+SELECT STR_TO_DATE('{p.ToString("01.MM.yyyy")}','%d.%m.%Y'), g.id, IFNULL(c.Count, 0)
+FROM Goods g LEFT JOIN goodcountbalancecurrents c ON g.id=c.GoodId");
+                        maxPeriod = periodCur;
+                        foreach(GoodBalanceSynchModel good in model)
+                        {
+                            bool flagSearch = con.ExecuteScalar<bool>($"SELECT IF(COUNT(*)>0,TRUE, FALSE) FROM goodcountbalancecurrents WHERE goodid={good.GoodId}");
+                            if (!flagSearch)
+                            {
+                                con.Execute($"INSERT INTO goodcountbalancecurrents (GoodId, Count) VALUES ({good.GoodId}, 0)");
+                                for(DateTime p=minPeriod.Value; p<=maxPeriod.Value;p=p.AddMonths(1))
+                                    con.Execute($"INSERT INTO goodcountbalances (Period, GoodId, Count) VALUES (STR_TO_DATE('{p.ToString("01.MM.yyyy")}','%d.%m.%Y'), {good.GoodId}, 0)");
+                            }
+                            else
+                            {
+                                con.Execute(
+                                    "UPDATE goodcountbalancecurrents SET Count=Count + @Count WHERE goodId=@GoodId",
+                                    new {Count=good.Count, GoodId=good.GoodId}
+                                    );
+                                con.Execute(
+                                    "UPDATE goodcountbalances SET Count=Count + @Count WHERE Period=@Period AND goodId=@GoodId",
+                                    new { Period=maxPeriod, Count = good.Count, GoodId = good.GoodId }
+                                    );
+                                con.Execute(
+                                    "INSERT INTO goodcountdochistories (Date, GoodId, DocId, TypeDoc, Count) VALUES (@Date, @GoodId, @DocId, @TypeDoc, @Count)",
+                                    new { DAte=good.DocumentDate, GoodId=good.GoodId, DocId=good.DocumentId, TypeDoc=good.TypeDoc, Count=good.Count }
+                                    );
+                            }
+                        }
+                        Console.WriteLine(minPeriod);
                     };
 
                     //channel.BasicAck(ex.DeliveryTag, true);
