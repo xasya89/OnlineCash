@@ -22,12 +22,12 @@ namespace OnlineCash.HostedServices
 {
     public class GoodBalanceBackgroundService : BackgroundService
     {
-        private readonly ILogger<ArrivalReciveBackgroundService> _logger;
+        private readonly ILogger<GoodBalanceBackgroundService> _logger;
         private readonly IConfiguration _configuration;
         private readonly IServiceScopeFactory _scopeFactory;
         private object _lock = new object();
 
-        public GoodBalanceBackgroundService(ILogger<ArrivalReciveBackgroundService> logger, IConfiguration configuration, IServiceScopeFactory scopeFactory)
+        public GoodBalanceBackgroundService(ILogger<GoodBalanceBackgroundService> logger, IConfiguration configuration, IServiceScopeFactory scopeFactory)
         {
             _logger = logger;
             _configuration = configuration;

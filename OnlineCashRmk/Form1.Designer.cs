@@ -83,6 +83,7 @@ namespace OnlineCashRmk
             this.toolStripStatusLabelScannerIsOpen = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelCashRegisterState = new System.Windows.Forms.ToolStripStatusLabel();
             this.findTextBox = new System.Windows.Forms.TextBox();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -479,7 +480,8 @@ namespace OnlineCashRmk
             this.labelStatusShift,
             this.toolStripDropDownButton1,
             this.toolStripStatusLabelScannerIsOpen,
-            this.toolStripStatusLabelCashRegisterState});
+            this.toolStripStatusLabelCashRegisterState,
+            this.toolStripStatusLabel2});
             this.statusStrip1.Location = new System.Drawing.Point(3, 233);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(944, 22);
@@ -612,6 +614,13 @@ namespace OnlineCashRmk
             this.findTextBox.TextChanged += new System.EventHandler(this.findTextBox_TextChanged);
             this.findTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.findTextBox_KeyDown);
             // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(174, 17);
+            this.toolStripStatusLabel2.Text = "Выполнить обмен с сервером";
+            this.toolStripStatusLabel2.Click += new System.EventHandler(this.toolStripStatusLabel2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -698,6 +707,7 @@ namespace OnlineCashRmk
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem загрузитьТоварыToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
     }
 }
 

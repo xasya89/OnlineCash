@@ -31,25 +31,17 @@ namespace OnlineCash.Controllers.Api.OnlineCash
         }
 
         [HttpPost("{shopId}")]
-        public async Task<IActionResult> Save(int shopId, [FromBody] ArrivalSynchModel model)
+        public async Task<IActionResult> Save([FromHeader(Name = "doc-uuid")] Guid uuid, int shopId, [FromBody] ArrivalSynchModel model)
         {
-            try
-            {
-                string uuidStr = HttpContext.Request.Headers.Where(h => h.Key.ToLower() == "doc-uuid").Select(h => h.Value).FirstOrDefault();
-                Guid? uuidSynch = null;
-                if (uuidStr != null)
-                    uuidSynch = Guid.Parse(uuidStr);
+            /*
+            string uuidStr = HttpContext.Request.Headers.Where(h => h.Key.ToLower() == "doc-uuid").Select(h => h.Value).FirstOrDefault();
+            Guid? uuidSynch = null;
+            if (uuidStr != null)
+                uuidSynch = Guid.Parse(uuidStr);
+            */
+            await service.SaveSynchAsync(shopId, model, uuid);
 
-                var arrival = await service.SaveSynchAsync(shopId, model, uuidSynch);
-
-                await _notificationService.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId=" + arrival.Id);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                //_logger.Error($"{ex.Message} \n {ex.StackTrace}");
-                return BadRequest();
-            }
+            return Ok();
         }
     }
 }

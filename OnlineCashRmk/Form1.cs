@@ -38,6 +38,7 @@ namespace OnlineCashRmk
 {
     public partial class Form1 : Form
     {
+        SynchWithServerService _synchWithServerService;
         IServiceProvider serviceProvider;
         ISynchService synchService;
         ICashRegisterService _cashService;
@@ -95,12 +96,13 @@ namespace OnlineCashRmk
         FormScreenForBuyer formScreenForBuyer;
 
         public Form1(IServiceProvider serviceProvider, 
-            ILogger<Form1> logger, 
-            IDbContextFactory<DataContext> dbFactory, 
-            ISynchService synchService, 
-            BarCodeScanner barCodeScanner, 
+            ILogger<Form1> logger,
+            IDbContextFactory<DataContext> dbFactory,
+            ISynchService synchService,
+            BarCodeScanner barCodeScanner,
             ICashRegisterService cashService,
-            IHttpClientFactory clientFactory)
+            IHttpClientFactory clientFactory,
+            SynchWithServerService synchWithServerService)
         {
             try
             {
@@ -135,7 +137,7 @@ namespace OnlineCashRmk
                         _logger.LogError("Barcode scanner port is not openned");
                         toolStripStatusLabelScannerIsOpen.BackColor = Color.Red;
                     }
-                        
+
                 };
                 GetFiscalRegisterState();
 
@@ -215,11 +217,13 @@ namespace OnlineCashRmk
                 BuyerHubConnected(hub);
                 */
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                logger.LogError("Form 1 error init \n"+ ex.StackTrace+"\n"+ ex.Message);
+                logger.LogError("Form 1 error init \n" + ex.StackTrace + "\n" + ex.Message);
                 Close();
             }
+
+            _synchWithServerService = synchWithServerService;
         }
 
         private void GetBuyers()
@@ -1081,6 +1085,12 @@ namespace OnlineCashRmk
                     MessageBox.Show("Ошибка загрузки товаров","",MessageBoxButtons.OK,MessageBoxIcon.Error);
                 }
             });
+        }
+
+        //Выполнить обмен с сервером
+        private void toolStripStatusLabel2_Click(object sender, EventArgs e)
+        {
+            _synchWithServerService.SendNow();
         }
     }
 }

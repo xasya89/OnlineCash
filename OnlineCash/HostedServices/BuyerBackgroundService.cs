@@ -38,6 +38,7 @@ namespace OnlineCash.HostedServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            /*
             try
             {
                 using var scope = _serviceFactory.CreateScope();
@@ -104,6 +105,7 @@ namespace OnlineCash.HostedServices
             {
                 _logger.LogError($"Byers backgroundService - " + ex.Message);
             }
+            */
         }
     }
 }

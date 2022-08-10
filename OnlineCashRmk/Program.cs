@@ -53,6 +53,7 @@ namespace OnlineCashRmk
                 .AddSingleton<ICashRegisterService, AtolService>()
                 .AddScoped<ISynchService, SynchService>()
                 .AddTransient<IConfiguration>(_ => context.Configuration)
+                .AddScoped<SynchWithServerService>()
                 .AddScoped<Form1>()
                 .AddScoped<FormMenu>()
                 //.AddTransient<PayForm>()

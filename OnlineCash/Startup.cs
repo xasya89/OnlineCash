@@ -84,7 +84,6 @@ namespace OnlineCash
             services.AddScoped<HostedServices.BuyerObserverHostedService>();
             services.AddHostedService<TelegramHostedService>();
             services.AddHostedService<BuyerBackgroundService>();
-            services.AddHostedService<ArrivalReciveBackgroundService>();
             services.AddHostedService<GoodBalanceBackgroundService>();
             services.AddHostedService<ControlDuplicateGoodBackgroundService>();
         }
