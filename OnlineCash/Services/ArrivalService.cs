@@ -52,12 +52,6 @@ namespace OnlineCash.Services
                 using var channel = connection.CreateModel();
 
                 channel.ExchangeDeclare("shop_test", "direct", true);
-                channel.QueueDeclare(queue: "shop_test_arrivals",
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-                channel.QueueBind("shop_test_arrivals", "shop_test", "shop_test_arrivals");
                 channel.QueueDeclare(queue: "shop_test_goodbalance",
                     durable: false,
                     exclusive: false,
@@ -102,124 +96,41 @@ namespace OnlineCash.Services
                 arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
                 arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
                 arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
+
+                var docSynch = await db.DocSynches.Where(d => d.Uuid == uuiSynch).FirstOrDefaultAsync();
+                if (docSynch != null)
+                {
+                    docSynch.DocId = arrival.Id;
+                    docSynch.TypeDoc = TypeDocs.Arrival;
+                    docSynch.isSuccess = true;
+                }
                 db.SaveChanges();
 
-                
-                List<GoodBalanceSynchModel> balances = new();
-                foreach (var arrivalGood in arrivalGoods)
-                    balances.Add(new GoodBalanceSynchModel
-                    {
-                        DocumentId = arrival.Id,
-                        DocumentDate = arrival.DateArrival,
-                        TypeDoc = TypeDocs.Arrival,
-                        GoodId = arrivalGood.GoodId,
-                        Count = arrivalGood.Count
-                    });
-                var bodyBalances = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(balances));
-                channel.BasicPublish(exchange: "shop_test",
-                 routingKey: "shop_test_goodbalance",
-                 basicProperties: null,
-                 body: bodyBalances);
+                if (autoSuccess)
+                {
+                    List<GoodBalanceSynchModel> balances = new();
+                    foreach (var arrivalGood in arrivalGoods)
+                        balances.Add(new GoodBalanceSynchModel
+                        {
+                            DocumentId = arrival.Id,
+                            DocumentDate = arrival.DateArrival,
+                            TypeDoc = TypeDocs.Arrival,
+                            GoodId = arrivalGood.GoodId,
+                            Count = arrivalGood.Count
+                        });
+                    var bodyBalances = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(balances));
+                    channel.BasicPublish(exchange: "shop_test",
+                     routingKey: "shop_test_goodbalance",
+                     basicProperties: null,
+                     body: bodyBalances);
+                }
 
-                //await _notificationService.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId=" + arrival.Id);
+                await _notification.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId=" + arrival.Id);
             }
             catch (Exception ex)
             {
                 _logger.LogError("Arrival background service error - " + ex.Message);
             }
-            /*
-            if (db.Shops.Where(s => s.Id == shopId) == null)
-                throw new Exception($"Магазин shopId - {shopId} не найден");
-            if (db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefault() == null)
-                throw new Exception($"Поставщик supplierId - {model.SupplierId} не найден");
-            var goods = await db.Goods.Include(g => g.GoodPrices.Where(gp => gp.ShopId == shopId)).ToListAsync();
-            foreach (var mGood in model.ArrivalGoods)
-                if (goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault() == null)
-                    throw new Exception($"Товар uuid {mGood.GoodUuid} не найден");
-
-            bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
-            var arrival = new Arrival
-            {
-                Num = model.Num,
-                DateArrival = model.DateArrival,
-                ShopId = shopId,
-                SupplierId = model.SupplierId,
-                SumSell=0,
-                isSuccess=autoSuccess
-            };
-            db.Arrivals.Add(arrival);
-            List<ArrivalGood> arrivalGoods = new List<ArrivalGood>();
-            foreach(var mGood in model.ArrivalGoods)
-            {
-                var good = goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault();
-                arrivalGoods.Add(new ArrivalGood
-                {
-                    Arrival = arrival,
-                    GoodId = good.Id,
-                    Price = mGood.Price,
-                    PriceSell = good.GoodPrices.FirstOrDefault().Price,
-                    Count = mGood.Count,
-                    Nds = mGood.Nds,
-                    ExpiresDate = mGood.ExpiresDate
-                });
-            }
-            db.ArrivalGoods.AddRange(arrivalGoods);
-            arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
-            arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
-            arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
-            await db.SaveChangesAsync();
-
-            //Добавить goodCountBalance
-            try
-            {
-                List<GoodCountDocHistory> goodCounts = new List<GoodCountDocHistory>();
-                foreach (var arrivalGood in arrivalGoods)
-                    goodCounts.Add(new GoodCountDocHistory
-                    {
-                        DocId = arrival.Id,
-                        Date = arrival.DateArrival,
-                        TypeDoc = TypeDocs.Arrival,
-                        GoodId = arrivalGood.GoodId,
-                        Count = arrivalGood.Count
-                    });
-                db.GoodCountDocHistories.AddRange(goodCounts);
-                var date = model.DateArrival.AddMonths(1);
-                date = Convert.ToDateTime($"01.{date.Month}.{date.Year}").Date;
-                foreach (var arrivalGood in arrivalGoods)
-                {
-                    var balance = await db.GoodCountBalances.Where(b => b.GoodId == arrivalGood.GoodId & DateTime.Compare(b.Period, date) == 0).FirstOrDefaultAsync();
-                    if (balance != null)
-                        balance.Count += arrivalGood.Count;
-                    var current = await db.GoodCountBalanceCurrents.Where(c => c.GoodId == arrivalGood.GoodId).FirstOrDefaultAsync();
-                    current.Count += arrivalGood.Count;
-                };
-
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Ошибка добавление arrivalId={arrival.Id} в GoodCountBalance", ex.Message);
-            }
-            //Изменение истории синхронизации docSynch
-            try
-            {
-                if (uuiSynch != null)
-                {
-                    var docSynch = await db.DocSynches.Where(d => d.Uuid == uuiSynch).FirstOrDefaultAsync();
-                    if (docSynch != null)
-                    {
-                        docSynch.DocId = arrival.Id;
-                        docSynch.TypeDoc = TypeDocs.Arrival;
-                        docSynch.isSuccess = true;
-                    }
-                }
-                await db.SaveChangesAsync();
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError($"Ошибка изменения статуса док-та arrivalId={arrival.Id}", ex.Message);
-            }
-            */
         }
 
         public async Task Create(Arrival model)

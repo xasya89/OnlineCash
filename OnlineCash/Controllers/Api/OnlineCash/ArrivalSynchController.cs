@@ -18,29 +18,16 @@ namespace OnlineCash.Controllers.Api.OnlineCash
     public class ArrivalSynchController : ControllerBase
     {
         ArrivalService service;
-        NotificationOfEventInSystemService _notificationService;
-        GoodCountBalanceService _countBalanceService;
         //ILogger _logger;
-        public ArrivalSynchController(ArrivalService service/*, ILogger logger*/, 
-            NotificationOfEventInSystemService notificationService,
-            GoodCountBalanceService countBalanceService)
+        public ArrivalSynchController(ArrivalService service)
         {
             this.service = service;
-            _notificationService = notificationService;
-            _countBalanceService = countBalanceService;
         }
 
         [HttpPost("{shopId}")]
         public async Task<IActionResult> Save([FromHeader(Name = "doc-uuid")] Guid uuid, int shopId, [FromBody] ArrivalSynchModel model)
         {
-            /*
-            string uuidStr = HttpContext.Request.Headers.Where(h => h.Key.ToLower() == "doc-uuid").Select(h => h.Value).FirstOrDefault();
-            Guid? uuidSynch = null;
-            if (uuidStr != null)
-                uuidSynch = Guid.Parse(uuidStr);
-            */
             await service.SaveSynchAsync(shopId, model, uuid);
-
             return Ok();
         }
     }

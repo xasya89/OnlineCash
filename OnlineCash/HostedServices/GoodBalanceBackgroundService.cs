@@ -37,7 +37,7 @@ namespace OnlineCash.HostedServices
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var scope = _scopeFactory.CreateScope();
-            using var db = scope.ServiceProvider.GetService<shopContext>();
+            //using var db = scope.ServiceProvider.GetService<shopContext>();
             try
             {
                 var factory = new ConnectionFactory()
@@ -65,9 +65,20 @@ namespace OnlineCash.HostedServices
                         var body = ex.Body.ToArray();
                         var str = Encoding.UTF8.GetString(body, 0, body.Length);
                         var model = JsonSerializer.Deserialize<List<GoodBalanceSynchModel>>(str);
-
-                        using var con =new MySqlConnection(_configuration.GetConnectionString("MySQL"));
                         
+                        using var con =new MySqlConnection(_configuration.GetConnectionString("MySQL"));
+                        foreach(GoodBalanceSynchModel balance in model)
+                        {
+                            bool flagSearch = con.ExecuteScalar<bool>($"SELECT IF(COUNT(*)>0,TRUE, FALSE) FROM goodcountbalancecurrents WHERE goodid={good.GoodId}");
+                            if (!flagSearch)
+                                con.Execute($"INSERT INTO goodcountbalancecurrents (GoodId, Count) VALUES ({balance.GoodId}, 0)");
+                            else
+                                con.Execute(
+                                    "UPDATE goodcountbalancecurrents SET Count=Count + @Count WHERE goodId=@GoodId",
+                                    new { Count = balance.Count, GoodId = balance.GoodId }
+                                    );
+                        }
+                        /*
                         DateTime? minPeriod = con.ExecuteScalar<DateTime?>("SELECT MIN(period) FROM goodcountbalances");
                         DateTime? maxPeriod = con.ExecuteScalar<DateTime?>("SELECT MAX(period) FROM goodcountbalances");
                         if(minPeriod==null)
@@ -110,6 +121,7 @@ FROM Goods g LEFT JOIN goodcountbalancecurrents c ON g.id=c.GoodId");
                             }
                         }
                         Console.WriteLine(minPeriod);
+                        */
                     };
 
                     //channel.BasicAck(ex.DeliveryTag, true);
