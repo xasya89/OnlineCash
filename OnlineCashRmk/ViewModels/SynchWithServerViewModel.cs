@@ -130,7 +130,7 @@ namespace OnlineCashRmk.ViewModels
                 });
 
             var resp = await httpClient.PostAsJsonAsync($"{serverurl}/api/onlinecash/ArrivalSynch/{shopId}", model);
-            if (resp.IsSuccessStatusCode)
+            if (!resp.IsSuccessStatusCode)
                 throw new Exception($"Ошиюка отправки arrival id - {docId}");
 
         }
