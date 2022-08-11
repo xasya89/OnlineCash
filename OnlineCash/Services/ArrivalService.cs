@@ -11,6 +11,7 @@ using OnlineCash.DataBaseModels;
 using OnlineCash.Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using OnlineCash.Extensions;
 
 namespace OnlineCash.Services
 {
@@ -42,6 +43,7 @@ namespace OnlineCash.Services
         {
             try
             {
+                string rabbitTemplate = _configuration.GetSection("RabbitTemplate").Value;
                 var factory = new ConnectionFactory()
                 {
                     HostName = _configuration.GetSection("RabbitServer").Value,
@@ -51,13 +53,13 @@ namespace OnlineCash.Services
                 using var connection = factory.CreateConnection();
                 using var channel = connection.CreateModel();
 
-                channel.ExchangeDeclare("shop_test", "direct", true);
-                channel.QueueDeclare(queue: "shop_test_goodbalance",
+                channel.ExchangeDeclare(rabbitTemplate, "direct", true);
+                channel.QueueDeclare(queue: rabbitTemplate+"_goodbalance",
                     durable: false,
                     exclusive: false,
                     autoDelete: false,
                     arguments: null);
-                channel.QueueBind("shop_test_goodbalance", "shop_test", "shop_test_goodbalance");
+                channel.QueueBind(rabbitTemplate+"_goodbalance", rabbitTemplate, rabbitTemplate+"_goodbalance");
 
                 if (db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefault() == null)
                     throw new Exception($"Поставщик supplierId - {model.SupplierId} не найден");
@@ -97,6 +99,7 @@ namespace OnlineCash.Services
                 arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
                 arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
 
+                db.SaveChanges();
                 var docSynch = await db.DocSynches.Where(d => d.Uuid == uuiSynch).FirstOrDefaultAsync();
                 if (docSynch != null)
                 {
@@ -104,6 +107,7 @@ namespace OnlineCash.Services
                     docSynch.TypeDoc = TypeDocs.Arrival;
                     docSynch.isSuccess = true;
                 }
+                db.DocumentHistories.Add(new DocumentHistory { TypeDoc=TypeDocs.Arrival, DocId=arrival.Id });
                 db.SaveChanges();
 
                 if (autoSuccess)
@@ -119,13 +123,18 @@ namespace OnlineCash.Services
                             Count = arrivalGood.Count
                         });
                     var bodyBalances = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(balances));
-                    channel.BasicPublish(exchange: "shop_test",
-                     routingKey: "shop_test_goodbalance",
+                    channel.BasicPublish(exchange: rabbitTemplate,
+                     routingKey: rabbitTemplate+"_goodbalance",
                      basicProperties: null,
                      body: bodyBalances);
                 }
 
-                await _notification.Send($"Приходная накладная {arrival.Num} на сумму {arrival.SumArrival}", "Arrivals/Edit?ArrivalId=" + arrival.Id);
+                channel.Publish<TelegramNotifyModel>(rabbitTemplate, rabbitTemplate + "_notify",
+                    new TelegramNotifyModel
+                    {
+                        Message = $"Приходная накладная {arrival.Num} от {arrival.Supplier?.Name} на сумму {arrival.SumArrival}",
+                        Url = "Arrivals/Edit?ArrivalId=" + arrival.Id
+                    });
             }
             catch (Exception ex)
             {

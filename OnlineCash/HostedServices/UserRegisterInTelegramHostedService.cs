@@ -16,12 +16,15 @@ using Telegram.Bot.Extensions.Polling;
 
 namespace OnlineCash.HostedServices
 {
-    public class TelegramHostedService : IHostedService
+    /// <summary>
+    /// Сервир бота для регистрации новых получателей сообщений в Telegram
+    /// </summary>
+    public class UserRegisterInTelegramHostedService : IHostedService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private TelegramBotClient botClient;
         private List<NewUser> RegisterUsers = new List<NewUser>();
-        public TelegramHostedService(IServiceScopeFactory serviceScope) => _scopeFactory = serviceScope;
+        public UserRegisterInTelegramHostedService(IServiceScopeFactory serviceScope) => _scopeFactory = serviceScope;
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             using var scope = _scopeFactory.CreateScope();

@@ -53,6 +53,8 @@ namespace OnlineCash
 
         public DbSet<TelegramUser> TelegramUsers { get; set; }
 
+        public DbSet<DocumentHistory> DocumentHistories { get; set; }
+
         public shopContext()
         {
         }

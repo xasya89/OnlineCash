@@ -69,7 +69,7 @@ namespace OnlineCash.HostedServices
                         using var con =new MySqlConnection(_configuration.GetConnectionString("MySQL"));
                         foreach(GoodBalanceSynchModel balance in model)
                         {
-                            bool flagSearch = con.ExecuteScalar<bool>($"SELECT IF(COUNT(*)>0,TRUE, FALSE) FROM goodcountbalancecurrents WHERE goodid={good.GoodId}");
+                            bool flagSearch = con.ExecuteScalar<bool>($"SELECT IF(COUNT(*)>0,TRUE, FALSE) FROM goodcountbalancecurrents WHERE goodid={balance.GoodId}");
                             if (!flagSearch)
                                 con.Execute($"INSERT INTO goodcountbalancecurrents (GoodId, Count) VALUES ({balance.GoodId}, 0)");
                             else

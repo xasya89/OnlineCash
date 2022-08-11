@@ -82,10 +82,11 @@ namespace OnlineCash
                 //options.Filters.Add(typeof(Filters.ControlDocSynchFilter));
             });
             services.AddScoped<HostedServices.BuyerObserverHostedService>();
-            services.AddHostedService<TelegramHostedService>();
+            services.AddHostedService<UserRegisterInTelegramHostedService>();
             services.AddHostedService<BuyerBackgroundService>();
             services.AddHostedService<GoodBalanceBackgroundService>();
             services.AddHostedService<ControlDuplicateGoodBackgroundService>();
+            services.AddHostedService<TelegramNotifyBackgroundService>();
         }
 
         public static string ShopName = "OnlineCash";
