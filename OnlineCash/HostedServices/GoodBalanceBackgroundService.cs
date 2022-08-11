@@ -17,6 +17,7 @@ using OnlineCash.DataBaseModels;
 using System.Collections.Generic;
 using Dapper;
 using MySql.Data.MySqlClient;
+using OnlineCash.Extensions;
 
 namespace OnlineCash.HostedServices
 {
@@ -40,6 +41,7 @@ namespace OnlineCash.HostedServices
             //using var db = scope.ServiceProvider.GetService<shopContext>();
             try
             {
+                string rabbitTemplate = _configuration.GetSection("RabbitTemplate").Value;
                 var factory = new ConnectionFactory()
                 {
                     HostName = _configuration.GetSection("RabbitServer").Value,
@@ -48,14 +50,7 @@ namespace OnlineCash.HostedServices
                 };
                 using var connection = factory.CreateConnection();
                 using var channel = connection.CreateModel();
-
-                channel.ExchangeDeclare("shop_test", "direct", true);
-                channel.QueueDeclare(queue: "shop_test_goodbalance",
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-                channel.QueueBind("shop_test_goodbalance", "shop_test", "shop_test_goodbalance");
+                channel.CreateStandartExchangeQueue(rabbitTemplate);
 
                 var arrivalConsumer = new EventingBasicConsumer(channel);
                 arrivalConsumer.Received += (ch, ex) =>
@@ -126,7 +121,7 @@ FROM Goods g LEFT JOIN goodcountbalancecurrents c ON g.id=c.GoodId");
 
                     //channel.BasicAck(ex.DeliveryTag, true);
                 };
-                channel.BasicConsume("shop_test_goodbalance", true, arrivalConsumer);
+                channel.BasicConsume(rabbitTemplate + "_goodbalance", true, arrivalConsumer);
                 while (!stoppingToken.IsCancellationRequested)
                     await Task.Delay(TimeSpan.FromSeconds(1));
             }

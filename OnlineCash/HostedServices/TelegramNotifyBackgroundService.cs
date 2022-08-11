@@ -15,6 +15,7 @@ using OnlineCash.DataBaseModels;
 using OnlineCash.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
+using OnlineCash.Extensions;
 
 namespace OnlineCash.HostedServices
 {
@@ -50,7 +51,7 @@ namespace OnlineCash.HostedServices
             List<TelegramUser> telegramUsers;
             using (var scope = _scopeFactory.CreateScope())
             using (var db = scope.ServiceProvider.GetService<shopContext>())
-                telegramUsers = await db.TelegramUsers.ToListAsync();
+                telegramUsers = await db.TelegramUsers.AsNoTracking().ToListAsync();
             try
             {
                 var factory = new ConnectionFactory()
@@ -61,14 +62,7 @@ namespace OnlineCash.HostedServices
                 };
                 using var connection = factory.CreateConnection();
                 using var channel = connection.CreateModel();
-
-                channel.ExchangeDeclare(rabbitTemplate, "direct", true);
-                channel.QueueDeclare(queue: rabbitTemplate+"_notify",
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-                channel.QueueBind(rabbitTemplate+ "_notify", rabbitTemplate, rabbitTemplate+ "_notify");
+                channel.CreateStandartExchangeQueue(rabbitTemplate);
 
                 var arrivalConsumer = new EventingBasicConsumer(channel);
                 arrivalConsumer.Received += async (ch, ex) =>
