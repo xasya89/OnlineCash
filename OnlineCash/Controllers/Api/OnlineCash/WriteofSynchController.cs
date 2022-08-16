@@ -26,10 +26,9 @@ namespace OnlineCash.Controllers.Api
         }
 
         [HttpPost("{shopId}")]
-        public async Task<IActionResult> Post(int shopId, [FromBody] WriteofSynchModel model)
+        public async Task<IActionResult> Post([FromHeader(Name = "doc-uuid")] Guid? uuid, int shopId, [FromBody] WriteofSynchModel model)
         {
-            var writeOf= await writeofService.SaveSynch(shopId, model);
-            await _notificationService.Send($"Списание на сумму {writeOf.SumAll} Примечание {writeOf.Note}", "Writeof/edit/" + writeOf.Id);
+            await writeofService.SaveSynch(shopId, model, uuid);
             return Ok();
         }
     }

@@ -16,22 +16,23 @@ namespace OnlineCash.Services
         private readonly IConfiguration _configuration;
         private readonly GoodCountBalanceService _countBalanceService;
         private readonly NotificationOfEventInSystemService _notificationService;
+        private readonly RabbitService _rabbitService;
         public WriteofService(shopContext db, 
-            IConfiguration configuration, 
+            IConfiguration configuration,
             NotificationOfEventInSystemService notificationService,
-            GoodCountBalanceService countBalanceService)
+            GoodCountBalanceService countBalanceService,
+            RabbitService rabbitService)
         {
             this.db = db;
             _configuration = configuration;
             _countBalanceService = countBalanceService;
             _notificationService = notificationService;
+            _rabbitService = rabbitService;
         }
 
-        public async Task<Writeof> SaveSynch(int shopId, WriteofSynchModel model)
+        public async Task SaveSynch(int shopId, WriteofSynchModel model, Guid? synchUuid=null)
         {
             bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
-            var old = await db.Writeofs.Where(w => w.Uuid == model.Uuid & w.ShopId==shopId).FirstOrDefaultAsync();
-            if (old != null) return null;
             Writeof writeofDb = new Writeof { 
                 IsSuccess=autoSuccess,
                 Uuid = model.Uuid, 
@@ -46,7 +47,8 @@ namespace OnlineCash.Services
             foreach(var wgood in model.Goods)
             {
                 Good good = await db.Goods.Where(g => g.Uuid == wgood.Uuid).FirstOrDefaultAsync();
-                if (good == null) return null;
+                if (good == null)
+                    throw new Exception($"Товар uuid {wgood.Uuid} не найден");
                 writeofGoods.Add(new WriteofGood
                 {
                     Writeof = writeofDb,
@@ -57,10 +59,36 @@ namespace OnlineCash.Services
             };
             db.WriteofGoods.AddRange(writeofGoods);
             await db.SaveChangesAsync();
+            var docSynch = await db.DocSynches.Where(d => d.Uuid == synchUuid).FirstOrDefaultAsync();
+            if (docSynch != null)
+            {
+                docSynch.DocId = writeofDb.Id;
+                docSynch.TypeDoc = TypeDocs.WriteOf;
+                docSynch.isSuccess = true;
+            }
+            db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = writeofDb.Id });
+            db.SaveChanges();
+
             if (autoSuccess)
-                await _countBalanceService.Add<WriteofGood>(writeofDb.Id, DateTime.Now, writeofGoods);
-                //await goodBalance.CalcAsync(shopId, model.DateCreate);
-            return writeofDb;
+            {
+                List<GoodBalanceSynchModel> balances = new();
+                foreach (var writeofGood in writeofGoods)
+                    balances.Add(new GoodBalanceSynchModel
+                    {
+                        DocumentId = writeofDb.Id,
+                        DocumentDate = writeofDb.DateWriteof,
+                        TypeDoc = TypeDocs.WriteOf,
+                        GoodId = writeofGood.GoodId,
+                        Count = -1*writeofGood.Count
+                    });
+                _rabbitService.Send<List<GoodBalanceSynchModel>>(RabbitService.QueueNames.GoodBalance, balances);
+            };
+            _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
+                    new TelegramNotifyModel
+                    {
+                        Message = $"Списание на сумму {writeofDb.SumAll} Примечание {writeofDb.Note}",
+                        Url = "Writeof/edit/" + writeofDb.Id
+                    });
         }
 
         public async Task Create(Writeof model)

@@ -9,7 +9,7 @@ namespace OnlineCash.Services
 {
     public interface IWriteofService
     {
-        public Task<Writeof> SaveSynch(int shopId, WriteofSynchModel writeof);
+        public Task SaveSynch(int shopId, WriteofSynchModel writeof, Guid? synchUuid);
         public Task Create(Writeof model);
         public Task Edit(Writeof model);
     }

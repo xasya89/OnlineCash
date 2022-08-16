@@ -17,19 +17,21 @@ namespace OnlineCash.Services
 {
     public class ArrivalService
     {
-        shopContext db;
-        IConfiguration _configuration;
-        GoodCountBalanceService _countBalanceService;
-        NotificationOfEventInSystemService _notification;
-        RevaluationService _revaluationService;
-        ILogger<ArrivalService> _logger;
+        private readonly shopContext db;
+        private readonly IConfiguration _configuration;
+        private readonly GoodCountBalanceService _countBalanceService;
+        private readonly NotificationOfEventInSystemService _notification;
+        private readonly RevaluationService _revaluationService;
+        private readonly ILogger<ArrivalService> _logger;
+        private readonly RabbitService _rabbitService;
         public ArrivalService(shopContext db,
             IConfiguration configuration,
             IGoodBalanceService goodBalanceService,
             GoodCountBalanceService countBalanceService,
             RevaluationService revaluationService,
             NotificationOfEventInSystemService notification,
-            ILogger<ArrivalService> logger)
+            ILogger<ArrivalService> logger,
+            RabbitService rabbitService)
         {
             this.db = db;
             _configuration = configuration;
@@ -37,30 +39,13 @@ namespace OnlineCash.Services
             _notification = notification;
             _revaluationService = revaluationService;
             _logger = logger;
+            _rabbitService = rabbitService;
         }
 
         public async Task SaveSynchAsync(int shopId, ArrivalSynchModel model, Guid? uuiSynch)
         {
             try
             {
-                string rabbitTemplate = _configuration.GetSection("RabbitTemplate").Value;
-                var factory = new ConnectionFactory()
-                {
-                    HostName = _configuration.GetSection("RabbitServer").Value,
-                    UserName = _configuration.GetSection("RabbitUser").Value,
-                    Password = _configuration.GetSection("RabbitPassword").Value
-                };
-                using var connection = factory.CreateConnection();
-                using var channel = connection.CreateModel();
-
-                channel.ExchangeDeclare(rabbitTemplate, "direct", true);
-                channel.QueueDeclare(queue: rabbitTemplate+"_goodbalance",
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-                channel.QueueBind(rabbitTemplate+"_goodbalance", rabbitTemplate, rabbitTemplate+"_goodbalance");
-
                 if (db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefault() == null)
                     throw new Exception($"Поставщик supplierId - {model.SupplierId} не найден");
                 var goods = db.Goods.Include(g => g.GoodPrices.Where(gp => gp.ShopId == 1)).AsNoTracking().ToList();
@@ -122,14 +107,10 @@ namespace OnlineCash.Services
                             GoodId = arrivalGood.GoodId,
                             Count = arrivalGood.Count
                         });
-                    var bodyBalances = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(balances));
-                    channel.BasicPublish(exchange: rabbitTemplate,
-                     routingKey: rabbitTemplate+"_goodbalance",
-                     basicProperties: null,
-                     body: bodyBalances);
+                    _rabbitService.Send<List<GoodBalanceSynchModel>>(RabbitService.QueueNames.GoodBalance, balances);
                 }
 
-                channel.Publish<TelegramNotifyModel>(rabbitTemplate, rabbitTemplate + "_notify",
+                _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
                     new TelegramNotifyModel
                     {
                         Message = $"Приходная накладная {arrival.Num} от {arrival.Supplier?.Name} на сумму {arrival.SumArrival}",
