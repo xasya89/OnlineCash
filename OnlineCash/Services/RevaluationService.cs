@@ -14,16 +14,19 @@ namespace OnlineCash.Services
         private readonly IConfiguration _configuration;
         private readonly shopContext _db;
         private readonly RabbitService _rabbitService;
+        private readonly DocSynchScopeService _docSynchService;
         public RevaluationService(shopContext db, 
-            IConfiguration configuration, 
-            RabbitService rabbitService)
+            IConfiguration configuration,
+            RabbitService rabbitService,
+            DocSynchScopeService docSynchService)
         {
             _db = db;
             _configuration = configuration;
             _rabbitService = rabbitService;
+            _docSynchService = docSynchService;
         }
 
-        public async Task SaveSynch(RevaluationModel model)
+        public async Task SaveSynch(RevaluationModel model, Guid? uuidSynch=null)
         {
             var goods = await _db.Goods.ToListAsync();
             var balanseCurrents = await _db.GoodCountBalanceCurrents.ToListAsync();
@@ -56,6 +59,9 @@ namespace OnlineCash.Services
             _db.RevaluationGoods.AddRange(revaluationGoods);
             await _db.SaveChangesAsync();
 
+            _db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Revaluation, DocId = revaluation.Id });
+            await _db.SaveChangesAsync();
+
             string message = $@"Переоценка 
 Предыдущая стоимость - {revaluationGoods.Sum(r => r.Count * r.PriceOld)}
 Новая стоимость - {revaluationGoods.Sum(r => r.Count * r.PriceNew)}";
@@ -63,8 +69,9 @@ namespace OnlineCash.Services
                 new TelegramNotifyModel
                 {
                     Message = message,
-                    Url = "Revaluation/Edit/" + revaluation.id
+                    Url = "Revaluation/Edit/" + revaluation.Id
                 });
+            _docSynchService.SetSynchSuccess(TypeDocs.Revaluation, revaluation.Id);
         }
 
         public async Task<List<Revaluation>> GetRevaluations()

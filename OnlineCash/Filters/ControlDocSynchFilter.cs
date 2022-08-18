@@ -6,13 +6,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OnlineCash.DataBaseModels;
+using OnlineCash.Services;
 
 namespace OnlineCash.Filters
 {
     public class ControlDocSynchFilter : Attribute, IAsyncActionFilter
     {
         shopContext _db;
-        public ControlDocSynchFilter(shopContext db) => _db = db;
+        DocSynchScopeService _docSynchService;
+        public ControlDocSynchFilter(shopContext db, DocSynchScopeService docSynchScopeService)
+        {
+            _db = db;
+            _docSynchService = docSynchScopeService;
+        }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -21,7 +27,7 @@ namespace OnlineCash.Filters
             {
                 Guid uuid = Guid.Parse(uuidStr);
 
-                _db.DocSynches.Add(new DocSynch { Uuid = uuid });
+                _db.DocSynches.Add(_docSynchService.NewDocSynch(uuid));
                 await _db.SaveChangesAsync();
                 /*
                 if (await _db.DocSynches.Where(d => d.Uuid == uuid).FirstOrDefaultAsync() == null)
@@ -35,6 +41,7 @@ namespace OnlineCash.Filters
                 */
             }
             await next();
+            await _db.SaveChangesAsync();
         }
     }
 }

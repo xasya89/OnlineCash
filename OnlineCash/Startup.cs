@@ -62,6 +62,7 @@ namespace OnlineCash
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                     options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/AccessDenied");
                 });
+            services.AddScoped<DocSynchScopeService>();
             services.AddScoped<RabbitService>();
             services.AddScoped<Filters.ControlCountGoodsFilter>();
             services.AddScoped<IGoodBalanceService, GoodBalanceService>();

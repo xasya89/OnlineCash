@@ -22,83 +22,73 @@ namespace OnlineCash.Services
         private readonly RevaluationService _revaluationService;
         private readonly ILogger<ArrivalService> _logger;
         private readonly RabbitService _rabbitService;
+        private readonly DocSynchScopeService _docSynchService;
         public ArrivalService(shopContext db,
             IConfiguration configuration,
             RevaluationService revaluationService,
             ILogger<ArrivalService> logger,
-            RabbitService rabbitService)
+            RabbitService rabbitService,
+            DocSynchScopeService docSynchService)
         {
             this.db = db;
             _configuration = configuration;
             _revaluationService = revaluationService;
             _logger = logger;
             _rabbitService = rabbitService;
+            _docSynchService = docSynchService;
         }
 
         public async Task SaveSynchAsync(int shopId, ArrivalSynchModel model, Guid? uuiSynch)
         {
-            try
+            if (db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefault() == null)
+                throw new Exception($"Поставщик supplierId - {model.SupplierId} не найден");
+            var goods = db.Goods.Include(g => g.GoodPrices.Where(gp => gp.ShopId == 1)).AsNoTracking().ToList();
+            foreach (var mGood in model.ArrivalGoods)
+                if (goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault() == null)
+                    throw new Exception($"Товар uuid {mGood.GoodUuid} не найден");
+
+            bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
+            var arrival = new Arrival
             {
-                if (db.Suppliers.Where(s => s.Id == model.SupplierId).FirstOrDefault() == null)
-                    throw new Exception($"Поставщик supplierId - {model.SupplierId} не найден");
-                var goods = db.Goods.Include(g => g.GoodPrices.Where(gp => gp.ShopId == 1)).AsNoTracking().ToList();
-                foreach (var mGood in model.ArrivalGoods)
-                    if (goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault() == null)
-                        throw new Exception($"Товар uuid {mGood.GoodUuid} не найден");
-
-                bool autoSuccess = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
-                var arrival = new Arrival
-                {
-                    Num = model.Num,
-                    DateArrival = model.DateArrival,
-                    ShopId = 1,
-                    SupplierId = model.SupplierId,
-                    SumSell = 0,
-                    isSuccess = autoSuccess
-                };
-                db.Arrivals.Add(arrival);
-                List<ArrivalGood> arrivalGoods = new List<ArrivalGood>();
-                foreach (var mGood in model.ArrivalGoods)
-                {
-                    var good = goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault();
-                    arrivalGoods.Add(new ArrivalGood
-                    {
-                        Arrival = arrival,
-                        GoodId = good.Id,
-                        Price = mGood.Price,
-                        PriceSell = mGood.PriceSell,
-                        Count = mGood.Count,
-                        Nds = mGood.Nds,
-                        ExpiresDate = mGood.ExpiresDate
-                    });
-                }
-                db.ArrivalGoods.AddRange(arrivalGoods);
-                arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
-                arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
-                arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
-
-                db.SaveChanges();
-                var docSynch = await db.DocSynches.Where(d => d.Uuid == uuiSynch).FirstOrDefaultAsync();
-                if (docSynch != null)
-                {
-                    docSynch.DocId = arrival.Id;
-                    docSynch.TypeDoc = TypeDocs.Arrival;
-                    docSynch.isSuccess = true;
-                }
-                db.SaveChanges();
-
-                if (autoSuccess)
-                {
-                    await CreateRevaluation(arrivalGoods);
-                    SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
-                }
-                db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
-                await db.SaveChangesAsync();
-            }
-            catch (Exception ex)
+                Num = model.Num,
+                DateArrival = model.DateArrival,
+                ShopId = 1,
+                SupplierId = model.SupplierId,
+                SumSell = 0,
+                isSuccess = autoSuccess
+            };
+            db.Arrivals.Add(arrival);
+            List<ArrivalGood> arrivalGoods = new List<ArrivalGood>();
+            foreach (var mGood in model.ArrivalGoods)
             {
-                _logger.LogError("Arrival background service error - " + ex.Message);
+                var good = goods.Where(g => g.Uuid == mGood.GoodUuid).FirstOrDefault();
+                arrivalGoods.Add(new ArrivalGood
+                {
+                    Arrival = arrival,
+                    GoodId = good.Id,
+                    Price = mGood.Price,
+                    PriceSell = mGood.PriceSell,
+                    Count = mGood.Count,
+                    Nds = mGood.Nds,
+                    ExpiresDate = mGood.ExpiresDate
+                });
             }
+            db.ArrivalGoods.AddRange(arrivalGoods);
+            arrival.SumNds = arrival.ArrivalGoods.Sum(a => a.SumNds);
+            arrival.SumArrival = arrival.ArrivalGoods.Sum(a => a.Sum);
+            arrival.SumSell = arrival.ArrivalGoods.Sum(a => a.SumSell);
+
+            db.SaveChanges();
+
+            if (autoSuccess)
+            {
+                await CreateRevaluation(arrivalGoods);
+                SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
+            }
+            db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
+            await db.SaveChangesAsync();
+
+            _docSynchService.SetSynchSuccess(TypeDocs.Arrival, arrival.Id);
         }
 
         public async Task Create(Arrival model)

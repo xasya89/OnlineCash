@@ -15,13 +15,16 @@ namespace OnlineCash.Services
         private readonly shopContext _db;
         private readonly IConfiguration _configuration;
         private readonly RabbitService _rabbitService;
+        private readonly DocSynchScopeService _docSynchService;
         public WriteofService(shopContext db, 
             IConfiguration configuration,
-            RabbitService rabbitService)
+            RabbitService rabbitService,
+            DocSynchScopeService docSynchService)
         {
             _db = db;
             _configuration = configuration;
             _rabbitService = rabbitService;
+            _docSynchService = docSynchService;
         }
 
         public async Task SaveSynch(int shopId, WriteofSynchModel model, Guid? synchUuid=null)
@@ -53,13 +56,6 @@ namespace OnlineCash.Services
             };
             _db.WriteofGoods.AddRange(writeofGoods);
             await _db.SaveChangesAsync();
-            var docSynch = await _db.DocSynches.Where(d => d.Uuid == synchUuid).FirstOrDefaultAsync();
-            if (docSynch != null)
-            {
-                docSynch.DocId = writeofDb.Id;
-                docSynch.TypeDoc = TypeDocs.WriteOf;
-                docSynch.isSuccess = true;
-            }
             _db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = writeofDb.Id });
             _db.SaveChanges();
 
@@ -83,6 +79,7 @@ namespace OnlineCash.Services
                         Message = $"Списание на сумму {writeofDb.SumAll} Примечание {writeofDb.Note}",
                         Url = "Writeof/edit/" + writeofDb.Id
                     });
+            _docSynchService.SetSynchSuccess(TypeDocs.WriteOf, writeofDb.Id);
         }
 
         public async Task Create(Writeof model)

@@ -25,9 +25,9 @@ namespace OnlineCash.Controllers.Api.OnlineCash
         }
 
         [HttpPost("{shopId}")]
-        public async Task<IActionResult> GetSynch(int shopId, [FromBody] RevaluationModel model)
+        public async Task<IActionResult> GetSynch([FromHeader(Name = "doc-uuid")] Guid? uuidSynch, int shopId, [FromBody] RevaluationModel model)
         {
-            await _service.SaveSynch(model);
+            await _service.SaveSynch(model, uuidSynch);
             return Ok();
         }
     }

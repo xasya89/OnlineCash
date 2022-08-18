@@ -17,6 +17,8 @@ namespace OnlineCash.DataBaseModels
         [Description("Перемещение")]
         Move,
         [Description("Продажа")]
-        Shift
+        Shift,
+        [Description("Переоценка")]
+        Revaluation
     }
 }

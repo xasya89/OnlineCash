@@ -27,7 +27,7 @@ namespace OnlineCashRmk.ViewModels
         {
             shopId = shop;
             IEnumerable<DocSynch> docs = await db.DocSynches
-                .Where(d => d.SynchStatus == false).OrderBy(d => d.Create).AsNoTracking().ToListAsync();
+                .Where(d => d.SynchStatus == false).OrderBy(d => d.Create).ToListAsync();
             foreach (var doc in docs)
             {
                 if (doc.Uuid.ToString() == "00000000-0000-0000-0000-000000000000")
