@@ -12,21 +12,15 @@ namespace OnlineCash.Services
 {
     public class WriteofService : IWriteofService
     {
-        private readonly shopContext db;
+        private readonly shopContext _db;
         private readonly IConfiguration _configuration;
-        private readonly GoodCountBalanceService _countBalanceService;
-        private readonly NotificationOfEventInSystemService _notificationService;
         private readonly RabbitService _rabbitService;
         public WriteofService(shopContext db, 
             IConfiguration configuration,
-            NotificationOfEventInSystemService notificationService,
-            GoodCountBalanceService countBalanceService,
             RabbitService rabbitService)
         {
-            this.db = db;
+            _db = db;
             _configuration = configuration;
-            _countBalanceService = countBalanceService;
-            _notificationService = notificationService;
             _rabbitService = rabbitService;
         }
 
@@ -42,11 +36,11 @@ namespace OnlineCash.Services
                 Note = model.Note,
                 SumAll=model.Goods.Sum(w=>(decimal)w.Count * w.Price)
             };
-            db.Writeofs.Add(writeofDb);
+            _db.Writeofs.Add(writeofDb);
             List<WriteofGood> writeofGoods = new List<WriteofGood>();
             foreach(var wgood in model.Goods)
             {
-                Good good = await db.Goods.Where(g => g.Uuid == wgood.Uuid).FirstOrDefaultAsync();
+                Good good = await _db.Goods.Where(g => g.Uuid == wgood.Uuid).FirstOrDefaultAsync();
                 if (good == null)
                     throw new Exception($"Товар uuid {wgood.Uuid} не найден");
                 writeofGoods.Add(new WriteofGood
@@ -57,17 +51,17 @@ namespace OnlineCash.Services
                     Price = wgood.Price
                 });
             };
-            db.WriteofGoods.AddRange(writeofGoods);
-            await db.SaveChangesAsync();
-            var docSynch = await db.DocSynches.Where(d => d.Uuid == synchUuid).FirstOrDefaultAsync();
+            _db.WriteofGoods.AddRange(writeofGoods);
+            await _db.SaveChangesAsync();
+            var docSynch = await _db.DocSynches.Where(d => d.Uuid == synchUuid).FirstOrDefaultAsync();
             if (docSynch != null)
             {
                 docSynch.DocId = writeofDb.Id;
                 docSynch.TypeDoc = TypeDocs.WriteOf;
                 docSynch.isSuccess = true;
             }
-            db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = writeofDb.Id });
-            db.SaveChanges();
+            _db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = writeofDb.Id });
+            _db.SaveChanges();
 
             if (autoSuccess)
             {
@@ -93,7 +87,7 @@ namespace OnlineCash.Services
 
         public async Task Create(Writeof model)
         {
-            var shop = await db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
+            var shop = await _db.Shops.Where(s => s.Id == model.ShopId).FirstOrDefaultAsync();
             decimal sumAll = model.WriteofGoods.Sum(w => w.Count * w.Price);
             var writeof = new Writeof
             {
@@ -104,7 +98,7 @@ namespace OnlineCash.Services
                 Note = model.Note,
                 SumAll = sumAll
             };
-            db.Writeofs.Add(writeof);
+            _db.Writeofs.Add(writeof);
             List<WriteofGood> writeofGoods = new List<WriteofGood>();
             foreach (var wgood in model.WriteofGoods)
                 writeofGoods.Add(new WriteofGood
@@ -114,19 +108,34 @@ namespace OnlineCash.Services
                     Count = wgood.Count,
                     Price = wgood.Price
                 });
-            db.WriteofGoods.AddRange(writeofGoods);
-            await db.SaveChangesAsync();
+            _db.WriteofGoods.AddRange(writeofGoods);
+            await _db.SaveChangesAsync();
 
             if (writeof.Status == DocumentStatus.Confirm)
             {
-                await _countBalanceService.Add<WriteofGood>(writeof.Id, DateTime.Now, writeofGoods);
-                await _notificationService.Send($"Списание на сумму {writeof.SumAll} Примечание {writeof.Note}", "Writeof/edit/" + writeof.Id);
-            }
+                List<GoodBalanceSynchModel> balances = new();
+                foreach (var writeofGood in writeofGoods)
+                    balances.Add(new GoodBalanceSynchModel
+                    {
+                        DocumentId = writeof.Id,
+                        DocumentDate = writeof.DateWriteof,
+                        TypeDoc = TypeDocs.WriteOf,
+                        GoodId = writeofGood.GoodId,
+                        Count = -1 * writeofGood.Count
+                    });
+                _rabbitService.Send<List<GoodBalanceSynchModel>>(RabbitService.QueueNames.GoodBalance, balances);
+            };
+            _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
+                    new TelegramNotifyModel
+                    {
+                        Message = $"Списание на сумму {writeof.SumAll} Примечание {writeof.Note}",
+                        Url = "Writeof/edit/" + writeof.Id
+                    });
         }
 
         public async Task Edit(Writeof model)
         {
-            var writeof = await db.Writeofs.Where(w => w.Id == model.Id).Include(w => w.WriteofGoods).FirstOrDefaultAsync();
+            var writeof = await _db.Writeofs.Where(w => w.Id == model.Id).Include(w => w.WriteofGoods).FirstOrDefaultAsync();
             var docStatusOld = writeof.Status;
             writeof.Status = model.IsSuccess ? DocumentStatus.Confirm : writeof.Status;
             writeof.ShopId = model.ShopId;
@@ -134,14 +143,25 @@ namespace OnlineCash.Services
             writeof.IsSuccess = model.IsSuccess;
             writeof.Note = model.Note;
             writeof.SumAll = model.WriteofGoods.Sum(wg => (decimal)wg.Count * wg.Price);
-            await db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
             //Удалим удаленные позиции
+            List<GoodBalanceSynchModel> balancesPlus = new();
             foreach (var writegood in writeof.WriteofGoods)
+            {
+                balancesPlus.Add(new GoodBalanceSynchModel
+                {
+                    DocumentId = writeof.Id,
+                    DocumentDate = writeof.DateWriteof,
+                    TypeDoc = TypeDocs.WriteOf,
+                    GoodId = writegood.GoodId,
+                    Count = writegood.Count
+                });
                 if (model.WriteofGoods.Where(wg => wg.Id == writegood.Id).FirstOrDefault() == null)
-                    db.WriteofGoods.Remove(writegood);
+                    _db.WriteofGoods.Remove(writegood);
+            }
             //Добавим новые позиции
             foreach (var wgood in model.WriteofGoods.Where(wg => wg.Id == -1).ToList())
-                db.WriteofGoods.Add(new WriteofGood
+                _db.WriteofGoods.Add(new WriteofGood
                 {
                     Writeof = writeof,
                     GoodId = wgood.GoodId,
@@ -151,18 +171,31 @@ namespace OnlineCash.Services
             //Изменим существующие позиции
             foreach (var wgood in model.WriteofGoods.Where(wg => wg.Id != -1).ToList())
             {
-                var writegood = await db.WriteofGoods.Where(wg => wg.Id == wgood.Id).FirstOrDefaultAsync();
+                var writegood = await _db.WriteofGoods.Where(wg => wg.Id == wgood.Id).FirstOrDefaultAsync();
                 writegood.Count = wgood.Count;
                 writegood.Price = wgood.Price;
             };
-            await db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
             if (docStatusOld != DocumentStatus.Confirm & writeof.Status == DocumentStatus.Confirm)
             {
-                await _countBalanceService.Add<WriteofGood>(writeof.Id, DateTime.Now, 
-                    (await db.Writeofs.Include(w=>w.WriteofGoods).Where(w=>w.Id==model.Id).FirstOrDefaultAsync()).WriteofGoods
-                    );
-                await _notificationService.Send($"Списание на сумму {writeof.SumAll} Примечание {writeof.Note}", "Writeof/edit/" + writeof.Id);
+                _rabbitService.Send<List<GoodBalanceSynchModel>>(RabbitService.QueueNames.GoodBalance, balancesPlus);
+                List<GoodBalanceSynchModel> balancesMinus = new();
+                foreach(var wgood in model.WriteofGoods)
+                    balancesMinus.Add(new GoodBalanceSynchModel
+                    {
+                        DocumentId = writeof.Id,
+                        DocumentDate = writeof.DateWriteof,
+                        TypeDoc = TypeDocs.WriteOf,
+                        GoodId = wgood.GoodId,
+                        Count = -1 * wgood.Count
+                    });
+                _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
+                        new TelegramNotifyModel
+                        {
+                            Message = $"Изменено списание на сумму {writeof.SumAll} Примечание {writeof.Note}",
+                            Url = "Writeof/edit/" + writeof.Id
+                        });
             }
         }
     }
