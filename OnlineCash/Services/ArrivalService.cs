@@ -66,7 +66,7 @@ namespace OnlineCash.Services
                         Arrival = arrival,
                         GoodId = good.Id,
                         Price = mGood.Price,
-                        PriceSell = good.GoodPrices.FirstOrDefault().Price,
+                        PriceSell = mGood.PriceSell,
                         Count = mGood.Count,
                         Nds = mGood.Nds,
                         ExpiresDate = mGood.ExpiresDate
@@ -89,10 +89,11 @@ namespace OnlineCash.Services
 
                 if (autoSuccess)
                 {
-                    db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
-                    await db.SaveChangesAsync();
+                    await CreateRevaluation(arrivalGoods);
                     SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
                 }
+                db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
+                await db.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -143,8 +144,8 @@ namespace OnlineCash.Services
             {
                 db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
                 await db.SaveChangesAsync();
-                SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
                 await CreateRevaluation(arrivalGoods);
+                SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
             }
         }
 
@@ -203,12 +204,12 @@ namespace OnlineCash.Services
             {
                 db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
                 await db.SaveChangesAsync();
+                await CreateRevaluation(arrival.ArrivalGoods);
                 SendBalanceAndNotify(
                     arrival.Id, 
                     arrival.DateArrival, 
                     arrival.Supplier?.Name, 
                     arrival.ArrivalGoods);
-                await CreateRevaluation(arrival.ArrivalGoods);
             }
         }
 

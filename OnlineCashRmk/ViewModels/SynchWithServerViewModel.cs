@@ -124,6 +124,7 @@ namespace OnlineCashRmk.ViewModels
                 {
                     GoodUuid = aGood.Good.Uuid,
                     Price = aGood.Price,
+                    PriceSell = aGood.PriceSell,
                     Count = aGood.Count,
                     Nds = aGood.Nds,
                     ExpiresDate = aGood.ExpiresDate

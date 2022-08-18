@@ -18,6 +18,7 @@ namespace OnlineCashRmk.DataModels
     {
         public Guid GoodUuid { get; set; }
         public decimal Price { get; set; }
+        public decimal PriceSell { get; set; }
         public decimal Count { get; set; }
         public string Nds { get; set; }
         public DateTime? ExpiresDate { get; set; }

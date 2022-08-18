@@ -277,38 +277,24 @@ namespace OnlineCashRmk
             {
                 var arrival = new Arrival { Num = arrivalNum.Text, DateArrival = arrivalDate.Value, SupplierId = supplier.Id };
                 db.Arrivals.Add(arrival);
-                List<NewGoodFromCash> newGoodList = new List<NewGoodFromCash>();
-                Revaluation revaluation = new Revaluation();
-                List<RevaluationGood> revaluationGoods = new List<RevaluationGood>();
+
                 foreach(var position in ArrivalPositions)
                 {
-                    var arrivalGood = new ArrivalGood { Arrival = arrival, GoodId = position.GoodId, Count = position.Count, Price = position.PriceArrival, Nds=position.NdsPercent, ExpiresDate=position.ExpiresDate };
+                    var arrivalGood = new ArrivalGood { 
+                        Arrival = arrival,
+                        GoodId = position.GoodId, 
+                        Count = position.Count, 
+                        Price = position.PriceArrival, 
+                        PriceSell = position.PriceSell,
+                        Nds=position.NdsPercent, 
+                        ExpiresDate=position.ExpiresDate 
+                    };
                     var good = db.Goods.Where(g => g.Id == position.GoodId).FirstOrDefault();
                     if(good.Price!=position.PriceSell)
-                    {
-                        RevaluationGood revaluationGood = revaluationGoods.Where(r => r.Good.Id == good.Id).FirstOrDefault();
-                        if (revaluationGood == null)
-                            revaluationGoods.Add(new RevaluationGood { Revaluation = revaluation, Good = good, PriceOld = good.Price, PriceNew = position.PriceSell });
-                        else
-                            if (revaluationGood.PriceNew < position.PriceSell)
-                            revaluationGood.PriceNew = position.PriceSell;
                         good.Price = position.PriceSell;
-                        var newGood = new NewGoodFromCash { Good = good };
-                        db.NewGoodsFromCash.Add(newGood);
-                        newGoodList.Add(newGood);
-                    }
                     db.ArrivalGoods.Add(arrivalGood);
                 };
-                if (revaluationGoods.Count > 0)
-                {
-                    db.Revaluations.Add(revaluation);
-                    db.RevaluationGoods.AddRange(revaluationGoods);
-                }
                 await db.SaveChangesAsync();
-                if (revaluationGoods.Count > 0)
-                    synch.AppendDoc(new DocSynch { DocId=revaluation.Id, TypeDoc=TypeDocs.Revaluation});
-                foreach (var newGood in newGoodList)
-                    synch.AppendDoc(new DocSynch { DocId = newGood.Id, Create = DateTime.Now, TypeDoc = TypeDocs.NewGoodFromCash });
                 synch.AppendDoc(new DocSynch { DocId = arrival.Id, Create = DateTime.Now, TypeDoc = TypeDocs.Arrival });
                 Close();
             }
