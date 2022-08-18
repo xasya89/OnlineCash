@@ -85,30 +85,14 @@ namespace OnlineCash.Services
                     docSynch.TypeDoc = TypeDocs.Arrival;
                     docSynch.isSuccess = true;
                 }
-                db.DocumentHistories.Add(new DocumentHistory { TypeDoc=TypeDocs.Arrival, DocId=arrival.Id });
                 db.SaveChanges();
 
                 if (autoSuccess)
                 {
-                    List<GoodBalanceSynchModel> balances = new();
-                    foreach (var arrivalGood in arrivalGoods)
-                        balances.Add(new GoodBalanceSynchModel
-                        {
-                            DocumentId = arrival.Id,
-                            DocumentDate = arrival.DateArrival,
-                            TypeDoc = TypeDocs.Arrival,
-                            GoodId = arrivalGood.GoodId,
-                            Count = arrivalGood.Count
-                        });
-                    _rabbitService.Send<List<GoodBalanceSynchModel>>(RabbitService.QueueNames.GoodBalance, balances);
+                    db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
+                    await db.SaveChangesAsync();
+                    SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
                 }
-
-                _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
-                    new TelegramNotifyModel
-                    {
-                        Message = $"Приходная накладная {arrival.Num} от {arrival.Supplier?.Name} на сумму {arrival.SumArrival}",
-                        Url = "Arrivals/Edit?ArrivalId=" + arrival.Id
-                    });
             }
             catch (Exception ex)
             {
@@ -157,7 +141,9 @@ namespace OnlineCash.Services
             await db.SaveChangesAsync();
             if (arrival.Status == DocumentStatus.Confirm)
             {
-                await SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
+                db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
+                await db.SaveChangesAsync();
+                SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, arrivalGoods);
                 await CreateRevaluation(arrivalGoods);
             }
         }
@@ -175,16 +161,10 @@ namespace OnlineCash.Services
             arrival.isSuccess = model.isSuccess;
             arrival.Status = model.isSuccess ? DocumentStatus.Confirm : model.Status;
             //Найдем удаленные товары
-            List<ArrivalGood> goodMinus = new();
-            List<ArrivalGood> goodPlus = new();
             foreach (var arrivalgood in arrival.ArrivalGoods)
                 if (model.ArrivalGoods.Where(m => m.Id == arrivalgood.Id).FirstOrDefault() == null)
-                {
                     db.Remove(arrivalgood);
-                    goodMinus.Add(new ArrivalGood { GoodId=arrivalgood.GoodId, Count=arrivalgood.Count});
-                }
                     
-            //
             foreach (var modelGood in model.ArrivalGoods)
             {
                 if (modelGood.Id == -1)
@@ -203,16 +183,10 @@ namespace OnlineCash.Services
                         ExpiresDate = modelGood.ExpiresDate
                     };
                     db.ArrivalGoods.Add(arrivalGood);
-                    goodPlus.Add(new ArrivalGood { GoodId= modelGood.GoodId, Count=modelGood.Count});
                 }
                 else
                 {
                     var arrivalGood = arrival.ArrivalGoods.Where(a => a.Id == modelGood.Id).FirstOrDefault();
-                    if (modelGood.Count != arrivalGood.Count)
-                    {
-                        goodMinus.Add(new ArrivalGood { GoodId = arrivalGood.GoodId, Count = arrivalGood.Count });
-                        goodPlus.Add(new ArrivalGood { GoodId = modelGood.GoodId, Count = modelGood.Count });
-                    }
                     arrivalGood.Price = modelGood.Price;
                     arrivalGood.PriceSell = modelGood.PriceSell;
                     arrivalGood.Count = modelGood.Count;
@@ -227,7 +201,13 @@ namespace OnlineCash.Services
             arrival.ArrivalGoods = model.ArrivalGoods;
             if (documentStatusOld != DocumentStatus.Confirm & arrival.Status == DocumentStatus.Confirm)
             {
-                await SendBalanceAndNotify(arrival.Id, arrival.DateArrival, arrival.Supplier?.Name, goodPlus, goodMinus);
+                db.DocumentHistories.Add(new DocumentHistory { TypeDoc = TypeDocs.Arrival, DocId = arrival.Id });
+                await db.SaveChangesAsync();
+                SendBalanceAndNotify(
+                    arrival.Id, 
+                    arrival.DateArrival, 
+                    arrival.Supplier?.Name, 
+                    arrival.ArrivalGoods);
                 await CreateRevaluation(arrival.ArrivalGoods);
             }
         }
@@ -237,7 +217,7 @@ namespace OnlineCash.Services
         /// </summary>
         /// <param name="arrival"></param>
         /// <returns></returns>
-        private async Task SendBalanceAndNotify(int arrivalId, 
+        private void SendBalanceAndNotify(int arrivalId, 
             DateTime dateArrival, 
             string? supplier=null, 
             IEnumerable<ArrivalGood> arrivalPlus=null,
