@@ -26,7 +26,8 @@ namespace OnlineCashRmk.ViewModels
         public static async Task StartSynch(string serverUrl, int shop, DataContext db, HttpClient httpClient)
         {
             shopId = shop;
-            IEnumerable<DocSynch> docs = await db.DocSynches.Where(d => d.SynchStatus == false).OrderBy(d => d.Create).ToListAsync();
+            IEnumerable<DocSynch> docs = await db.DocSynches
+                .Where(d => d.SynchStatus == false).OrderBy(d => d.Create).AsNoTracking().ToListAsync();
             foreach (var doc in docs)
             {
                 if (doc.Uuid.ToString() == "00000000-0000-0000-0000-000000000000")

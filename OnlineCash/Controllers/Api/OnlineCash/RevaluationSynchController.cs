@@ -25,13 +25,10 @@ namespace OnlineCash.Controllers.Api.OnlineCash
         }
 
         [HttpPost("{shopId}")]
-        public async Task<RevaluationModel> GetSynch(int shopId, [FromBody] RevaluationModel model)
+        public async Task<IActionResult> GetSynch(int shopId, [FromBody] RevaluationModel model)
         {
-            RevaluationModel rModel= await _service.SaveSynch(model);
-            await _notificationService.Send($@"Переоценка 
-Предыдущая стоимость - {rModel.RevaluationGoods.Sum(r=>r.Count * r.PriceOld)}
-Новая стоимость - {rModel.RevaluationGoods.Sum(r=>r.Count * r.PriceNew)}", "Revaluation/Edit/" + rModel.Id);
-            return rModel;
+            await _service.SaveSynch(model);
+            return Ok();
         }
     }
 }

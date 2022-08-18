@@ -13,26 +13,26 @@ namespace OnlineCash.Services
     {
         private readonly IConfiguration _configuration;
         private readonly shopContext _db;
-        private readonly NotificationOfEventInSystemService _notification;
-        public RevaluationService(shopContext db, IConfiguration configuration, NotificationOfEventInSystemService notification)
+        private readonly RabbitService _rabbitService;
+        public RevaluationService(shopContext db, 
+            IConfiguration configuration, 
+            RabbitService rabbitService)
         {
             _db = db;
             _configuration = configuration;
-            _notification = notification;
+            _rabbitService = rabbitService;
         }
 
-        public async Task<RevaluationModel> SaveSynch(RevaluationModel model)
+        public async Task SaveSynch(RevaluationModel model)
         {
-            var revaluationDb = await _db.Revaluations.Where(r => r.Uuid == model.Uuid).FirstOrDefaultAsync();
-            if (revaluationDb != null)
-                throw new Exception($"Документ с пересортица с uuid - {model.Uuid} уже существует в базе данных");
-
             var goods = await _db.Goods.ToListAsync();
             var balanseCurrents = await _db.GoodCountBalanceCurrents.ToListAsync();
             foreach (var rGood in model.RevaluationGoods)
                 if (goods.Where(g => g.Uuid == rGood.Uuid).FirstOrDefault() == null)
                     throw new Exception($"При попытке сохранения акта Переоценки, товар с uuid - {rGood.Uuid} не найден");
+
             bool autosave = _configuration.GetSection("AutoSuccessFromCash").Value == "1";
+
             Revaluation revaluation = new Revaluation { Status=autosave ? DocumentStatus.Confirm : DocumentStatus.New, Create=model.Create};
             List<RevaluationGood> revaluationGoods = new List<RevaluationGood>();
             foreach(var rGood in model.RevaluationGoods)
@@ -55,8 +55,16 @@ namespace OnlineCash.Services
             _db.Revaluations.Add(revaluation);
             _db.RevaluationGoods.AddRange(revaluationGoods);
             await _db.SaveChangesAsync();
-            model.Id = revaluation.Id;
-            return model;
+
+            string message = $@"Переоценка 
+Предыдущая стоимость - {revaluationGoods.Sum(r => r.Count * r.PriceOld)}
+Новая стоимость - {revaluationGoods.Sum(r => r.Count * r.PriceNew)}";
+            _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
+                new TelegramNotifyModel
+                {
+                    Message = message,
+                    Url = "Revaluation/Edit/" + revaluation.id
+                });
         }
 
         public async Task<List<Revaluation>> GetRevaluations()
@@ -74,10 +82,11 @@ namespace OnlineCash.Services
                 _db.Revaluations.Add(revaluation);
             };
             string notifyMessage = "Переоценка";
+            List<RevaluationGood> revaluationGoods = new();
             foreach (var good in goods)
             {
                 decimal countCurrent = (await _db.GoodCountBalanceCurrents.Where(g => g.GoodId == good.Good.Id).FirstOrDefaultAsync())?.Count ?? 0;
-                _db.RevaluationGoods.Add(new RevaluationGood
+                revaluationGoods.Add(new RevaluationGood
                 {
                     Revaluation = revaluation,
                     GoodId = good.Good.Id,
@@ -89,8 +98,18 @@ namespace OnlineCash.Services
                 revaluation.SumNew += good.PriceNew * countCurrent;
                 notifyMessage += $"\n{good.Good.Name} было {good.PriceOld * countCurrent} стало {good.PriceNew * countCurrent}\nКоличество {countCurrent}";
             };
+            _db.RevaluationGoods.AddRange(revaluationGoods);
             await _db.SaveChangesAsync();
-            await _notification.Send(notifyMessage);
+
+            string message = $@"Переоценка 
+Предыдущая стоимость - {revaluationGoods.Sum(r => r.Count * r.PriceOld)}
+Новая стоимость - {revaluationGoods.Sum(r => r.Count * r.PriceNew)}";
+            _rabbitService.Send<TelegramNotifyModel>(RabbitService.QueueNames.Notify,
+                new TelegramNotifyModel
+                {
+                    Message = message,
+                    Url = "Revaluation/Edit/" + revaluation.Id
+                });
         }
     }
 }
